@@ -1,0 +1,5 @@
+D:/VisualGEANT4/VisualGEANT4/CMakeFiles/exampleB3a.dir
+D:/VisualGEANT4/VisualGEANT4/CMakeFiles/B3a.dir
+D:/VisualGEANT4/VisualGEANT4/CMakeFiles/INSTALL.dir
+D:/VisualGEANT4/VisualGEANT4/CMakeFiles/ALL_BUILD.dir
+D:/VisualGEANT4/VisualGEANT4/CMakeFiles/ZERO_CHECK.dir

@@ -12,8 +12,8 @@ public:
 	std::string KernelCommand;
 	char** Kernel_argv;
 	std::vector<std::string> Kernel_args;
-	int Kernel_argc;
+	int Kernel_argc = 1;
 	GetCommand();
-	void ParseToArgv(std::string cmd);
+	//void ParseToArgv(std::string cmd);
 };
 

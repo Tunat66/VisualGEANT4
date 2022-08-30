@@ -1,5 +1,7 @@
 #include "BuildApplication.h"
 
+//AS TEST COMMAND build C:/Users/Dell/GEANT4TEMP/geant4-v11.0.0/examples/basic/B3/B3a C:/Users/Dell/GEANT4/Geant4-11.0/lib/Geant4-11.0.0
+
 BuildApplication::BuildApplication(std::vector<std::string> Kernel_args) 
 {
 	CMakeListsTxt_DIR = Kernel_args.at(1);
@@ -12,21 +14,26 @@ BuildApplication::BuildApplication(std::vector<std::string> Kernel_args)
 bool BuildApplication::CMakeGenerate()
 {
 	//first check wheater CMakeLists.txt exists //the problem with cmakelistsdir
+
 	bool flag = false;
-	std::ifstream f(CMakeListsTxt_DIR.c_str());
 	std::cout << CMakeListsTxt_DIR << std::endl;
-	if (true) {
-		std::string cdCommand;
-		cdCommand = "cd " + CMakeListsTxt_DIR + " && " + "mkdir build" + " && " + "cd build";
-		std::string CMakeCommand;
-		CMakeCommand = "cmake -DGeant4_DIR=" + GEANT4_DIR + " " + CMakeListsTxt_DIR;
-		std::string command = cdCommand + " && " + CMakeCommand;
-		//std::cout << command << std::endl;
-		system(cdCommand.c_str());
-		bool flag = true;
-	}
-	else
-		std::cout << "CMakeLists.txt is not found in:" + CMakeListsTxt_DIR << std::endl;
+	//std::ifstream f(CMakeListsTxt_DIR.c_str());
+	std::filesystem::path MakeDir = std::string(CMakeListsTxt_DIR + "/build");
+		
+	//create a build directory
+	std::filesystem::create_directories(MakeDir);
+		
+	// cd to build and cmake
+	std::string cdCommand;
+	//cdCommand = "cd " + CMakeListsTxt_DIR + "/build";
+	std::string CMakeCommand;
+	CMakeCommand = "cmake -DGeant4_DIR=" + GEANT4_DIR + " -B" + CMakeListsTxt_DIR + "/build" + " -S" + CMakeListsTxt_DIR;
+	//std::string Command = cdCommand + " && " + CMakeCommand;
+	system(CMakeCommand.c_str());
+	std::cout << CMakeCommand << std::endl;
+	
+	//succesful execution
+	flag = true;
 
 	return flag;
 }
@@ -35,11 +42,17 @@ void BuildApplication::Build_MSBuild()
 {
 	std::string cdCommand;
 	//NTS: change this depending on the MSVS version
-	cdCommand = "C:/Program Files(x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin";
+	cdCommand = "cd C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin";
 	std::string BuildCommand = "MSBuild.exe " + CMakeListsTxt_DIR + "/build/Project.sln " + "/property:Configuration=Release";
 	std::string command;
-	command = "cd " + cdCommand + " && " + BuildCommand;
+	command = cdCommand + " && " + BuildCommand;
 	//std::cout << command << std::endl;
-	system(command.c_str());
+	//system(command.c_str());
+	std::string command2 = "C:/\"Program Files (x86)\"/\"Microsoft Visual Studio\"/2019/Community/MSBuild/Current/Bin/MSBuild.exe " 
+		+ CMakeListsTxt_DIR + "/build/Project.sln " + "/property:Configuration=Release";
+
+	char* MSBuildDirectory = new char[command2.length() + 1];
+	strcpy(MSBuildDirectory, command2.c_str());
+	system(MSBuildDirectory);
 
 }

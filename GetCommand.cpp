@@ -3,13 +3,25 @@
 GetCommand::GetCommand() 
 {
 	std::cout << "\n$";
-	std::getline(std::cin, KernelCommand);
-	ParseToArgv(KernelCommand);
+	while (true) {
+		std::string NewArg;
+		std::cin >> NewArg;
+		Kernel_args.push_back(NewArg);
+		if (std::cin.peek() == '\n') { break;}
+	}
+	
+	/*while (std::getline(std::cin, KernelCommand, ' '))
+	{
+		Kernel_args.push_back(KernelCommand); //push the arg into the vector of them (args)
+		Kernel_argc++;
+		std::cout << Kernel_argc << std::endl;
+		std::cout << Kernel_args.at(i);
+		i++;
+	}*/
 }
 
-void GetCommand::ParseToArgv(std::string cmd)
+/*void GetCommand::ParseToArgv(std::string cmd) //out of order
 {
-	Kernel_argc = 0;
 	//allocate argv (Defunct)
 	/*Kernel_argv = new char* [cmd.length()];
 	for (int k = 0; k < cmd.length(); k++)
@@ -29,7 +41,7 @@ void GetCommand::ParseToArgv(std::string cmd)
 			j++;
 	}*/
 	//allocate args
-	int j = 0;
+	/*int j = 0;
 	int argpos = 0;
 	for (int i = 0; i < cmd.length(); i++) {
 		if (cmd.at(i) == ' ' || i == cmd.length() - 1) {
@@ -42,6 +54,5 @@ void GetCommand::ParseToArgv(std::string cmd)
 		else {
 			j++;
 		}
-	}
+	}*/
 	
-}
