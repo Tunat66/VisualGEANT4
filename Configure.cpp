@@ -105,37 +105,27 @@ void Configure::VisHandle()
 	else if (Args.at(3) == "style")
 	{
 		std::string NewSetting = Args.at(4);
-		std::ifstream f(ProjectDir + "/Macros/" + FileToModify); //taking file as inputstream, templates exist at VisualGEANT4 Install
-		string TempContent;
-		//get contents
-		if (f) {
-			std::ostringstream ss;
-			ss << f.rdbuf(); // reading data
-			TempContent = ss.str();
-		}
-		f.close();
-
-		cout << "OLD:\n" + TempContent << endl;
-		TempContent = std::regex_replace(TempContent, std::regex("(/vis/viewer/set/style)(.*)"), "/vis/viewer/set/style " + NewSetting);
-		f.close();
-		cout << "NEW:\n" + TempContent << endl;
-
-		ofstream ofs;
-		ofs.open(ProjectDir + "/Macros/" + FileToModify, std::ofstream::out | std::ofstream::trunc);
-		ofs << TempContent;
-		ofs.close();
+		ChangeWithRegex(ProjectDir + "/Macros/" + FileToModify, "/vis/viewer/set/style", NewSetting);
 	}
 
 }
 
 void Configure::RunHandle()
 {
+	//usual console syntax
+	std::string FileToModify = Args.at(Args.size() - 1);
+	
 	//create a new file if requested as: config run <projectdir> <neworexistingfilename.mac>
 	if (Args.at(3) == "new")
 	{
-		NewConfig("vis", Args.at(4));
+		NewConfig("run", Args.at(4));
 	}
-	
+	if (Args.at(3) == "beamOnTimes") //how many particles to shoot
+	{
+		std::string NewSetting = Args.at(4);
+		ChangeWithRegex(ProjectDir + "/Macros/" + FileToModify, "/run/beamOn", NewSetting);
+	}
+
 	// the rest of Kernel_args has the form: <runproperty1> <runproperty1value> ...
 	/*current properties:
 	* 
@@ -146,14 +136,24 @@ void Configure::RunHandle()
 
 void Configure::GunHandle()
 {
-	std::ofstream* GunConfig;
-	//create a new file if requested as: config gun <projectdir> <neworexistingfilename.mac>
-	GunConfig = new std::ofstream(ProjectDir + "/" + Args.at(3));
-	// the rest of Kernel_args has the form: <gunproperty1> <gunproperty1value> ...
-	/*current properties:
-	*
-	*
-	*/
+	//usual console syntax
+	std::string FileToModify = Args.at(Args.size() - 1);
+	
+	//create a new file if requested as: config run <projectdir> <neworexistingfilename.mac>
+	if (Args.at(3) == "new")
+	{
+		NewConfig("gun", Args.at(4));
+	}
+	if (Args.at(3) == "setParticle") //how many particles to shoot
+	{
+		std::string NewSetting = Args.at(4);
+		ChangeWithRegex(ProjectDir + "/Macros/" + FileToModify, "/gun/particle", NewSetting);
+	}
+	if (Args.at(3) == "setEnergy") //how many particles to shoot
+	{
+		std::string NewSetting = Args.at(4);
+		ChangeWithRegex(ProjectDir + "/Macros/" + FileToModify, "/gun/energy", NewSetting);
+	}
 }
 
 
