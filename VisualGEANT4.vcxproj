@@ -142,15 +142,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BuildApplication.cpp" />
+    <ClCompile Include="Configure.cpp" />
     <ClCompile Include="GetCommand.cpp" />
     <ClCompile Include="mainKernel.cpp" />
     <ClCompile Include="Process.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuildApplication.h" />
+    <ClInclude Include="Configure.h" />
     <ClInclude Include="GetCommand.h" />
     <ClInclude Include="Process.h" />
-    <ClInclude Include="resource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

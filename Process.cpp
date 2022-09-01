@@ -10,7 +10,12 @@ Process::Process(std::vector<std::string> Kernel_args) {
 		OpenExisting(Kernel_args);
 	else if (FirstCommand == "build") { //format: build Cmakelist_DIR Geant4_DIR
 		BuildApplication* builder = new BuildApplication(Kernel_args);
-	}	
+		delete builder;
+	}
+	else if (FirstCommand == "config") {
+		Configure* configurer = new Configure(Kernel_args);
+		delete configurer;
+	}
 	else
 		isValidCommand = false;
 		

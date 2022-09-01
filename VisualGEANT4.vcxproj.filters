@@ -27,6 +27,9 @@
     <ClCompile Include="BuildApplication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Configure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Process.h">
@@ -35,10 +38,10 @@
     <ClInclude Include="GetCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="BuildApplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BuildApplication.h">
+    <ClInclude Include="Configure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
