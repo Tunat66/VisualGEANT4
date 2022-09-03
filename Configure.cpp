@@ -1,7 +1,9 @@
 #include "Configure.h"
 
-//to test: config vis D:/VisualGEANT4/Example
-//to test: config vis D:/VisualGEANT4/Example trajectories drawByCharge <macroname>.mac
+using namespace std;
+
+//to test: config vis <stuff> D:/VisualGEANT4/Example
+//to test: config vis trajectories drawByCharge <macroname>.mac D:/VisualGEANT4/Example
 void Configure::SetArgs(std::vector<std::string> val)
 {
 	Args = val;
@@ -15,7 +17,7 @@ Configure::Configure(std::vector<std::string> Kernel_args)
 {
 	//this is a layer 2 class examining the second arg in Kernel_args and invoking another if neccesary
 	std::string SecondCommand = Kernel_args.at(1);
-	ProjectDir = Kernel_args.at(2);
+	ProjectDir = Kernel_args.at(Kernel_args.size() - 1);
 	Args = Kernel_args;
 
 	if (SecondCommand == "run") {
@@ -39,10 +41,6 @@ Configure::~Configure() {
 
 void Configure::VisHandle() 
 {
-	std::ofstream* VisConfig;
-	//create a new file if requested as: config vis <projectdir> <neworexistingfilename.mac>
-	VisConfig = new std::ofstream(ProjectDir + "/" + Args.at(3));
-	// the rest of Kernel_args has the form: <visproperty1> <visproperty1value> ...
 	/*current properties:
 	*style(surface, wireframe, auxiliary edges) 1string
 	*trajectories 1string : <drawby> (particleID, charge, LATER: originvolume, encounteredvolume)
@@ -52,13 +50,13 @@ void Configure::VisHandle()
 	*/
 	//now reading args (the modified file is always written last):
 	std::string FileToModify = Args.at(Args.size() - 1);
-	if (Args.at(3) == "new")
+	if (Args.at(2) == "new")
 	{
-		NewConfig("vis", Args.at(4));
+		NewConfig("vis", Args.at(3));
 	}
-	else if (Args.at(3) == "trajectories")
+	else if (Args.at(2) == "trajectories")
 	{
-		std::ifstream f("Templates/" + Args.at(4) + ".mac"); //taking file as inputstream, templates exist at VisualGEANT4 Install
+		std::ifstream f("Templates/" + Args.at(3) + ".mac"); //taking file as inputstream, templates exist at VisualGEANT4 Install
 		string Template;
 		//get contents
 		if (f) {
@@ -89,9 +87,9 @@ void Configure::VisHandle()
 		ofs << newstr2;
 		ofs.close();
 	}
-	else if (Args.at(3) == "filtering")
+	else if (Args.at(2) == "filtering")
 	{
-		int j = 4;
+		int j = 3;
 		ofstream ofs;
 		ofs.open(ProjectDir + "/Macros/" + FileToModify, std::ofstream::app); //open in append mode
 		ofs << "/vis/filtering/trajectories/create/particleFilter" << endl;
@@ -102,9 +100,9 @@ void Configure::VisHandle()
 		}
 		ofs.close();
 	}
-	else if (Args.at(3) == "style")
+	else if (Args.at(2) == "style")
 	{
-		std::string NewSetting = Args.at(4);
+		std::string NewSetting = Args.at(3);
 		ChangeWithRegex(ProjectDir + "/Macros/" + FileToModify, "/vis/viewer/set/style", NewSetting);
 	}
 
@@ -116,13 +114,13 @@ void Configure::RunHandle()
 	std::string FileToModify = Args.at(Args.size() - 1);
 	
 	//create a new file if requested as: config run <projectdir> <neworexistingfilename.mac>
-	if (Args.at(3) == "new")
+	if (Args.at(2) == "new")
 	{
-		NewConfig("run", Args.at(4));
+		NewConfig("run", Args.at(3));
 	}
-	if (Args.at(3) == "beamOnTimes") //how many particles to shoot
+	if (Args.at(2) == "beamOnTimes") //how many particles to shoot
 	{
-		std::string NewSetting = Args.at(4);
+		std::string NewSetting = Args.at(3);
 		ChangeWithRegex(ProjectDir + "/Macros/" + FileToModify, "/run/beamOn", NewSetting);
 	}
 
@@ -140,18 +138,18 @@ void Configure::GunHandle()
 	std::string FileToModify = Args.at(Args.size() - 1);
 	
 	//create a new file if requested as: config run <projectdir> <neworexistingfilename.mac>
-	if (Args.at(3) == "new")
+	if (Args.at(2) == "new")
 	{
-		NewConfig("gun", Args.at(4));
+		NewConfig("gun", Args.at(3));
 	}
-	if (Args.at(3) == "setParticle") //how many particles to shoot
+	if (Args.at(2) == "setParticle") //how many particles to shoot
 	{
-		std::string NewSetting = Args.at(4);
+		std::string NewSetting = Args.at(3);
 		ChangeWithRegex(ProjectDir + "/Macros/" + FileToModify, "/gun/particle", NewSetting);
 	}
-	if (Args.at(3) == "setEnergy") //how many particles to shoot
+	if (Args.at(2) == "setEnergy") //how many particles to shoot
 	{
-		std::string NewSetting = Args.at(4);
+		std::string NewSetting = Args.at(3);
 		ChangeWithRegex(ProjectDir + "/Macros/" + FileToModify, "/gun/energy", NewSetting);
 	}
 }

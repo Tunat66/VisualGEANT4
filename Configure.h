@@ -9,7 +9,6 @@
 #include <regex> //to modifiy files
 #include<sstream> //to get file content
 
-using namespace std;
 
 class Configure //this class essentially creates and modifies .mac files which are fed into GEANT4
 //the generation/modification of files is handled by the seperate method, 

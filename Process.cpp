@@ -30,7 +30,10 @@ Process::~Process() {
 
 //some simple functions are within this class
 void Process::OpenExisting(std::vector<std::string> Kernel_args) { //NTS: add a checker to see if CONFIG EXISTS
-	char* AppDirectory = new char[Kernel_args.at(1).length() + 1];
-	strcpy(AppDirectory, Kernel_args.at(1).c_str());
+	std::string LastArg /*which is always the app dir*/ = Kernel_args.at(Kernel_args.size() - 1);
+	//all app executables are saved as main.exe, otherwise an error will be raised (this issue may be solved in future versions)
+	LastArg += "/main.exe";
+	char* AppDirectory = new char[LastArg.length() + 1];
+	strcpy(AppDirectory, LastArg.c_str());
 	system(AppDirectory);
 }
