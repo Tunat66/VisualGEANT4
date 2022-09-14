@@ -148,12 +148,15 @@
     <ClCompile Include="BuildApplication.cpp" />
     <ClCompile Include="Configure.cpp" />
     <ClCompile Include="ConfigureWindow.cpp" />
+    <ClCompile Include="GeometryPanel.cpp" />
     <ClCompile Include="GetCommand.cpp" />
     <ClCompile Include="cApp.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="RunPanel.cpp" />
     <ClCompile Include="SetupConstruction.cpp" />
+    <ClCompile Include="SourcePanel.cpp" />
+    <ClCompile Include="SystemVariables.cpp" />
     <ClCompile Include="wxChoiceVector.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -161,7 +164,10 @@
     <ClInclude Include="cApp.h" />
     <ClInclude Include="Configure.h" />
     <ClInclude Include="ConfigureWindow.h" />
+    <ClInclude Include="GeometryPanel.h" />
     <ClInclude Include="GetCommand.h" />
+    <ClInclude Include="SourcePanel.h" />
+    <ClInclude Include="SystemVariables.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Process.h" />
     <ClInclude Include="RunPanel.h" />

@@ -2,39 +2,32 @@
 #include "wx/wx.h"
 #include <string>
 #include <vector>
-#include "Process.h"
-#include "ConfigureWindow.h"
+#include "SystemVariables.h"
+
+//panels
+#include "RunPanel.h"
+#include "GeometryPanel.h"
+#include "SourcePanel.h"
+
 //include any new windows here
 class MainWindow : public wxFrame
 {
 public:
 	MainWindow();
 	~MainWindow();
-//this is the key attribute of this class, the Kernel_args vector
-//this vector is normally constructed from the command line, but what the gui does
-//is to contruct this vector, then flag it as "READY" when it reaches its final form
-//if flagged as "READY", Kernel_args will be passed to a Process object by cApp (main) class
-private:
-	std::vector<std::string> Kernel_args;
-public:
-	std::vector<std::string> GetArgs();
-	bool Project_isOpen = false;
-	std::string CurrentProjectDir;
+	wxBoxSizer* MainWindowSizer = new wxBoxSizer(wxHORIZONTAL);// = new wxBoxSizer(wxHORIZONTAL);
 
-public:
-	wxTextCtrl* m_txt1 = nullptr;
-	wxListBox* m_list1 = nullptr;
-	wxButton* new_window_btn = nullptr;
-
-	//event handler methods
-	void OnButton1Clicked(wxCommandEvent& evt);
-	virtual void NewWindowOpen(wxCommandEvent& evt);
+//to access the backend, and some aliases for clean code made with address matching, possible bugs with assignment
+	SystemVariables SystemManager;
+	//std::vector<std::string>& Kernel_args = SystemManager.Kernel_args;
+	//bool& Project_isOpen = SystemManager.Project_isOpen;
+	//std::string& CurrentProjectDir = SystemManager.CurrentProjectDir;
 
 //CONFIG SUBWINDOW DISPLAY
 private:
 	//this object to display the subwindow
 	MainWindow* m_frame2 = nullptr;
-
+	
 //MENU BAR METHODS	
 private:
 	//File Menu (in order)
@@ -47,48 +40,30 @@ private:
 	//help menu
 	void OnAbout(wxCommandEvent& event);
 
-	
-	//PANELS with neccesary SIZERS
+//PANELS
+public:
 	wxPanel* LeftPanel;
 	wxPanel* RightPanel;
-	wxBoxSizer* RightPanelSizer = new wxBoxSizer(wxVERTICAL);
+	//use a template to modify the right panel
+	//void ReallocateRightPanel(wxPanel* New);
+	//the reallocation happens so fast that the user does not notice it happened
+	template <typename RightPanelType>
+	void ReallocatePanel()
+	{
+		RightPanel->Destroy();
+		RightPanel = new RightPanelType(this);
+		MainWindowSizer->Add(RightPanel, 1, wxEXPAND | wxRIGHT | wxBOTTOM | wxTOP, 5);
+		MainWindowSizer->Layout();
+	}
 
-	
-	
-	//RIGHT PANEL METHODS
-	
-	//RUN PANEL:
-	
+//TOOLBAR METHODS
 	void RunPanelShow(wxCommandEvent& event);
-	//just compiles/builds the project
-	wxButton* button_ApplyChanges = nullptr;
-	void ApplyChanges(wxCommandEvent& event);
-	//runs the project executable
-	wxButton* button_RunProject = nullptr;
-	void RunProject(wxCommandEvent& event);
-	//configures the project
-	wxButton* button_ConfigureProject = nullptr;
-	void ConfigureProject(wxCommandEvent& event);
-
-
-	//GEOMETRY PANEL:
 	void GeometryPanelShow(wxCommandEvent& event);
-
-
-	//SOURCE PANEL:
 	void SourcePanelShow(wxCommandEvent& event);
 
 
-
-
-
-
-
-
-
-
 	//conclusion method setting the final form of Kernel_args
-	void Conclude();
+	//void Conclude();
 	
 	//finally, a macro for event handling
 	wxDECLARE_EVENT_TABLE();

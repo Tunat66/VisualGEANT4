@@ -6,10 +6,6 @@
 
 //add all button functionalities here so that they are implemented
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
-	EVT_BUTTON(10001, ApplyChanges) //link button with ID 10001 to method OnButtonClicked
-	EVT_BUTTON(10002, NewWindowOpen)
-	EVT_BUTTON(10003, RunProject)
-	EVT_BUTTON(10004, ConfigureProject)
 	EVT_MENU(ID_NewProject, MainWindow::OnNewProject)
 	EVT_MENU(ID_OpenProject, MainWindow::OnOpenProject)
 	EVT_MENU(ID_Save, MainWindow::OnSave)
@@ -55,30 +51,19 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting 
 	LeftPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200,100));
 	LeftPanel->SetBackgroundColour(wxColor(205, 205, 205));
 //RIGHT PANEL: This is the panel where buttons and controls are located, controlled by a toolbar	
-	RightPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200, 100));
+	//default window is the run window
+	RightPanel = new RunPanel(this);
 	RightPanel->SetBackgroundColour(wxColor(205, 205, 205));
+	
+//TOOLBAR, which changes the RightPanel:	
 	wxToolBar* RightPanelNav = this->CreateToolBar(wxTB_HORIZONTAL, wxID_ANY);;
 	wxToolBarToolBase* RunTool = RightPanelNav->AddTool(20001, wxT("Run"), wxNullBitmap, wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
 	wxToolBarToolBase* GeomteryTool = RightPanelNav->AddTool(20002, wxT("Geometry"), wxNullBitmap, wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);;
 	wxToolBarToolBase* SourceTool = RightPanelNav->AddTool(20003, wxT("Particle Source"), wxNullBitmap, wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);;
 	RightPanelNav->Realize();
-	//default window is the run window
-	
-
-
-	wxBoxSizer* RightPanelSizer = new wxBoxSizer(wxVERTICAL);
-	button_RunProject = new wxButton(RightPanel, 10003, "Run Project", wxDefaultPosition, wxSize(150, 50));
-	button_ApplyChanges = new wxButton(RightPanel, 10001, "Apply Changes", wxDefaultPosition, wxSize(150, 50));
-	button_ConfigureProject = new wxButton(RightPanel, 10004, "Configure Project", wxDefaultPosition, wxSize(150, 50));
-	RightPanelSizer->Add(button_RunProject, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 20);
-	RightPanelSizer->Add(button_ApplyChanges, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 20);
-	RightPanelSizer->Add(button_ConfigureProject, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 20);
-	RightPanel->SetSizer(RightPanelSizer);
 	
 	
-
 //MAIN WINDOW: Sizers to incorporate both panels into the window:
-	wxBoxSizer* MainWindowSizer = new wxBoxSizer(wxHORIZONTAL);
 	MainWindowSizer->Add(LeftPanel, 3, wxEXPAND | wxALL, 5); //args are proportion, borderedsides, bordervalue(px)
 	MainWindowSizer->Add(RightPanel, 1, wxEXPAND | wxRIGHT | wxBOTTOM | wxTOP, 5);
 	SetSizer(MainWindowSizer);
@@ -93,24 +78,6 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting 
 MainWindow::~MainWindow()
 {
 	//deletes are not included since wxWidgets performs garbage collection for objects created under its classes
-}
-
-std::vector<std::string> MainWindow::GetArgs() {
-	return Kernel_args;
-}
-
-void MainWindow::OnButton1Clicked(wxCommandEvent& evt)
-{
-	m_list1->AppendString(m_txt1->GetValue()); //add entered values to the list
-	//to tell the system that the event has been handled and finished
-	evt.Skip();
-}
-
-void MainWindow::NewWindowOpen(wxCommandEvent& evt)
-{
-	//m_frame2 = new NewWindow();
-	//m_frame2->Show();
-	//evt.Skip();
 }
 
 //MENU BAR METHODS
@@ -152,13 +119,13 @@ void MainWindow::OnOpenProject(wxCommandEvent& event)
 		//theText->LoadFile(path);
 		
 		//MOST IMPORTANT PART
-		CurrentProjectDir = path.mb_str(); //convert wxString to std::string
+		SystemManager.CurrentProjectDir = path.mb_str(); //convert wxString to std::string
 		
 		SetStatusText(path, 0);
 		SetStatusText(openFileDialog->GetDirectory(), 1);
 	}
 	
-	Project_isOpen = true; //some methods will run if only this is true;
+	SystemManager.Project_isOpen = true; //some methods will run if only this is true;
 
 	//delete the status text "please select a project"
 	SetStatusText("");
@@ -171,73 +138,32 @@ void MainWindow::OnSaveAs(wxCommandEvent& event) {
 }
 
 
-//RIGHT PANEL METHODS
-
-//begin RunPanel
+//RIGHT PANEL METHODS, accessed by toolbar
 void MainWindow::RunPanelShow(wxCommandEvent& event)
 {
-	wxBoxSizer* RightPanelSizer = new wxBoxSizer(wxVERTICAL);
-	button_RunProject = new wxButton(RightPanel, 10003, "Run Project", wxDefaultPosition, wxSize(150, 50));
-	button_ApplyChanges = new wxButton(RightPanel, 10001, "Apply Changes", wxPoint(10, 110), wxSize(150, 50));
-	button_ConfigureProject = new wxButton(RightPanel, 10004, "Configure Project", wxPoint(10, 210), wxSize(150, 50));
-	RightPanelSizer->Add(button_RunProject, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 20);
-	RightPanelSizer->Add(button_ApplyChanges, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 20);
-	RightPanelSizer->Add(button_ConfigureProject, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 20);
-	RightPanel->SetSizer(RightPanelSizer);
+	ReallocatePanel<RunPanel>();
 }
-
-
-void MainWindow::RunProject(wxCommandEvent& event)
-{
-	if (Project_isOpen)
-	{
-		Kernel_args.push_back("open");
-		Conclude();
-		SetStatusText(Kernel_args.at(1));
-		SetStatusText("Project Running...");
-	}
-	else
-		SetStatusText("Please Select a Project before running.");
-}
-
-
-void MainWindow::ApplyChanges(wxCommandEvent& event)
-{
-	SetStatusText("Compiling Project...");
-	//do stuff
-}
-
-void MainWindow::ConfigureProject(wxCommandEvent& event)
-{
-	ConfigureWindow* NewInstance = new ConfigureWindow();
-	NewInstance->Show();
-}
-//end runpanel
-
-
-//begin geometrypanel
 void MainWindow::GeometryPanelShow(wxCommandEvent& event)
 {
 	//Choice button dropdown, new button(opens dialog), set postion and set angle
-	wxStaticText* PickExisting = new wxStaticText(RightPanel, wxID_ANY, wxT("PickExisting"), wxDefaultPosition, wxDefaultSize, 0);
-
+	//wxStaticText* PickExisting = new wxStaticText(RightPanel, wxID_ANY, wxT("PickExisting"), wxDefaultPosition, wxDefaultSize, 0);
+	ReallocatePanel<GeometryPanel>();
 }
-
-//end geometrypanel
-
 //begin sourcepanel
 void MainWindow::SourcePanelShow(wxCommandEvent& event)
 {
-
+	ReallocatePanel<SourcePanel>();
 }
 //end sourcepanel
 
 
-//FINALLY: Conclude method applying to all completed tasks
+//FINALLY: Conclude method applying to all completed tasks, MOVED TO A SEPERATE CLASS
+/*
 void MainWindow::Conclude() //conclude the command with project dir send it to "Process"
 {
 	//stick the current project dir at the end of Kernel_args and send it to Process class
-	Kernel_args.push_back(CurrentProjectDir);
+	Kernel_args.push_back(SystemManager.CurrentProjectDir);
 	Process* ProcessCommand = new Process(Kernel_args);
 	delete ProcessCommand;
 }
+*/
