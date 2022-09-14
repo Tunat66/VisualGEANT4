@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 #include "wx/wx.h"
 #include <string>
 #include <vector>
@@ -47,17 +47,44 @@ private:
 	//help menu
 	void OnAbout(wxCommandEvent& event);
 
+	
+	//PANELS with neccesary SIZERS
+	wxPanel* LeftPanel;
+	wxPanel* RightPanel;
+	wxBoxSizer* RightPanelSizer = new wxBoxSizer(wxVERTICAL);
+
+	
+	
 	//RIGHT PANEL METHODS
+	
+	//RUN PANEL:
+	
+	void RunPanelShow(wxCommandEvent& event);
 	//just compiles/builds the project
 	wxButton* button_ApplyChanges = nullptr;
 	void ApplyChanges(wxCommandEvent& event);
-
 	//runs the project executable
 	wxButton* button_RunProject = nullptr;
 	void RunProject(wxCommandEvent& event);
-
+	//configures the project
 	wxButton* button_ConfigureProject = nullptr;
 	void ConfigureProject(wxCommandEvent& event);
+
+
+	//GEOMETRY PANEL:
+	void GeometryPanelShow(wxCommandEvent& event);
+
+
+	//SOURCE PANEL:
+	void SourcePanelShow(wxCommandEvent& event);
+
+
+
+
+
+
+
+
 
 
 	//conclusion method setting the final form of Kernel_args

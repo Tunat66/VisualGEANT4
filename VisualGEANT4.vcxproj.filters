@@ -39,6 +39,12 @@
     <ClCompile Include="wxChoiceVector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SetupConstruction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RunPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Process.h">
@@ -63,6 +69,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="wxChoiceVector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SetupConstruction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RunPanel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

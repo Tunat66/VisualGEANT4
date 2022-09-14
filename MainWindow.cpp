@@ -15,6 +15,9 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
 	EVT_MENU(ID_Save, MainWindow::OnSave)
 	EVT_MENU(ID_SaveAs, MainWindow::OnSaveAs)
 	EVT_MENU(wxID_EXIT, MainWindow::OnExit)
+	EVT_TOOL(20001, RunPanelShow)
+	EVT_TOOL(20002, GeometryPanelShow)
+	EVT_TOOL(20003, SourcePanelShow)
 wxEND_EVENT_TABLE()
 
 
@@ -49,21 +52,30 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting 
 	SetStatusText("Please Select A Project...");
 
 //LEFT PANEL: This will be mostly for embedding geometry view:
-	wxPanel* LeftPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200,100));
+	LeftPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200,100));
 	LeftPanel->SetBackgroundColour(wxColor(205, 205, 205));
-//RIGHT PANEL: This is the panel where permeanent buttons and controls are located	
-	wxPanel* RightPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200, 100));
+//RIGHT PANEL: This is the panel where buttons and controls are located, controlled by a toolbar	
+	RightPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200, 100));
 	RightPanel->SetBackgroundColour(wxColor(205, 205, 205));
-	button_RunProject = new wxButton(RightPanel, 10003, "Run Project", wxDefaultPosition, wxSize(150, 50));
-	button_ApplyChanges = new wxButton(RightPanel, 10001, "Apply Changes", wxPoint(10,110), wxSize(150, 50));
-	button_ConfigureProject = new wxButton(RightPanel, 10004, "Configure Project", wxPoint(10, 210), wxSize(150, 50));
+	wxToolBar* RightPanelNav = this->CreateToolBar(wxTB_HORIZONTAL, wxID_ANY);;
+	wxToolBarToolBase* RunTool = RightPanelNav->AddTool(20001, wxT("Run"), wxNullBitmap, wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
+	wxToolBarToolBase* GeomteryTool = RightPanelNav->AddTool(20002, wxT("Geometry"), wxNullBitmap, wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);;
+	wxToolBarToolBase* SourceTool = RightPanelNav->AddTool(20003, wxT("Particle Source"), wxNullBitmap, wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);;
+	RightPanelNav->Realize();
+	//default window is the run window
 	
 
+
 	wxBoxSizer* RightPanelSizer = new wxBoxSizer(wxVERTICAL);
+	button_RunProject = new wxButton(RightPanel, 10003, "Run Project", wxDefaultPosition, wxSize(150, 50));
+	button_ApplyChanges = new wxButton(RightPanel, 10001, "Apply Changes", wxDefaultPosition, wxSize(150, 50));
+	button_ConfigureProject = new wxButton(RightPanel, 10004, "Configure Project", wxDefaultPosition, wxSize(150, 50));
 	RightPanelSizer->Add(button_RunProject, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 20);
 	RightPanelSizer->Add(button_ApplyChanges, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 20);
 	RightPanelSizer->Add(button_ConfigureProject, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 20);
 	RightPanel->SetSizer(RightPanelSizer);
+	
+	
 
 //MAIN WINDOW: Sizers to incorporate both panels into the window:
 	wxBoxSizer* MainWindowSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -160,6 +172,21 @@ void MainWindow::OnSaveAs(wxCommandEvent& event) {
 
 
 //RIGHT PANEL METHODS
+
+//begin RunPanel
+void MainWindow::RunPanelShow(wxCommandEvent& event)
+{
+	wxBoxSizer* RightPanelSizer = new wxBoxSizer(wxVERTICAL);
+	button_RunProject = new wxButton(RightPanel, 10003, "Run Project", wxDefaultPosition, wxSize(150, 50));
+	button_ApplyChanges = new wxButton(RightPanel, 10001, "Apply Changes", wxPoint(10, 110), wxSize(150, 50));
+	button_ConfigureProject = new wxButton(RightPanel, 10004, "Configure Project", wxPoint(10, 210), wxSize(150, 50));
+	RightPanelSizer->Add(button_RunProject, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 20);
+	RightPanelSizer->Add(button_ApplyChanges, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 20);
+	RightPanelSizer->Add(button_ConfigureProject, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 20);
+	RightPanel->SetSizer(RightPanelSizer);
+}
+
+
 void MainWindow::RunProject(wxCommandEvent& event)
 {
 	if (Project_isOpen)
@@ -185,6 +212,25 @@ void MainWindow::ConfigureProject(wxCommandEvent& event)
 	ConfigureWindow* NewInstance = new ConfigureWindow();
 	NewInstance->Show();
 }
+//end runpanel
+
+
+//begin geometrypanel
+void MainWindow::GeometryPanelShow(wxCommandEvent& event)
+{
+	//Choice button dropdown, new button(opens dialog), set postion and set angle
+	wxStaticText* PickExisting = new wxStaticText(RightPanel, wxID_ANY, wxT("PickExisting"), wxDefaultPosition, wxDefaultSize, 0);
+
+}
+
+//end geometrypanel
+
+//begin sourcepanel
+void MainWindow::SourcePanelShow(wxCommandEvent& event)
+{
+
+}
+//end sourcepanel
 
 
 //FINALLY: Conclude method applying to all completed tasks

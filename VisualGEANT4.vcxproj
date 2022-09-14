@@ -152,6 +152,8 @@
     <ClCompile Include="cApp.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Process.cpp" />
+    <ClCompile Include="RunPanel.cpp" />
+    <ClCompile Include="SetupConstruction.cpp" />
     <ClCompile Include="wxChoiceVector.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +164,8 @@
     <ClInclude Include="GetCommand.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Process.h" />
+    <ClInclude Include="RunPanel.h" />
+    <ClInclude Include="SetupConstruction.h" />
     <ClInclude Include="wxChoiceVector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
