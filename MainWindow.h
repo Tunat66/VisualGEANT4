@@ -4,10 +4,13 @@
 #include <vector>
 #include "SystemVariables.h"
 
-//panels
+//right panels
 #include "RunPanel.h"
 #include "GeometryPanel.h"
 #include "SourcePanel.h"
+
+//left panels
+#include "GLGeometryViewer.h"
 
 //include any new windows here
 class MainWindow : public wxFrame
@@ -26,7 +29,7 @@ public:
 //CONFIG SUBWINDOW DISPLAY
 private:
 	//this object to display the subwindow
-	MainWindow* m_frame2 = nullptr;
+	//MainWindow* m_frame2 = nullptr;
 	
 //MENU BAR METHODS	
 private:
@@ -44,6 +47,8 @@ private:
 public:
 	wxPanel* LeftPanel;
 	wxPanel* RightPanel;
+	
+	//FOR RIGHT PANEL
 	//use a template to modify the right panel
 	//void ReallocateRightPanel(wxPanel* New);
 	//the reallocation happens so fast that the user does not notice it happened
@@ -52,9 +57,13 @@ public:
 	{
 		RightPanel->Destroy();
 		RightPanel = new RightPanelType(this);
+		RightPanel->SetBackgroundColour(wxColor(205, 205, 205));
 		MainWindowSizer->Add(RightPanel, 1, wxEXPAND | wxRIGHT | wxBOTTOM | wxTOP, 5);
 		MainWindowSizer->Layout();
 	}
+
+	//FOR LEFT PANEL (Geometry Viewer)
+	wxWindow* GeometryViewer;
 
 //TOOLBAR METHODS
 	void RunPanelShow(wxCommandEvent& event);

@@ -3,6 +3,7 @@
 #include <math.h>
 #include <regex>
 #include <fstream>
+#include <wx/wx.h>
 class SetupConstruction
 {
 	//the constructor parses the Geometry.txt file and creates a list of existing geometry:

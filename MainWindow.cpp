@@ -50,6 +50,12 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting 
 //LEFT PANEL: This will be mostly for embedding geometry view:
 	LeftPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200,100));
 	LeftPanel->SetBackgroundColour(wxColor(205, 205, 205));
+	GeometryViewer = new GLGeometryViewer(LeftPanel);
+	wxBoxSizer* ViewerSizer = new wxBoxSizer(wxVERTICAL);
+	ViewerSizer->Add(GeometryViewer, 1, wxEXPAND | wxALL);
+	LeftPanel->SetSizer(ViewerSizer);
+
+	
 //RIGHT PANEL: This is the panel where buttons and controls are located, controlled by a toolbar	
 	//default window is the run window
 	RightPanel = new RunPanel(this);

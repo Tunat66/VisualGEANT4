@@ -20,7 +20,13 @@ public:
 	wxPanel* runPage = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200, 100));
 	wxPanel* gunPage = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200, 100));
 
+	//some reusable methods
+	void CreateNewConfig();
+	void ModifyExistingConfig();
+
 	//macro for event handling
 	wxDECLARE_EVENT_TABLE();
 };
+
+
 

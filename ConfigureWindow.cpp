@@ -41,11 +41,50 @@ ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Co
 	//END: Particle Gun
 
 	//BEGIN: Run Options
-	
+	wxStaticText* BeamOnTimesText = new wxStaticText(runPage, wxID_ANY, wxT("Number of Particles to be shot"), wxDefaultPosition, wxDefaultSize, 0);
+	wxSpinCtrl* BeamOnTimesEdit = new wxSpinCtrl(runPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10000000, 0, "wxSpinCtrl");
+
+	wxBoxSizer* RunPageSizer = new wxBoxSizer(wxVERTICAL);
+	RunPageSizer->Add(BeamOnTimesText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10); //these 0's are essential, since they allow these elements to be "stacked" without any prior scaling
+	RunPageSizer->Add(BeamOnTimesEdit, 0, wxALIGN_LEFT | wxLEFT, 10);
+	runPage->SetSizer(RunPageSizer);
 	//END: Run Options
 
 	//BEGIN: Vis Options (shit this is a bit more complex),
+	std::vector<wxString> Styles{ "Wireframe", "Surface" };
+	std::vector<wxString> FilterBy{ "Particle", "Charge" };
+
+	wxStaticText* VisStyleText = new wxStaticText(visPage, wxID_ANY, wxT("Style"), wxDefaultPosition, wxDefaultSize, 0);
+	wxChoiceVector* VisStyleEdit = new wxChoiceVector(visPage, wxID_ANY, Styles);
+	wxStaticText* VisFilterText = new wxStaticText(visPage, wxID_ANY, wxT("Filter By:"), wxDefaultPosition, wxDefaultSize, 0);
+	wxChoiceVector* VisFilterEdit = new wxChoiceVector(visPage, wxID_ANY, FilterBy);
+	//the particles for particle filter (make it dissapearable/unclickable), with their horizontal sizer:
+	wxStaticText* VisSelectParticleText = new wxStaticText(visPage, wxID_ANY, wxT("(If filtering by particle) Select Particles to be shown:"), wxDefaultPosition, wxDefaultSize, 0);
+	wxCheckBox* ProtonCB = new wxCheckBox(visPage, wxID_ANY, wxT("Proton"), wxDefaultPosition, wxDefaultSize, 0);
+	wxCheckBox* NeutronCB = new wxCheckBox(visPage, wxID_ANY, wxT("Neutron"), wxDefaultPosition, wxDefaultSize, 0);
+	wxCheckBox* PositronCB = new wxCheckBox(visPage, wxID_ANY, wxT("e+"), wxDefaultPosition, wxDefaultSize, 0);
+	wxCheckBox* ElectronCB = new wxCheckBox(visPage, wxID_ANY, wxT("e-"), wxDefaultPosition, wxDefaultSize, 0);
+	wxCheckBox* GammaCB = new wxCheckBox(visPage, wxID_ANY, wxT("gamma"), wxDefaultPosition, wxDefaultSize, 0);
+	wxBoxSizer* ParticleCBSizer = new wxBoxSizer(wxHORIZONTAL);
+	ParticleCBSizer->Add(ProtonCB, 0, wxLEFT | wxRIGHT, 3);
+	ParticleCBSizer->Add(NeutronCB, 0, wxRIGHT, 3);
+	ParticleCBSizer->Add(PositronCB, 0, wxRIGHT, 3);
+	ParticleCBSizer->Add(ElectronCB, 0, wxRIGHT, 3);
+	ParticleCBSizer->Add(GammaCB, 0, wxRIGHT, 3);
+	//implement pions and muons later
+	//to be added:
+	//color picker for trajectories (not yet in backend)
 	
+
+	wxBoxSizer* VisPageSizer = new wxBoxSizer(wxVERTICAL);
+	VisPageSizer->Add(VisStyleText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10); //these 0's are essential, since they allow these elements to be "stacked" without any prior scaling
+	VisPageSizer->Add(VisStyleEdit, 0, wxALIGN_LEFT | wxLEFT, 10);
+	VisPageSizer->Add(VisFilterText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
+	VisPageSizer->Add(VisFilterEdit, 0, wxALIGN_LEFT | wxLEFT, 10);
+	VisPageSizer->Add(VisSelectParticleText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
+	//VisPageSizer->Add(CBHolder, 0, wxALIGN_LEFT | wxLEFT, 10);
+	VisPageSizer->Add(ParticleCBSizer, 0, wxALIGN_LEFT | wxLEFT, 10);
+	visPage->SetSizer(VisPageSizer);
 	//END: Vis Options
 
 	//now create the notebook/pages
@@ -64,6 +103,16 @@ ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Co
 
 ConfigureWindow::~ConfigureWindow()
 {
+}
+
+void ConfigureWindow::CreateNewConfig()
+{
+
+}
+
+void ConfigureWindow::ModifyExistingConfig()
+{
+
 }
 
 /*void ConfigureWindow::Test(wxCommandEvent& event)

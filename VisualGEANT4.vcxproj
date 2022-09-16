@@ -90,6 +90,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\wxWidgets-3.1.5\include\msvc;D:\wxWidgets-3.1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -107,6 +108,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\wxWidgets-3.1.5\include\msvc;D:\wxWidgets-3.1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -151,6 +153,7 @@
     <ClCompile Include="GeometryPanel.cpp" />
     <ClCompile Include="GetCommand.cpp" />
     <ClCompile Include="cApp.cpp" />
+    <ClCompile Include="GLGeometryViewer.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="RunPanel.cpp" />
@@ -166,6 +169,7 @@
     <ClInclude Include="ConfigureWindow.h" />
     <ClInclude Include="GeometryPanel.h" />
     <ClInclude Include="GetCommand.h" />
+    <ClInclude Include="GLGeometryViewer.h" />
     <ClInclude Include="SourcePanel.h" />
     <ClInclude Include="SystemVariables.h" />
     <ClInclude Include="MainWindow.h" />
