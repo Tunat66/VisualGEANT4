@@ -39,9 +39,6 @@
     <ClCompile Include="wxChoiceVector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SetupConstruction.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="RunPanel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -55,6 +52,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GLGeometryViewer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WavefrontObj.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WavefrontOBJUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -83,9 +89,6 @@
     <ClInclude Include="wxChoiceVector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SetupConstruction.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RunPanel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -99,6 +102,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GLGeometryViewer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WavefrontObj.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WavefrontOBJUtility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

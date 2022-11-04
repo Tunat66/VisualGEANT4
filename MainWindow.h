@@ -11,6 +11,9 @@
 
 //left panels
 #include "GLGeometryViewer.h"
+//#include "G4VGraphicsSystem.hh"
+//maybe later
+//#include "G4OpenGLImmediateXViewer.hh"
 
 //include any new windows here
 class MainWindow : public wxFrame
@@ -62,8 +65,9 @@ public:
 		MainWindowSizer->Layout();
 	}
 
-	//FOR LEFT PANEL (Geometry Viewer)
+	//FOR LEFT PANEL (Geometry Viewers)
 	wxWindow* GeometryViewer;
+	//G4OpenGLImmediateXViewer* SetupViewer;
 
 //TOOLBAR METHODS
 	void RunPanelShow(wxCommandEvent& event);

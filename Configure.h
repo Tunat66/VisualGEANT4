@@ -24,21 +24,20 @@ public:
 	void SetArgs(std::vector<std::string> val);
 	std::vector<std::string> GetArgs();
 	
+	//METHODS
 	//creating a new config:
 	void NewConfig(std::string type, std::string FileName);
-	
 	//vis methods
 	void VisHandle();
-	void WriteVisMac();
-
+	//void WriteVisMac();
 	//run methods
 	void RunHandle();
-	
 	//gun methods (particle type and energy)
 	void GunHandle();
 
 	//IN FUTURE VERSIONS, a plane irradiator (instead of a point gun) will also be available.
 
+	//REULSABLE METHODS:
 	//to change patterns with regex
 	void ChangeWithRegex(std::string File, std::string Prefix, std::string NewValue);
 private:

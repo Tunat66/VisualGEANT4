@@ -4,8 +4,8 @@
 #include <wx/spinctrl.h>
 #include <string>
 #include <vector>
-#include "Process.h"
 #include "wxChoiceVector.h"
+#include "SystemVariables.h"
 
 class ConfigureWindow : public wxFrame
 {

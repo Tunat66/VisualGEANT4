@@ -16,6 +16,10 @@ Process::Process(std::vector<std::string> Kernel_args) {
 		Configure* configurer = new Configure(Kernel_args);
 		delete configurer;
 	}
+	else if (FirstCommand == "geom") {
+		Geometry* GeometryModifier = new Geometry(Kernel_args);
+		delete GeometryModifier;
+	}
 	else
 		isValidCommand = false;
 		

@@ -48,8 +48,8 @@ void Configure::VisHandle()
 	*   if by Charge color 2 string <charge> <color>
 	*filtering addparticle <name1> addparticle <name2>
 	*/
-	//now reading args (the modified file is always written last):
-	std::string FileToModify = Args.at(Args.size() - 1);
+	//now reading args (the modified file is always written second last):
+	std::string FileToModify = Args.at(Args.size() - 2); //it was -1
 	if (Args.at(2) == "new")
 	{
 		NewConfig("vis", Args.at(3));
@@ -142,12 +142,12 @@ void Configure::GunHandle()
 	{
 		NewConfig("gun", Args.at(3));
 	}
-	if (Args.at(2) == "setParticle") //how many particles to shoot
+	if (Args.at(2) == "setParticle") //select particle to be shot
 	{
 		std::string NewSetting = Args.at(3);
 		ChangeWithRegex(ProjectDir + "/Macros/" + FileToModify, "/gun/particle", NewSetting);
 	}
-	if (Args.at(2) == "setEnergy") //how many particles to shoot
+	if (Args.at(2) == "setEnergy") //select energy
 	{
 		std::string NewSetting = Args.at(3);
 		ChangeWithRegex(ProjectDir + "/Macros/" + FileToModify, "/gun/energy", NewSetting);
@@ -196,6 +196,7 @@ void Configure::ChangeWithRegex(std::string FileWithDir, std::string Prefix, std
 	ofs << TempContent;
 	ofs.close();
 }
+
 
 
 

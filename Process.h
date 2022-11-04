@@ -10,6 +10,7 @@
 #include"BuildApplication.h"
 #include"Configure.h"
 #include"GetCommand.h"
+#include"Geometry.h"
 
 
 class Process
