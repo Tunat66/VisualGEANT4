@@ -31,8 +31,8 @@ void RunPanel::RunProject(wxCommandEvent& event)
 	{
 		SystemManager.Kernel_args.push_back("open");
 		SystemManager.Conclude();
-		SetStatusText(SystemManager.Kernel_args.at(1));
-		SetStatusText("Project Running...");
+		//SetStatusText(SystemManager.Kernel_args.at(1)); possible bug source
+		//SetStatusText("Project Running...");
 	}
 	else
 		SetStatusText("Please Select a Project before running.");

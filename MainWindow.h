@@ -1,8 +1,10 @@
- #pragma once
+#pragma once
 #include "wx/wx.h"
+#include "wx/filepicker.h"
 #include <string>
 #include <vector>
 #include "SystemVariables.h"
+#include "GetCommand.h"
 
 //right panels
 #include "RunPanel.h"
@@ -16,6 +18,9 @@
 //#include "G4OpenGLImmediateXViewer.hh"
 
 //include any new windows here
+
+//Misc:
+#include "NewDirPicker.h"
 class MainWindow : public wxFrame
 {
 public:
@@ -45,6 +50,9 @@ private:
 
 	//help menu
 	void OnAbout(wxCommandEvent& event);
+
+	//command line menu:
+	void OnCommandLine(wxCommandEvent& event);
 
 //PANELS
 public:
@@ -91,6 +99,7 @@ enum { //assign ids to click events
 	ID_NewProject = 111,
 	ID_OpenProject = 112,
 	ID_Save = 113,
-	ID_SaveAs = 114
+	ID_SaveAs = 114,
+	ID_CommandLine = 311
 };
 

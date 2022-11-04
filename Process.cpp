@@ -37,6 +37,8 @@ void Process::OpenExisting(std::vector<std::string> Kernel_args) { //NTS: add a 
 	std::string LastArg /*which is always the app dir*/ = Kernel_args.at(Kernel_args.size() - 1);
 	//all app executables are saved as main.exe, otherwise an error will be raised (this issue may be solved in future versions)
 	LastArg += "/main.exe";
+
+	//allocation to C type string is needed to use the system() function
 	char* AppDirectory = new char[LastArg.length() + 1];
 	strcpy(AppDirectory, LastArg.c_str());
 	system(AppDirectory);

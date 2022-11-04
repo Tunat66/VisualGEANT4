@@ -21,14 +21,14 @@ ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Co
 	std::vector<wxString> Particles{"e-", "e+" , "proton", "neutron", "gamma"};
 	std::vector<wxString> EnergyUnits{"eV", "keV", "MeV", "GeV"};
 
-	wxStaticText* GunParticleText = new wxStaticText(gunPage, wxID_ANY, wxT("Particle"), wxDefaultPosition, wxDefaultSize, 0);
+	GunParticleText = new wxStaticText(gunPage, wxID_ANY, wxT("Particle"), wxDefaultPosition, wxDefaultSize, 0);
 	//wxChoice* GunParticleEdit = new wxChoice(gunPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0, wxDefaultValidator, "Particle");
-	wxChoiceVector* GunParticleEdit = new wxChoiceVector(gunPage, wxID_ANY, Particles);
-	wxStaticText* GunEnergyText = new wxStaticText(gunPage, wxID_ANY, wxT("Energy"), wxDefaultPosition, wxDefaultSize, 0);
-	wxSpinCtrl* GunEnergyEdit = new wxSpinCtrl(gunPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
-	wxStaticText* GunUnitText = new wxStaticText(gunPage, wxID_ANY, wxT("Energy Unit"), wxDefaultPosition, wxDefaultSize, 0);
+	GunParticleEdit = new wxChoiceVector(gunPage, wxID_ANY, Particles);
+	GunEnergyText = new wxStaticText(gunPage, wxID_ANY, wxT("Energy"), wxDefaultPosition, wxDefaultSize, 0);
+	GunEnergyEdit = new wxSpinCtrl(gunPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
+	GunUnitText = new wxStaticText(gunPage, wxID_ANY, wxT("Energy Unit"), wxDefaultPosition, wxDefaultSize, 0);
 	//wxChoice* GunUnitEdit = new wxChoice(gunPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0, wxDefaultValidator, "Particle");
-	wxChoiceVector* GunUnitEdit = new wxChoiceVector(gunPage, wxID_ANY, EnergyUnits);
+	GunUnitEdit = new wxChoiceVector(gunPage, wxID_ANY, EnergyUnits);
 
 	wxBoxSizer* GunPageSizer = new wxBoxSizer(wxVERTICAL);
 	GunPageSizer->Add(GunParticleText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10); //these 0's are essential, since they allow these elements to be "stacked" without any prior scaling
@@ -41,8 +41,8 @@ ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Co
 	//END: Particle Gun
 
 	//BEGIN: Run Options
-	wxStaticText* BeamOnTimesText = new wxStaticText(runPage, wxID_ANY, wxT("Number of Particles to be shot"), wxDefaultPosition, wxDefaultSize, 0);
-	wxSpinCtrl* BeamOnTimesEdit = new wxSpinCtrl(runPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10000000, 0, "wxSpinCtrl");
+	BeamOnTimesText = new wxStaticText(runPage, wxID_ANY, wxT("Number of Particles to be shot"), wxDefaultPosition, wxDefaultSize, 0);
+	BeamOnTimesEdit = new wxSpinCtrl(runPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10000000, 0, "wxSpinCtrl");
 
 	wxBoxSizer* RunPageSizer = new wxBoxSizer(wxVERTICAL);
 	RunPageSizer->Add(BeamOnTimesText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10); //these 0's are essential, since they allow these elements to be "stacked" without any prior scaling
@@ -54,17 +54,17 @@ ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Co
 	std::vector<wxString> Styles{ "Wireframe", "Surface" };
 	std::vector<wxString> FilterBy{ "Particle", "Charge" };
 
-	wxStaticText* VisStyleText = new wxStaticText(visPage, wxID_ANY, wxT("Style"), wxDefaultPosition, wxDefaultSize, 0);
-	wxChoiceVector* VisStyleEdit = new wxChoiceVector(visPage, wxID_ANY, Styles);
-	wxStaticText* VisFilterText = new wxStaticText(visPage, wxID_ANY, wxT("Filter By:"), wxDefaultPosition, wxDefaultSize, 0);
-	wxChoiceVector* VisFilterEdit = new wxChoiceVector(visPage, wxID_ANY, FilterBy);
+	VisStyleText = new wxStaticText(visPage, wxID_ANY, wxT("Style"), wxDefaultPosition, wxDefaultSize, 0);
+	VisStyleEdit = new wxChoiceVector(visPage, wxID_ANY, Styles);
+	VisFilterText = new wxStaticText(visPage, wxID_ANY, wxT("Filter By:"), wxDefaultPosition, wxDefaultSize, 0);
+	VisFilterEdit = new wxChoiceVector(visPage, wxID_ANY, FilterBy);
 	//the particles for particle filter (make it dissapearable/unclickable), with their horizontal sizer:
-	wxStaticText* VisSelectParticleText = new wxStaticText(visPage, wxID_ANY, wxT("(If filtering by particle) Select Particles to be shown:"), wxDefaultPosition, wxDefaultSize, 0);
-	wxCheckBox* ProtonCB = new wxCheckBox(visPage, wxID_ANY, wxT("Proton"), wxDefaultPosition, wxDefaultSize, 0);
-	wxCheckBox* NeutronCB = new wxCheckBox(visPage, wxID_ANY, wxT("Neutron"), wxDefaultPosition, wxDefaultSize, 0);
-	wxCheckBox* PositronCB = new wxCheckBox(visPage, wxID_ANY, wxT("e+"), wxDefaultPosition, wxDefaultSize, 0);
-	wxCheckBox* ElectronCB = new wxCheckBox(visPage, wxID_ANY, wxT("e-"), wxDefaultPosition, wxDefaultSize, 0);
-	wxCheckBox* GammaCB = new wxCheckBox(visPage, wxID_ANY, wxT("gamma"), wxDefaultPosition, wxDefaultSize, 0);
+	VisSelectParticleText = new wxStaticText(visPage, wxID_ANY, wxT("(If filtering by particle) Select Particles to be shown:"), wxDefaultPosition, wxDefaultSize, 0);
+	ProtonCB = new wxCheckBox(visPage, wxID_ANY, wxT("Proton"), wxDefaultPosition, wxDefaultSize, 0);
+	NeutronCB = new wxCheckBox(visPage, wxID_ANY, wxT("Neutron"), wxDefaultPosition, wxDefaultSize, 0);
+	PositronCB = new wxCheckBox(visPage, wxID_ANY, wxT("e+"), wxDefaultPosition, wxDefaultSize, 0);
+	ElectronCB = new wxCheckBox(visPage, wxID_ANY, wxT("e-"), wxDefaultPosition, wxDefaultSize, 0);
+	GammaCB = new wxCheckBox(visPage, wxID_ANY, wxT("gamma"), wxDefaultPosition, wxDefaultSize, 0);
 	wxBoxSizer* ParticleCBSizer = new wxBoxSizer(wxHORIZONTAL);
 	ParticleCBSizer->Add(ProtonCB, 0, wxLEFT | wxRIGHT, 3);
 	ParticleCBSizer->Add(NeutronCB, 0, wxRIGHT, 3);
@@ -99,6 +99,159 @@ ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Co
 	BackgroundSizer->Add(ConfigureOptions, 1, wxEXPAND | wxALL);
 	SetSizer(BackgroundSizer);
 
+}
+
+//for utility
+void ConfigureWindow::Push(std::string arg)
+{
+	SystemManager.Kernel_args.push_back(arg);
+}
+
+//functions bound to every single control:
+void ConfigureWindow::GunParticleEditf(wxCommandEvent& event) {
+	SystemManager.Kernel_args.push_back("config");
+	SystemManager.Kernel_args.push_back("gun");
+	SystemManager.Kernel_args.push_back("setParticle");
+	int index = GunParticleEdit->GetSelection();
+	//remember
+	/*std::vector<wxString> Particles{"e-", "e+" , "proton", "neutron", "gamma"};
+	std::vector<wxString> EnergyUnits{"eV", "keV", "MeV", "GeV"};*/
+	
+	switch (index) {
+	case 0:
+		SystemManager.Kernel_args.push_back("e-");
+		break;
+	case 1:
+		SystemManager.Kernel_args.push_back("e+");
+		break;
+	case 2:
+		SystemManager.Kernel_args.push_back("proton");
+		break;
+	case 3:
+		SystemManager.Kernel_args.push_back("neutron");
+		break;
+	case 4:
+		SystemManager.Kernel_args.push_back("gamma");
+		break;
+	}
+
+	SystemManager.Kernel_args.push_back("gun.mac");
+	SystemManager.Conclude();
+}
+
+
+void ConfigureWindow::GunEnergyEditf(wxCommandEvent& event) {
+	Push("config");
+	Push("gun");
+	Push("setEnergy");
+	Push(std::to_string(GunEnergyEdit->GetValue()) + "KeV"); //capitalization be carful
+	Push("gun.mac");
+	SystemManager.Conclude();
+}
+void ConfigureWindow::GunUnitEditf(wxCommandEvent& event) {
+	//currently defunct. Only available energy unit is KeV
+}
+
+
+void ConfigureWindow::BeamOnTimesEditf(wxCommandEvent& event) {
+	Push("config");
+	Push("run");
+	Push("beamOnTimes");
+	Push(std::to_string(BeamOnTimesEdit->GetValue())); 
+	Push("run.mac");
+	SystemManager.Conclude();
+}
+
+
+void ConfigureWindow::VisStyleEditf(wxCommandEvent& event) {
+	//remember
+	/*std::vector<wxString> Styles{"Wireframe", "Surface"};
+	std::vector<wxString> FilterBy{ "Particle", "Charge" };*/
+	Push("config");
+	Push("vis");
+	Push("style");
+	int index = VisStyleEdit->GetSelection();
+
+	switch (index) {
+	case 0:
+		Push("Wireframe");
+		break;
+	case 1:
+		Push("Surface");
+		break;
+	}
+	Push("vis.mac");
+	SystemManager.Conclude();
+}
+void ConfigureWindow::VisFilterEditf(wxCommandEvent& event) {
+	//Note to self: Filter by is kind of a misnomer, consider "color by"
+/*std::vector<wxString> Styles{"Wireframe", "Surface"};
+std::vector<wxString> FilterBy{ "Particle", "Charge" };*/
+	Push("config");
+	Push("vis");
+	Push("trajectories");
+	int index = VisStyleEdit->GetSelection();
+
+	switch (index) {
+	case 0:
+		Push("drawByParticleID");
+		break;
+	case 1:
+		Push("drawByCharge");
+		break;
+	}
+	Push("vis.mac");
+	SystemManager.Conclude();
+}
+void ConfigureWindow::ProtonCBf(wxCommandEvent& event) {
+	Push("config");
+	Push("vis");
+	Push("filter");
+	Push("addparticle");
+	//spec
+	Push("proton");
+	Push("vis.mac");
+	SystemManager.Conclude();
+}
+void ConfigureWindow::NeutronCBf(wxCommandEvent& event) {
+	Push("config");
+	Push("vis");
+	Push("filter");
+	Push("addparticle");
+	//spec
+	Push("neutron");
+	Push("vis.mac");
+	SystemManager.Conclude();
+}
+void ConfigureWindow::PositronCBf(wxCommandEvent& event) {
+	Push("config");
+	Push("vis");
+	Push("filter");
+	Push("addparticle");
+	//spec
+	Push("e+");
+	Push("vis.mac");
+	SystemManager.Conclude();
+}
+void ConfigureWindow::ElectronCBf(wxCommandEvent& event) {
+	Push("config");
+	Push("vis");
+	Push("filter");
+	Push("addparticle");
+	//spec
+	Push("e-");
+	Push("vis.mac");
+	SystemManager.Conclude();
+}
+void ConfigureWindow::GammaCBf(wxCommandEvent& event) {
+	Push("config");
+	Push("vis");
+	Push("filter");
+	Push("addparticle");
+	//spec
+	Push("gamma");
+	Push("vis.mac");
+	SystemManager.Conclude();
 }
 
 ConfigureWindow::~ConfigureWindow()

@@ -103,7 +103,7 @@ GLGeometryViewer::GLGeometryViewer(wxWindow* parent) :
     v[0][2] = v[3][2] = v[4][2] = v[7][2] = 1;
     v[1][2] = v[2][2] = v[5][2] = v[6][2] = -1;
 
-    // To avoid flashing on MSW
+    // To avoid flashing on MSWindows
     SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 }
 

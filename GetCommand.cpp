@@ -1,14 +1,27 @@
 #include "GetCommand.h"
 
-GetCommand::GetCommand() 
+GetCommand::GetCommand(int Mode, std::string Command) 
 {
-	std::cout << "\n$";
-	while (true) {
-		std::string NewArg;
-		std::cin >> NewArg;
-		Kernel_args.push_back(NewArg);
-		if (std::cin.peek() == '\n') { break;}
+	switch (Mode)
+	{
+	case BATCH:
+		std::cout << "\n$";
+		while (true) {
+			std::string NewArg;
+			std::cin >> NewArg;
+			Kernel_args.push_back(NewArg);
+			if (std::cin.peek() == '\n') { break; }
+		}
+		break;
+	case EXTERNAL:
+		std::istringstream Parser(Command);
+		std::string Word;
+		while (Parser >> Word)
+			Kernel_args.push_back(Word);
+		break;
 	}
+	
+	
 	
 	/*while (std::getline(std::cin, KernelCommand, ' '))
 	{

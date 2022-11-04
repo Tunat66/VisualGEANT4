@@ -6,11 +6,14 @@
 
 //add all button functionalities here so that they are implemented
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
+	//file menu	
 	EVT_MENU(ID_NewProject, MainWindow::OnNewProject)
 	EVT_MENU(ID_OpenProject, MainWindow::OnOpenProject)
 	EVT_MENU(ID_Save, MainWindow::OnSave)
 	EVT_MENU(ID_SaveAs, MainWindow::OnSaveAs)
 	EVT_MENU(wxID_EXIT, MainWindow::OnExit)
+	//command menu
+	EVT_MENU(ID_CommandLine, MainWindow::OnCommandLine)
 	EVT_TOOL(20001, RunPanelShow)
 	EVT_TOOL(20002, GeometryPanelShow)
 	EVT_TOOL(20003, SourcePanelShow)
@@ -36,11 +39,18 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting 
 	//MENU: Help
 	wxMenu* menuHelp = new wxMenu;
 	menuHelp->Append(wxID_ABOUT);
-	wxMenuBar* menuBar = new wxMenuBar;
+
+
+	//MENU: Control
+	wxMenu* menuControl = new wxMenu;
+	menuControl->Append(ID_CommandLine, "&Command Line", "Command Line interface used for troubleshooting and testing.");
+	
 	
 //IMPLEMENT MENU BAR
+	wxMenuBar* menuBar = new wxMenuBar;
 	menuBar->Append(menuFile, "&File");
 	menuBar->Append(menuHelp, "&Help");
+	menuBar->Append(menuControl, "&Control");
 	SetMenuBar(menuBar);
 	
 //status bar, display current app state/process to the user
@@ -100,17 +110,49 @@ void MainWindow::OnAbout(wxCommandEvent& event)
 }
 void MainWindow::OnNewProject(wxCommandEvent& event)
 {
-	wxLogMessage("Under Construction");
+	
+	//NewDirPicker* Picker = new NewDirPicker();
+	//Picker->Show();
+	static const wxChar* FILETYPES = _T(
+		"VisualGEANT4 files |*.vg4|"
+		"All files|*.*"
+	);
+
+	wxFileDialog* openFileDialog =
+		new wxFileDialog(this, _("Create VisualGEANT4 Project"), "", "", FILETYPES,
+			wxFD_SAVE, wxDefaultPosition);
+
+	if (openFileDialog->ShowModal() == wxID_OK)
+	{
+		wxString ProjectPath;
+		ProjectPath.append(openFileDialog->GetDirectory());
+		wxString ProjectName = openFileDialog->GetFilename();
+		wxString ProjectFolderName = ProjectPath + "/" + ProjectName;
+
+		//create a new folder to put the project files in it
+		std::filesystem::path New = std::string(ProjectFolderName.mb_str());
+		std::filesystem::create_directories(New);
+
+		//create a vg4proj file inside this new folder, opened by the user when accessing the project later
+		std::ofstream ProjectFile(std::string(ProjectFolderName.mb_str()) + "/" + std::string(ProjectName.mb_str()) + "proj");
+
+		//copy the contents of the "default project" into this "new project"
+
+		
+		//lastly, set it as the current project dir:
+		SystemManager.CurrentProjectDir = ProjectPath.mb_str(); //convert wxString to std::string
+
+	}
+
+	SystemManager.Project_isOpen = true; //some methods will run if only this is true;
+
+	//delete the status text "please select a project"
+	SetStatusText("Project Selected.");
 }
 void MainWindow::OnOpenProject(wxCommandEvent& event)
 {
 	static const wxChar* FILETYPES = _T(
-		"Text files|*.txt|"
-		"C/C++ source files|*.cpp;*.cc;*.c|"
-		"C/C++ header files|*.hpp;*.h|"
-		"Make files|Mak*;mak*|"
-		"Java files|*java|"
-		"Hypertext markup files|*html;*htm;*HTML;*HTM|"
+		"VisualGEANT4 marker files |*.vg4proj|"
 		"All files|*.*"
 	);
 	
@@ -136,7 +178,7 @@ void MainWindow::OnOpenProject(wxCommandEvent& event)
 	SystemManager.Project_isOpen = true; //some methods will run if only this is true;
 
 	//delete the status text "please select a project"
-	SetStatusText("");
+	SetStatusText("Project Selected.");
 }
 void MainWindow::OnSave(wxCommandEvent& event) {
 	wxLogMessage("Will be available when custom app build is implemented");
@@ -145,17 +187,42 @@ void MainWindow::OnSaveAs(wxCommandEvent& event) {
 	wxLogMessage("Will be available when custom app build is implemented");
 }
 
+void MainWindow::OnCommandLine(wxCommandEvent& event)
+{
+	//creates text entry
+	wxTextEntryDialog* CommandEntry = new wxTextEntryDialog();
+	CommandEntry->Create(this, "Enter command, refer to documentation for syntax:");
+	CommandEntry->ShowModal();
+
+	wxString Out = CommandEntry->GetValue();
+	SetStatusText(Out);
+	GetCommand* Parse = new GetCommand(2, std::string(Out.mb_str()));
+	
+	SystemManager.Kernel_args = Parse->Kernel_args;
+	delete Parse;
+	SystemManager.Conclude();
+
+	//try testing with the command:
+
+
+}
+
+
+
+
 
 //RIGHT PANEL METHODS, accessed by toolbar
 void MainWindow::RunPanelShow(wxCommandEvent& event)
 {
 	ReallocatePanel<RunPanel>();
+	
 }
 void MainWindow::GeometryPanelShow(wxCommandEvent& event)
 {
 	//Choice button dropdown, new button(opens dialog), set postion and set angle
 	//wxStaticText* PickExisting = new wxStaticText(RightPanel, wxID_ANY, wxT("PickExisting"), wxDefaultPosition, wxDefaultSize, 0);
 	ReallocatePanel<GeometryPanel>();
+	
 }
 //begin sourcepanel
 void MainWindow::SourcePanelShow(wxCommandEvent& event)

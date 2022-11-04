@@ -17,7 +17,19 @@ cApp::~cApp()
 bool cApp::OnInit()
 {
 	bool GUI = true;
-	//this part is dangerous, move it to another project
+	
+	if(true) //UI mode
+	{
+		m_frame1 = new MainWindow();
+		m_frame1->Show();
+			
+	}
+
+	return true;
+}
+
+
+//this part is dangerous, move it to another project
 	/*if (true) //if any argument is supplied, start in console mode
 	{
 		bool exit = false;
@@ -30,13 +42,3 @@ bool cApp::OnInit()
 			delete CommandServant;
 		}
 	}*/
-	if(true) //UI mode
-	{
-		m_frame1 = new MainWindow();
-		m_frame1->Show();
-
-			
-	}
-
-	return true;
-}

@@ -159,6 +159,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\VisualGEANT4\sdks\freeglut-3.2.2\include;D:\wxWidgets-3.1.5\include\msvc;D:\wxWidgets-3.1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\VisualGEANT4\sdks\freeglut-3.2.2\include;D:\wxWidgets-3.1.5\include\msvc;D:\wxWidgets-3.1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="NewDirPicker.cpp" />
     <ClCompile Include="Process.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\VisualGEANT4\sdks\freeglut-3.2.2\include;D:\wxWidgets-3.1.5\include\msvc;D:\wxWidgets-3.1.5\include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\VisualGEANT4\sdks\freeglut-3.2.2\include;D:\wxWidgets-3.1.5\include\msvc;D:\wxWidgets-3.1.5\include</AdditionalIncludeDirectories>
@@ -179,6 +180,7 @@
     <ClInclude Include="GeometryPanel.h" />
     <ClInclude Include="GetCommand.h" />
     <ClInclude Include="GLGeometryViewer.h" />
+    <ClInclude Include="NewDirPicker.h" />
     <ClInclude Include="SourcePanel.h" />
     <ClInclude Include="SystemVariables.h" />
     <ClInclude Include="MainWindow.h" />
