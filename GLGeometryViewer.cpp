@@ -105,6 +105,9 @@ GLGeometryViewer::GLGeometryViewer(wxWindow* parent) :
 
     // To avoid flashing on MSWindows
     SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+
+    //initialize, see below for the method
+    init();
 }
 
 GLGeometryViewer::~GLGeometryViewer()
@@ -264,6 +267,7 @@ int GLGeometryViewer::getHeight()
 }
 
 
+//the MAIN method here
 void GLGeometryViewer::render(wxPaintEvent& evt)
 {
     if (!IsShown()) return;
@@ -272,7 +276,8 @@ void GLGeometryViewer::render(wxPaintEvent& evt)
     wxPaintDC(this); // only to be used in paint events. use wxClientDC to paint outside the paint event
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    
+    /*TRIALS BEGIN
     // ------------- draw some 2D ----------------
     prepare2DViewport(0, 0, getWidth() / 2, getHeight());
     glLoadIdentity();
@@ -294,9 +299,9 @@ void GLGeometryViewer::render(wxPaintEvent& evt)
     glVertex3f(getWidth() * 3 / 8, getHeight() * 2 / 3, 0);
     glVertex3f(getWidth() / 8, getHeight() * 2 / 3, 0);
     glEnd();
-
+    */
     // ------------- draw some 3D ----------------
-    prepare3DViewport(getWidth() / 2, 0, getWidth(), getHeight());
+    prepare3DViewport(0, 0, getWidth(), getHeight());
     glLoadIdentity();
 
     glColor4f(0, 0, 1, 1);
@@ -314,6 +319,7 @@ void GLGeometryViewer::render(wxPaintEvent& evt)
         glVertex3fv(&v[faces[i][0]][0]);
         glEnd();
     }
+
 
     glFlush();
     SwapBuffers();

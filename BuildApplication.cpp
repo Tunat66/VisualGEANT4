@@ -1,11 +1,14 @@
-#include "BuildApplication.h"
+ #include "BuildApplication.h"
+#include "wx/wx.h" 
 
 //AS TEST COMMAND build C:/Users/Dell/GEANT4TEMP/geant4-v11.0.0/examples/basic/B3/B3a C:/Users/Dell/GEANT4/Geant4-11.0/lib/Geant4-11.0.0
 
 BuildApplication::BuildApplication(std::vector<std::string> Kernel_args) 
 {
-	CMakeListsTxt_DIR = Kernel_args.at(1);
-	GEANT4_DIR = Kernel_args.at(2);
+	CMakeListsTxt_DIR = Kernel_args.at(Kernel_args.size()-1);
+	wxString out(CMakeListsTxt_DIR);
+	GEANT4_DIR = Kernel_args.at(1);
+	wxLogMessage(out);
 
 	bool res = CMakeGenerate();
 	if (res) { Build_MSBuild(); }
@@ -30,11 +33,15 @@ bool BuildApplication::CMakeGenerate()
 	CMakeCommand = "cmake -DGeant4_DIR=" + GEANT4_DIR + " -B" + CMakeListsTxt_DIR + "/build" + " -S" + CMakeListsTxt_DIR;
 	//std::string Command = cdCommand + " && " + CMakeCommand;
 	system(CMakeCommand.c_str());
-	std::cout << CMakeCommand << std::endl;
-	
+	//std::cout << CMakeCommand << std::endl;
+	//DEBUG
+	wxString CMakeCmd(CMakeCommand);
+	wxLogMessage(CMakeCmd);
+
+
 	//succesful execution
 	flag = true;
-
+	wxLogMessage("CMake Successful");
 	return flag;
 }
 

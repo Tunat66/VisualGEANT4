@@ -89,7 +89,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\VisualGEANT4\sdks\freeglut-3.2.2\include;D:\wxWidgets-3.1.5\include\msvc;D:\wxWidgets-3.1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\wxWidgets-3.1.5\include;D:\VisualGEANT4\sdks\freeglut-3.2.2\include;D:\wxWidgets-3.1.5\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -107,7 +107,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\VisualGEANT4\sdks\freeglut-3.2.2\include;D:\wxWidgets-3.1.5\include\msvc;D:\wxWidgets-3.1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\wxWidgets-3.1.5\include;D:\VisualGEANT4\sdks\freeglut-3.2.2\include;D:\wxWidgets-3.1.5\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>

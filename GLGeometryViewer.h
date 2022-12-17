@@ -30,8 +30,10 @@ public:
 	int getWidth();
 	int getHeight();
 
-	//test methods
+
 	void render(wxPaintEvent& evt);
+
+
 	void prepare3DViewport(int topleft_x, int topleft_y, int bottomrigth_x, int bottomrigth_y);
 	void prepare2DViewport(int topleft_x, int topleft_y, int bottomrigth_x, int bottomrigth_y);
 
@@ -64,6 +66,8 @@ public:
 		unsigned long v1, v2, v3, v4;
 	} face_quad;
 
+
+	//the elements of a wavefront OBJ file, extracted through a parser
 	std::vector<vertex> vertices;
 	std::vector<face_quad> faces_quads;
 	std::vector<face_triangle> faces_triangles;

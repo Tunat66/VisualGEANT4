@@ -41,8 +41,23 @@ void RunPanel::RunProject(wxCommandEvent& event)
 
 void RunPanel::ApplyChanges(wxCommandEvent& event)
 {
-	SetStatusText("Compiling Project...");
-	//do stuff
+	if (SystemManager.Project_isOpen)
+	{
+		SetStatusText("Compiling Project...");
+		SystemManager.Kernel_args.push_back("build");
+
+		//read the G4DIR and push back to kernel args
+		std::string G4DIR;
+		std::ifstream Reader("G4DIR.txt");
+		Reader >> G4DIR;
+		SystemManager.Kernel_args.push_back(G4DIR);
+
+		//finally
+		SystemManager.Conclude();
+		SetStatusText("Compile Complete.");
+	}
+	else
+		SetStatusText("Please Select a Project before running.");
 }
 
 void RunPanel::ConfigureProject(wxCommandEvent& event)
