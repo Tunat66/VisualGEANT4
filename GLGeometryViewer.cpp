@@ -2,21 +2,21 @@
 //THIS is a test code to test the viewer
 #include "GLGeometryViewer.h"
 BEGIN_EVENT_TABLE(GLGeometryViewer, wxGLCanvas)
-EVT_MOTION(GLGeometryViewer::mouseMoved)
-EVT_LEFT_DOWN(GLGeometryViewer::mouseDown)
-EVT_LEFT_UP(GLGeometryViewer::mouseReleased)
-EVT_RIGHT_DOWN(GLGeometryViewer::rightClick)
-EVT_LEAVE_WINDOW(GLGeometryViewer::mouseLeftWindow)
-EVT_SIZE(GLGeometryViewer::resized)
-EVT_KEY_DOWN(GLGeometryViewer::keyPressed)
-EVT_KEY_UP(GLGeometryViewer::keyReleased)
-EVT_MOUSEWHEEL(GLGeometryViewer::mouseWheelMoved)
-EVT_PAINT(GLGeometryViewer::render)
+    EVT_MOTION(GLGeometryViewer::mouseMoved)
+    EVT_LEFT_DOWN(GLGeometryViewer::mouseDown)
+    EVT_LEFT_UP(GLGeometryViewer::mouseReleased)
+    EVT_RIGHT_DOWN(GLGeometryViewer::rightClick)
+    EVT_LEAVE_WINDOW(GLGeometryViewer::mouseLeftWindow)
+    EVT_SIZE(GLGeometryViewer::resized)
+    EVT_KEY_DOWN(GLGeometryViewer::keyPressed)
+    EVT_KEY_UP(GLGeometryViewer::keyReleased)
+    EVT_MOUSEWHEEL(GLGeometryViewer::mouseWheelMoved)
+    EVT_PAINT(GLGeometryViewer::render)
 END_EVENT_TABLE()
 
 
 //bool is_quad; DUPLICATE (violates one-def rule)
-bool render_mode; // true = solid body, false = wireframe
+bool render_mode = true; // true = solid body, false = wireframe
 
 const float ZOOM_SPEED = 0.1f;
 const float ROTATE_SPEED = 0.1f;
@@ -39,46 +39,61 @@ struct camera {
     camera() : x(-4.0f), y(2.0f), z(0.0f), phi(0), theta(0) {}
 } camera;
 
-/*
-void init() {
-    glShadeModel(GL_SMOOTH);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClearDepth(1.0f);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    glEnable(GL_COLOR);
-    glEnable(GL_COLOR_MATERIAL);
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
-    glEnable(GL_LIGHTING);
-    glEnable(GL_NORMALIZE);
-    glEnable(GL_LIGHT1);
-    GLfloat lightAmbient1[4] = { 0.2, 0.2, 0.2, 1.0 };
-    GLfloat lightPos1[4] = { 0.5, 0.5, 0.5, 1.0 };
-    GLfloat lightDiffuse1[4] = { 0.8, 0.8, 0.8, 1.0 };
-    GLfloat lightSpec1[4] = { 1.0, 1.0, 1.0, 1.0 };
-    GLfloat lightLinAtten = 0.0f;
-    GLfloat lightQuadAtten = 1.0f;
-    glLightfv(GL_LIGHT1, GL_POSITION, (GLfloat*)&lightPos1);
-    glLightfv(GL_LIGHT1, GL_AMBIENT, (GLfloat*)&lightAmbient1);
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, (GLfloat*)&lightDiffuse1);
-    glLightfv(GL_LIGHT1, GL_SPECULAR, (GLfloat*)&lightSpec1);
-    glLightfv(GL_LIGHT1, GL_LINEAR_ATTENUATION, &lightLinAtten);
-    glLightfv(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, &lightQuadAtten);
-    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-
-}*/
-
-
-
 // some useful events to use
 void GLGeometryViewer::mouseMoved(wxMouseEvent& event) {}
-void GLGeometryViewer::mouseDown(wxMouseEvent& event) {}
-void GLGeometryViewer::mouseWheelMoved(wxMouseEvent& event) {}
+void GLGeometryViewer::mouseDown(wxMouseEvent& event) {
+
+    //used while testing
+    //longitude_current -= 10.0f;
+    //render_again(longitude_current, latitude_current);
+
+}
+void GLGeometryViewer::mouseWheelMoved(wxMouseEvent& event) 
+{
+    zoom = zoom*exp((GLfloat) 0.0001*event.GetWheelRotation());
+    render_again(longitude_current, latitude_current, zoom);
+
+}
 void GLGeometryViewer::mouseReleased(wxMouseEvent& event) {}
-void GLGeometryViewer::rightClick(wxMouseEvent& event) {}
+void GLGeometryViewer::rightClick(wxMouseEvent& event) {
+
+    //longitude_current += 10.0f;
+    //render_again(longitude_current, latitude_current);
+}
 void GLGeometryViewer::mouseLeftWindow(wxMouseEvent& event) {}
-void GLGeometryViewer::keyPressed(wxKeyEvent& event) {}
+
+void GLGeometryViewer::keyPressed(wxKeyEvent& event) 
+{
+    enum {
+        wKey=87,
+        aKey=65,
+        sKey=83,
+        dKey=68
+    };
+    //std::string stringer = std::to_string(event.GetKeyCode());
+    //wxString debug(stringer);
+    //wxLogMessage(debug);
+    switch (event.GetKeyCode())
+    {
+    case aKey:
+        longitude_current += 10.0f;
+        render_again(longitude_current, latitude_current, zoom);
+        break;
+    case dKey:
+        longitude_current -= 10.0f;
+        render_again(longitude_current, latitude_current, zoom);
+        break;
+    case wKey:
+        latitude_current -= 10.0f;
+        render_again(longitude_current, latitude_current, zoom);
+        break;
+    case sKey:
+        latitude_current += 10.0f;
+        render_again(longitude_current, latitude_current, zoom);
+        break;
+    }
+
+}
 void GLGeometryViewer::keyReleased(wxKeyEvent& event) {}
 
 // Vertices and faces of a simple cube to demonstrate 3D render
@@ -91,7 +106,7 @@ GLint faces[6][4] = {  /* Vertex indices for the 6 faces of a cube. */
 
 
 GLGeometryViewer::GLGeometryViewer(wxWindow* parent) :
-    wxGLCanvas(parent, wxID_ANY, NULL, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE) //changed: args to NULL
+    wxGLCanvas(parent, wxID_ANY, NULL, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE), WavefrontOBJUtility()//, //WavefrontObj(File) //changed: args to NULL
 {
     m_context = new wxGLContext(this);
     // prepare a simple cube to demonstrate 3D render
@@ -106,6 +121,35 @@ GLGeometryViewer::GLGeometryViewer(wxWindow* parent) :
     // To avoid flashing on MSWindows
     SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
+    //set the file source
+    File = SystemManager.CurrentProjectDir + "\\setup.obj"; //note that for any project, the obj file is called "setup.obj"
+    DisplayedObj = new WavefrontObj(File);
+
+    //initialize, see below for the method
+    init();
+}
+
+//this method below is almost IDENTICAL to the constructor, used when a new project is opened (this is becaause
+//in wxwidgets, if this viewer is re-instantiated, it gets small on the screen (IDK why??!!))
+void GLGeometryViewer::refresh_view() 
+{
+    m_context = new wxGLContext(this);
+    // prepare a simple cube to demonstrate 3D render
+    // source: http://www.opengl.org/resources/code/samples/glut_examples/examples/cube.c
+    v[0][0] = v[1][0] = v[2][0] = v[3][0] = -1;
+    v[4][0] = v[5][0] = v[6][0] = v[7][0] = 1;
+    v[0][1] = v[1][1] = v[4][1] = v[5][1] = -1;
+    v[2][1] = v[3][1] = v[6][1] = v[7][1] = 1;
+    v[0][2] = v[3][2] = v[4][2] = v[7][2] = 1;
+    v[1][2] = v[2][2] = v[5][2] = v[6][2] = -1;
+
+    // To avoid flashing on MSWindows
+    SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+
+    //set the file source
+    File = SystemManager.CurrentProjectDir + "\\setup.obj"; //note that for any project, the obj file is called "setup.obj"
+    DisplayedObj = new WavefrontObj(File);
+
     //initialize, see below for the method
     init();
 }
@@ -114,6 +158,7 @@ GLGeometryViewer::~GLGeometryViewer()
 {
     delete m_context;
 }
+
 
 void GLGeometryViewer::resized(wxSizeEvent& evt)
 {
@@ -124,80 +169,90 @@ void GLGeometryViewer::resized(wxSizeEvent& evt)
 
 //OBJ VIEWER METHODS
 void GLGeometryViewer::init() {
-    glShadeModel(GL_SMOOTH);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClearDepth(1.0f);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    glEnable(GL_COLOR);
-    glEnable(GL_COLOR_MATERIAL);
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-    glEnable(GL_LIGHTING);
-    glEnable(GL_NORMALIZE);
-    glEnable(GL_LIGHT1);
-    GLfloat lightAmbient1[4] = { 0.2, 0.2, 0.2, 1.0 };
-    GLfloat lightPos1[4] = { 0.5, 0.5, 0.5, 1.0 };
-    GLfloat lightDiffuse1[4] = { 0.8, 0.8, 0.8, 1.0 };
-    GLfloat lightSpec1[4] = { 1.0, 1.0, 1.0, 1.0 };
-    GLfloat lightLinAtten = 0.0f;
-    GLfloat lightQuadAtten = 1.0f;
-    glLightfv(GL_LIGHT1, GL_POSITION, (GLfloat*)&lightPos1);
-    glLightfv(GL_LIGHT1, GL_AMBIENT, (GLfloat*)&lightAmbient1);
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, (GLfloat*)&lightDiffuse1);
-    glLightfv(GL_LIGHT1, GL_SPECULAR, (GLfloat*)&lightSpec1);
-    glLightfv(GL_LIGHT1, GL_LINEAR_ATTENUATION, &lightLinAtten);
-    glLightfv(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, &lightQuadAtten);
-    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 
 }
 
-void GLGeometryViewer::draw_obj() {
-    if (render_mode) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
-    else {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    }
-    if (is_quad) {
-        for (face_quad f : faces_quads) {
-            // Calculate normal by calculating two tri normals & averaging
-            face_triangle f_tri1 = { f.v1, f.v2, f.v3 };
-            face_triangle f_tri2 = { f.v2, f.v3, f.v4 };
-            GLdouble normal_tri1[3];
-            GLdouble normal_tri2[3];
-            calculate_normal(f_tri1, normal_tri1);
-            calculate_normal(f_tri2, normal_tri2);
-            GLdouble normal[3] = {
-                    (normal_tri1[0] + normal_tri2[0]) / 2,
-                    (normal_tri1[1] + normal_tri2[1]) / 2,
-                    (normal_tri1[2] + normal_tri2[2]) / 2
-            };
+void GLGeometryViewer::load_obj() {
 
-            glBegin(GL_QUADS);
-            glColor3f(OBJ_COLOR.red, OBJ_COLOR.green, OBJ_COLOR.blue);
-            glNormal3dv(normal);
-            glVertex3d(vertices[f.v1 - 1].x, vertices[f.v1 - 1].y, vertices[f.v1 - 1].z);
-            glVertex3d(vertices[f.v2 - 1].x, vertices[f.v2 - 1].y, vertices[f.v2 - 1].z);
-            glVertex3d(vertices[f.v3 - 1].x, vertices[f.v3 - 1].y, vertices[f.v3 - 1].z);
-            glVertex3d(vertices[f.v4 - 1].x, vertices[f.v4 - 1].y, vertices[f.v4 - 1].z);
-            glEnd();
+    if (SystemManager.Project_isOpen) {
+        wxString str(File);
+        wxLogMessage(str);
+        DisplayedObj->open_obj(File);
+
+        //load wavefrontobj data to this viewer class:
+        vertices = DisplayedObj->vertices;
+        faces_quads = DisplayedObj->faces_quads;
+        faces_triangles = DisplayedObj->faces_triangles;
+        is_quad = DisplayedObj->is_quad;
+        wxLogMessage("Object successfully in viewer memory!");
+    }
+    render_again(longitude_current, latitude_current, 1);
+}
+
+void GLGeometryViewer::draw_obj() {
+    
+    if (SystemManager.Project_isOpen) {
+
+        if (render_mode) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
+        else {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
+        if (is_quad) {
+            for (face_quad f : faces_quads) {
+                // Calculate normal by calculating two tri normals & averaging
+                face_triangle f_tri1 = { f.v1, f.v2, f.v3 };
+                face_triangle f_tri2 = { f.v2, f.v3, f.v4 };
+                GLdouble normal_tri1[3];
+                GLdouble normal_tri2[3];
+                calculate_normal(f_tri1, normal_tri1);
+                calculate_normal(f_tri2, normal_tri2);
+                GLdouble normal[3] = {
+                        (normal_tri1[0] + normal_tri2[0]) / 2,
+                        (normal_tri1[1] + normal_tri2[1]) / 2,
+                        (normal_tri1[2] + normal_tri2[2]) / 2
+                };
+
+                glBegin(GL_QUADS);
+                glColor3f(OBJ_COLOR.red, OBJ_COLOR.green, OBJ_COLOR.blue);
+                glNormal3dv(normal);
+                glVertex3d(vertices[f.v1 - 1].x, vertices[f.v1 - 1].y, vertices[f.v1 - 1].z);
+                glVertex3d(vertices[f.v2 - 1].x, vertices[f.v2 - 1].y, vertices[f.v2 - 1].z);
+                glVertex3d(vertices[f.v3 - 1].x, vertices[f.v3 - 1].y, vertices[f.v3 - 1].z);
+                glVertex3d(vertices[f.v4 - 1].x, vertices[f.v4 - 1].y, vertices[f.v4 - 1].z);
+                glEnd();
+            }
+        }
+        else {
+            for (face_triangle f : faces_triangles) {
+                GLdouble normal[3];
+                calculate_normal(f, normal);
+                glBegin(GL_TRIANGLES);
+                glColor3f(OBJ_COLOR.red, OBJ_COLOR.green, OBJ_COLOR.blue);
+                glNormal3dv(normal);
+                glVertex3d(vertices[f.v1 - 1].x, vertices[f.v1 - 1].y, vertices[f.v1 - 1].z);
+                glVertex3d(vertices[f.v2 - 1].x, vertices[f.v2 - 1].y, vertices[f.v2 - 1].z);
+                glVertex3d(vertices[f.v3 - 1].x, vertices[f.v3 - 1].y, vertices[f.v3 - 1].z);
+                glEnd();
+            }
+        }
+        glFlush();
     }
     else {
-        for (face_triangle f : faces_triangles) {
-            GLdouble normal[3];
-            calculate_normal(f, normal);
-            glBegin(GL_TRIANGLES);
-            glColor3f(OBJ_COLOR.red, OBJ_COLOR.green, OBJ_COLOR.blue);
-            glNormal3dv(normal);
-            glVertex3d(vertices[f.v1 - 1].x, vertices[f.v1 - 1].y, vertices[f.v1 - 1].z);
-            glVertex3d(vertices[f.v2 - 1].x, vertices[f.v2 - 1].y, vertices[f.v2 - 1].z);
-            glVertex3d(vertices[f.v3 - 1].x, vertices[f.v3 - 1].y, vertices[f.v3 - 1].z);
+        glColor4f(1, 0, 0, 1);
+        for (int i = 0; i < 6; i++)
+        {
+            glBegin(GL_LINE_STRIP);
+            glVertex3fv(&v[faces[i][0]][0]);
+            glVertex3fv(&v[faces[i][1]][0]);
+            glVertex3fv(&v[faces[i][2]][0]);
+            glVertex3fv(&v[faces[i][3]][0]);
+            glVertex3fv(&v[faces[i][0]][0]);
             glEnd();
         }
     }
-    glFlush();
 }
 
 void reshape(int w, int h) {
@@ -235,6 +290,32 @@ void GLGeometryViewer::prepare3DViewport(int topleft_x, int topleft_y, int botto
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    glShadeModel(GL_FLAT);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearDepth(1.0f);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glEnable(GL_COLOR);
+    glEnable(GL_COLOR_MATERIAL);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_NORMALIZE);
+    glEnable(GL_LIGHT1);
+    GLfloat lightAmbient1[4] = { 0.2, 0.2, 0.2, 1.0 };
+    GLfloat lightPos1[4] = { 0.5, 0.5, 0.5, 1.0 };
+    GLfloat lightDiffuse1[4] = { 0.8, 0.8, 0.8, 1.0 };
+    GLfloat lightSpec1[4] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat lightLinAtten = 0.0f;
+    GLfloat lightQuadAtten = 1.0f;
+    //glLightfv(GL_LIGHT1, GL_POSITION, (GLfloat*)&lightPos1);
+    //glLightfv(GL_LIGHT1, GL_AMBIENT, (GLfloat*)&lightAmbient1);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, (GLfloat*)&lightDiffuse1);
+    //glLightfv(GL_LIGHT1, GL_SPECULAR, (GLfloat*)&lightSpec1);
+    glLightfv(GL_LIGHT1, GL_LINEAR_ATTENUATION, &lightLinAtten);
+    glLightfv(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, &lightQuadAtten);
+    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+
 }
 
 /** Inits the OpenGL viewport for drawing in 2D. */
@@ -270,8 +351,7 @@ int GLGeometryViewer::getHeight()
 //the MAIN method here
 void GLGeometryViewer::render(wxPaintEvent& evt)
 {
-    if (!IsShown()) return;
-
+    if (!IsShown()) return; //may require modification
     wxGLCanvas::SetCurrent(*m_context);
     wxPaintDC(this); // only to be used in paint events. use wxClientDC to paint outside the paint event
 
@@ -305,10 +385,11 @@ void GLGeometryViewer::render(wxPaintEvent& evt)
     glLoadIdentity();
 
     glColor4f(0, 0, 1, 1);
-    glTranslatef(0, 0, -5);
-    glRotatef(50.0f, 0.0f, 1.0f, 0.0f);
+    glTranslatef(0, 0, -15);
+    glRotatef(longitude_current, 0.0f, 1.0f, 0.0f);
+    glRotatef(latitude_current, 1.0f/*(GLfloat)sin(M_PI / 180.0 * (double)latitude)*/, 0.0f, /*(GLfloat)-cos(M_PI / 180.0 * (double)latitude)*/0.0f);
 
-    glColor4f(1, 0, 0, 1);
+    /*glColor4f(1, 0, 0, 1);
     for (int i = 0; i < 6; i++)
     {
         glBegin(GL_LINE_STRIP);
@@ -318,9 +399,57 @@ void GLGeometryViewer::render(wxPaintEvent& evt)
         glVertex3fv(&v[faces[i][3]][0]);
         glVertex3fv(&v[faces[i][0]][0]);
         glEnd();
-    }
+    }*/
+    draw_obj();
 
-
-    glFlush();
+    //glFlush();
     SwapBuffers();
 }
+
+void GLGeometryViewer::render_again(GLfloat longitude, GLfloat latitude, GLfloat zoom)
+{
+    if (!IsShown()) return; //may require modification
+    wxGLCanvas::SetCurrent(*m_context);
+    wxPaintDC(this); // only to be used in paint events. use wxClientDC to paint outside the paint event
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    /*TRIALS BEGIN
+    // ------------- draw some 2D ----------------
+    prepare2DViewport(0, 0, getWidth() / 2, getHeight());
+    glLoadIdentity();
+
+    // white background
+    glColor4f(1, 1, 1, 1);
+    glBegin(GL_QUADS);
+    glVertex3f(0, 0, 0);
+    glVertex3f(getWidth(), 0, 0);
+    glVertex3f(getWidth(), getHeight(), 0);
+    glVertex3f(0, getHeight(), 0);
+    glEnd();
+
+    // red square
+    glColor4f(1, 0, 0, 1);
+    glBegin(GL_QUADS);
+    glVertex3f(getWidth() / 8, getHeight() / 3, 0);
+    glVertex3f(getWidth() * 3 / 8, getHeight() / 3, 0);
+    glVertex3f(getWidth() * 3 / 8, getHeight() * 2 / 3, 0);
+    glVertex3f(getWidth() / 8, getHeight() * 2 / 3, 0);
+    glEnd();
+    */
+    // ------------- draw some 3D ----------------
+    prepare3DViewport(0, 0, getWidth(), getHeight());
+    glLoadIdentity();
+
+    glColor4f(0, 0, 1, 1);
+    glTranslatef(0, 0, -15);
+    glRotatef(longitude, 0.0f, 1.0f, 0.0f);
+    ///glRotatef(latitude, (GLfloat)sin(M_PI / 180.0 * (double)longitude), 0.0f, (GLfloat)-cos(M_PI / 180.0 * (double)longitude));//this one rotates your head
+    glRotatef(latitude, -(GLfloat)cos(M_PI / 180.0 * (double)longitude) , 0.0f, -(GLfloat)sin(M_PI / 180.0 * (double)longitude));
+    glScalef(zoom, zoom, zoom);
+    draw_obj();
+
+    //glFlush();
+    SwapBuffers();
+}
+

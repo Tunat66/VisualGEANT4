@@ -60,12 +60,12 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting 
 //LEFT PANEL: This will be mostly for embedding geometry view:
 	LeftPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200,100));
 	LeftPanel->SetBackgroundColour(wxColor(205, 205, 205));
-	//for testing purposes:
+	//view setup geometry by instantiaitng the opengl canvas:
 	GeometryViewer = new GLGeometryViewer(LeftPanel);
 	//SetupViewer = new G4OpenGLImmediateXViewer();
-	wxBoxSizer* ViewerSizer = new wxBoxSizer(wxVERTICAL);
-	ViewerSizer->Add(GeometryViewer, 1, wxEXPAND | wxALL);
+	ViewerSizer->Add(GeometryViewer, 5, wxEXPAND | wxALL);
 	LeftPanel->SetSizer(ViewerSizer);
+	
 
 	
 //RIGHT PANEL: This is the panel where buttons and controls are located, controlled by a toolbar	
@@ -172,13 +172,17 @@ void MainWindow::OnOpenProject(wxCommandEvent& event)
 		SystemManager.CurrentProjectDir = path.mb_str(); //convert wxString to std::string
 		
 		SetStatusText(path, 0);
-		SetStatusText(openFileDialog->GetDirectory(), 1);
+		//SetStatusText(openFileDialog->GetDirectory(), 1);
 	}
 	
 	SystemManager.Project_isOpen = true; //some methods will run if only this is true;
 
+	//CRUCIAL: refresh the geomerty viewer with the new geometry
+	//view setup geometry by instantiaitng the opengl canvas:
+	GeometryViewer->refresh_view();
+	GeometryViewer->load_obj();
+
 	//delete the status text "please select a project"
-	SetStatusText("Project Selected.");
 }
 void MainWindow::OnSave(wxCommandEvent& event) {
 	wxLogMessage("Will be available when custom app build is implemented");

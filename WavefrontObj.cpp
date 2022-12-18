@@ -1,4 +1,6 @@
 #include "WavefrontObj.h"
+//for debug
+#include "wx/wx.h"
 
 WavefrontObj::WavefrontObj(std::string File)
 {
@@ -30,6 +32,7 @@ void WavefrontObj::open_obj(std::string filename) {
     std::ifstream file_stream;
     file_stream.open(filename, std::ifstream::in);
 
+    
     if ((file_stream.rdstate() & std::ifstream::failbit) != 0) {
         std::cerr << "Error opening " << filename << std::endl;
         exit(1);
@@ -44,6 +47,8 @@ void WavefrontObj::open_obj(std::string filename) {
     file_stream.close();
 
     is_quad = (faces_quads.size() > faces_triangles.size());
+
+    wxLogMessage("Object loaded succesfully");
 }
 
 void WavefrontObj::obj_parse(char* file_line) {

@@ -57,6 +57,7 @@ private:
 //PANELS
 public:
 	wxPanel* LeftPanel;
+	wxBoxSizer* ViewerSizer = new wxBoxSizer(wxVERTICAL);
 	wxPanel* RightPanel;
 	
 	//FOR RIGHT PANEL
@@ -74,7 +75,7 @@ public:
 	}
 
 	//FOR LEFT PANEL (Geometry Viewers)
-	wxWindow* GeometryViewer;
+	GLGeometryViewer* GeometryViewer;
 	//G4OpenGLImmediateXViewer* SetupViewer;
 
 //TOOLBAR METHODS
