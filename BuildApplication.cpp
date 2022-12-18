@@ -30,7 +30,7 @@ bool BuildApplication::CMakeGenerate()
 	std::string cdCommand;
 	//cdCommand = "cd " + CMakeListsTxt_DIR + "/build";
 	std::string CMakeCommand;
-	CMakeCommand = "cmake -DGeant4_DIR=" + GEANT4_DIR + " -B" + CMakeListsTxt_DIR + "/build" + " -S" + CMakeListsTxt_DIR;
+	CMakeCommand = "cmake -D Geant4_DIR=" + GEANT4_DIR + " -B " + CMakeListsTxt_DIR + "/build" + " -S " + CMakeListsTxt_DIR;
 	//std::string Command = cdCommand + " && " + CMakeCommand;
 	system(CMakeCommand.c_str());
 	//std::cout << CMakeCommand << std::endl;
@@ -61,5 +61,11 @@ void BuildApplication::Build_MSBuild()
 	char* MSBuildDirectory = new char[command2.length() + 1];
 	strcpy(MSBuildDirectory, command2.c_str());
 	system(MSBuildDirectory);
+
+	//finally, copy the executable from the build/Release directory
+
+	std::filesystem::path from(CMakeListsTxt_DIR + "/build/Release/main.exe");
+	std::filesystem::path to(CMakeListsTxt_DIR + "/main.exe");
+	std::filesystem::copy(from, to, std::filesystem::copy_options::overwrite_existing);
 
 }
