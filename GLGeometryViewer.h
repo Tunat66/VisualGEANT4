@@ -46,6 +46,7 @@ public:
 	GLfloat latitude_current = 0.0f;
 	GLfloat longitude_current = 50.0f;
 	GLfloat zoom=1; 
+	wxPoint initialPos;
 
 
 	void prepare3DViewport(int topleft_x, int topleft_y, int bottomrigth_x, int bottomrigth_y);
