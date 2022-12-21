@@ -1,7 +1,9 @@
 #include "SourcePanel.h"
 
-SourcePanel::SourcePanel(wxFrame* MainFrame) : wxPanel(MainFrame, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0)
+SourcePanel::SourcePanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewer) : wxPanel(MainFrame, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0)
 {
+	ViewerAccess = GeometryViewer;
+	
 	//the layout (from top to bottom)
 	std::vector<wxString> DummyChoices = { "ahcjbhknklml", "b" }; //changed when filesystem is implemented
 	SelectBody = new wxChoiceVector(this, wxID_ANY, DummyChoices);;

@@ -53,10 +53,10 @@ public:
 
 	//functions bound to every single control:
 	void GunParticleEditf(wxCommandEvent& event);
-	void GunEnergyEditf(wxCommandEvent& event);
+	void GunEnergyEditf(wxSpinEvent& event);
 	void GunUnitEditf(wxCommandEvent& event);
 
-	void BeamOnTimesEditf(wxCommandEvent& event);
+	void BeamOnTimesEditf(wxSpinEvent& event);
 
 	void VisStyleEditf(wxCommandEvent& event);
 	void VisFilterEditf(wxCommandEvent& event);
@@ -66,7 +66,19 @@ public:
 	void ElectronCBf(wxCommandEvent& event);
 	void GammaCBf(wxCommandEvent& event);
 
-
+	enum {
+		GunParticleEdit_ID,
+		GunEnergyEdit_ID,
+		GunUnitEdit_ID,
+		BeamOnTimesEdit_ID,
+		VisStyleEdit_ID,
+		VisFilterEdit_ID,
+		ProtonCB_ID,
+		NeutronCB_ID,
+		ElectronCB_ID,
+		PositronCB_ID,
+		GammaCB_ID
+	};
 
 	//macro for event handling
 	wxDECLARE_EVENT_TABLE();

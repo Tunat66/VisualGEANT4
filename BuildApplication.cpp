@@ -16,8 +16,12 @@ BuildApplication::BuildApplication(std::vector<std::string> Kernel_args)
 	//refresh the g4_00.wrl file:
 	create_wrl(CMakeListsTxt_DIR);
 
-	//finally, refresh the setup.obj file
-	create_obj_from_wrl(CMakeListsTxt_DIR);
+	//finally, refresh the setup.obj file (OLD, the method now in RunPanel.cpp)
+	//create_obj_from_wrl(CMakeListsTxt_DIR);
+
+	//finally finally, instruct the viewer to view the new .obj file
+	//MainWindow::GeometryViewer->refresh_view();
+	//MainWindow::GeometryViewer->load_obj();
 }
 
 bool BuildApplication::CMakeGenerate()
@@ -137,11 +141,14 @@ void BuildApplication::create_wrl(std::string ProjectDir)
 	wxMessageBox(wxT("Hello World!"));
 }
 
+
+/*This guy used to be here, but moved it to RunPanel class to avoid "Race Condition" bugs (the program attempting to open obj files before
+writing to them is completed
 void BuildApplication::create_obj_from_wrl(std::string ProjectDir)
 {
-	//std::filesystem::path Existing(ProjectDir + "/setup.obj");
-	//if(std::filesystem::exists(Existing))
-		//std::filesystem::remove(Existing);
+	std::filesystem::path Existing(ProjectDir + "/setup.obj");
+	if(std::filesystem::exists(Existing))
+		std::filesystem::remove(Existing);
 
 	//instruct the python script:
 	//std::string InstructScript = "python " + ProjectDir + "\\meshconvOpener.py";
@@ -185,7 +192,7 @@ void BuildApplication::create_obj_from_wrl(std::string ProjectDir)
 	/*
 	wchar_t wtext3[30];
 	mbstowcs(wtext3, cmdArgs, strlen(cmdArgs) + 1);//Plus null
-	LPWSTR cmd = wtext3;*/
+	LPWSTR cmd = wtext3;
 
 	
 	// additional information
@@ -226,3 +233,4 @@ void BuildApplication::create_obj_from_wrl(std::string ProjectDir)
 	//delete[] ChildDirectory;
 }
 
+*/

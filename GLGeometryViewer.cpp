@@ -135,7 +135,7 @@ GLGeometryViewer::GLGeometryViewer(wxWindow* parent) :
     SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
     //set the file source
-    File = SystemManager.CurrentProjectDir + "\\setup.obj"; //note that for any project, the obj file is called "setup.obj"
+    File = GLSystemManager.CurrentProjectDir + "\\setup.obj"; //note that for any project, the obj file is called "setup.obj"
     DisplayedObj = new WavefrontObj(File);
 
     //initialize, see below for the method
@@ -146,26 +146,36 @@ GLGeometryViewer::GLGeometryViewer(wxWindow* parent) :
 //in wxwidgets, if this viewer is re-instantiated, it gets small on the screen (IDK why??!!))
 void GLGeometryViewer::refresh_view() 
 {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clean the screen and the depth buffer
+    glLoadIdentity(); // Reset The Projection Matrix
     m_context = new wxGLContext(this);
-    // prepare a simple cube to demonstrate 3D render
-    // source: http://www.opengl.org/resources/code/samples/glut_examples/examples/cube.c
-    v[0][0] = v[1][0] = v[2][0] = v[3][0] = -1;
-    v[4][0] = v[5][0] = v[6][0] = v[7][0] = 1;
-    v[0][1] = v[1][1] = v[4][1] = v[5][1] = -1;
-    v[2][1] = v[3][1] = v[6][1] = v[7][1] = 1;
-    v[0][2] = v[3][2] = v[4][2] = v[7][2] = 1;
-    v[1][2] = v[2][2] = v[5][2] = v[6][2] = -1;
 
     // To avoid flashing on MSWindows
     SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
     //set the file source
-    File = SystemManager.CurrentProjectDir + "\\setup.obj"; //note that for any project, the obj file is called "setup.obj"
+    File = GLSystemManager.CurrentProjectDir + "\\setup.obj"; //note that for any project, the obj file is called "setup.obj"
     DisplayedObj = new WavefrontObj(File);
 
     //initialize, see below for the method
     init();
 }
+
+void GLGeometryViewer::refresh_view_dbg()
+{
+    m_context = new wxGLContext(this);
+
+    // To avoid flashing on MSWindows
+    SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+
+    //set the file source
+    File = GLSystemManager.CurrentProjectDir + "\\dummy.obj"; //note that for any project, the obj file is called "setup.obj"
+    DisplayedObj = new WavefrontObj(File);
+
+    //initialize, see below for the method
+    init();
+}
+
 
 GLGeometryViewer::~GLGeometryViewer()
 {
@@ -188,7 +198,7 @@ void GLGeometryViewer::init() {
 
 void GLGeometryViewer::load_obj() {
 
-    if (SystemManager.Project_isOpen) {
+    if (GLSystemManager.Project_isOpen) {
         wxString str(File);
         wxLogMessage(str);
         DisplayedObj->open_obj(File);
@@ -200,12 +210,12 @@ void GLGeometryViewer::load_obj() {
         is_quad = DisplayedObj->is_quad;
         wxLogMessage("Object successfully in viewer memory!");
     }
-    render_again(longitude_current, latitude_current, 1);
+    render_again(longitude_current, latitude_current, zoom);
 }
 
 void GLGeometryViewer::draw_obj() {
     
-    if (SystemManager.Project_isOpen) {
+    if (GLSystemManager.Project_isOpen) {
 
         if (render_mode) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

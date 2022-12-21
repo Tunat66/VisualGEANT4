@@ -17,8 +17,17 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
 	EVT_TOOL(20001, RunPanelShow)
 	EVT_TOOL(20002, GeometryPanelShow)
 	EVT_TOOL(20003, SourcePanelShow)
+	//EVT_BUTTON(10001, RunPanel::ApplyChanges)
 wxEND_EVENT_TABLE()
 
+//wxBEGIN_EVENT_TABLE(RunPanel, wxWindow)
+	//EVT_BUTTON(10001, MainWindow::RefreshGeometryViever)
+//wxEND_EVENT_TABLE()
+
+void MainWindow::RefreshGeometryViever()
+{
+	wxLogMessage("nothing");
+}
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting initial position*/ wxPoint(30, 30), wxSize(1200, 700))
 {
@@ -70,7 +79,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting 
 	
 //RIGHT PANEL: This is the panel where buttons and controls are located, controlled by a toolbar	
 	//default window is the run window
-	RightPanel = new RunPanel(this);
+	RightPanel = new RunPanel(this, GeometryViewer);
 	RightPanel->SetBackgroundColour(wxColor(205, 205, 205));
 	
 //TOOLBAR, which changes the RightPanel:	
@@ -150,14 +159,14 @@ void MainWindow::OnNewProject(wxCommandEvent& event)
 		std::ofstream ProjectFile(std::string(ProjectFolderName.mb_str()) + "/" + std::string(ProjectName.mb_str()) + "proj");
 
 		//copy the contents of the "default project" into this "new project"
-
+		//ADD HERE IMMEDIATELY
 		
 		//lastly, set it as the current project dir:
 		SystemManager.CurrentProjectDir = ProjectPath.mb_str(); //convert wxString to std::string
 
 	}
 
-	SystemManager.Project_isOpen = true; //some methods will run if only this is true;
+	SystemManager.Project_isOpen = true; //some methods will run only if this is true;
 
 	//delete the status text "please select a project"
 	SetStatusText("Project Selected.");

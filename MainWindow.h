@@ -69,7 +69,7 @@ public:
 	void ReallocatePanel()
 	{
 		RightPanel->Destroy();
-		RightPanel = new RightPanelType(this);
+		RightPanel = new RightPanelType(this, GeometryViewer);
 		RightPanel->SetBackgroundColour(wxColor(205, 205, 205));
 		MainWindowSizer->Add(RightPanel, 1, wxEXPAND | wxRIGHT | wxBOTTOM | wxTOP, 5);
 		MainWindowSizer->Layout();
@@ -77,6 +77,7 @@ public:
 
 	//FOR LEFT PANEL (Geometry Viewers)
 	GLGeometryViewer* GeometryViewer;
+	void RefreshGeometryViever(); //allow it to read and display the newly created setup.obj file
 	//G4OpenGLImmediateXViewer* SetupViewer;
 
 //TOOLBAR METHODS

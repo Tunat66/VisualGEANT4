@@ -6,6 +6,10 @@
 #include<fstream>
 #include<filesystem>
 //this allows the application to be built from its sources
+//#include "MainWindow.h"
+//one exception, it includes the main window (overriding the frontend-backend relationship we described)
+//class MainWindow;
+
 class BuildApplication
 {
 public:

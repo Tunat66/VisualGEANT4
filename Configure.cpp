@@ -187,7 +187,7 @@ void Configure::ChangeWithRegex(std::string FileWithDir, std::string Prefix, std
 	f.close();
 
 	cout << "OLD:\n" + TempContent << endl;
-	TempContent = std::regex_replace(TempContent, std::regex("(/vis/viewer/set/style)(.*)"), Prefix + " " + NewValue);
+	TempContent = std::regex_replace(TempContent, std::regex("(" + Prefix + ")(.*)"), Prefix + " " + NewValue);
 	f.close();
 	cout << "NEW:\n" + TempContent << endl;
 

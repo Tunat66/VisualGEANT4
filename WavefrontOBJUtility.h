@@ -29,6 +29,7 @@ public:
 		unsigned long v1, v2, v3, v4;
 	} face_quad;
 
+	//calling them static may cause issues
 	std::vector<vertex> vertices;
 	std::vector<face_quad> faces_quads;
 	std::vector<face_triangle> faces_triangles;

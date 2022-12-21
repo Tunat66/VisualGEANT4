@@ -26,8 +26,9 @@ class GLGeometryViewer : public wxGLCanvas, public WavefrontOBJUtility//, do not
 
 public:
 	//the ususal systemmanager to access the projectDirectory
-	SystemVariables SystemManager; //must be allocated in stack, IDK why
+	SystemVariables GLSystemManager; //must be allocated in stack, IDK why
 	void refresh_view();
+	void refresh_view_dbg();
 	std::string File;
 	WavefrontObj* DisplayedObj;
 

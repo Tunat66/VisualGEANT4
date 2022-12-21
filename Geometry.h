@@ -36,6 +36,8 @@ public:
 
 	//REUSABLE METHODS:
 	void WriteFromTemplateObj(std::ofstream& TargetFile, std::ifstream& TemplateFile);
+	void ChangeWithRegex(std::string FileWithDir, std::string Prefix, std::string NewValue);
+	void FullChangeWithRegex(std::string FileWithDir, std::string Prefix, std::string NewValue);
 	
 };
 

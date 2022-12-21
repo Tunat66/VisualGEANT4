@@ -1,13 +1,21 @@
 #pragma once
-#include"wx/wx.h"
+#include "wx/wx.h"
 #include "SystemVariables.h"
 #include "ConfigureWindow.h"
+#include "GLGeometryViewer.h"
+#include <windows.h>
+//#include "MainWindow.h"
 //this object is panel which attaches itself to the right panel
+
+class MainWindow;
+
 class RunPanel : public wxPanel
 {
 public:
-	RunPanel(wxFrame* MainFrame);
+	RunPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewer);
 	~RunPanel();
+
+	GLGeometryViewer* ViewerAccess;
 
 	//to access the backend, and some aliases for clean code made with address matching, possible bugs with assignment
 	SystemVariables SystemManager;
