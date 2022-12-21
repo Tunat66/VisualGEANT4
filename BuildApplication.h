@@ -14,5 +14,7 @@ public:
 	std::string GEANT4_DIR;
 	bool CMakeGenerate();
 	void Build_MSBuild();
+	void create_wrl(std::string ProjectDir);
+	void create_obj_from_wrl(std::string ProjectDir);
 };
 

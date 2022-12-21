@@ -1,7 +1,7 @@
 
 #include"cApp.h"
 #pragma warning(disable:4996)
-
+#pragma optimize("", off) //important: removing it will cause variables to be destroyed (optimized away, my ass) in buffer.h
 //this is to inform the system main function to
 //be informed of the entry point
 wxIMPLEMENT_APP(cApp);

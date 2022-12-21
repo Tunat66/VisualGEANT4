@@ -1,5 +1,4 @@
 //code from source: https://wiki.wxwidgets.org/WxGLCanvas
-//THIS is a test code to test the viewer
 #include "GLGeometryViewer.h"
 BEGIN_EVENT_TABLE(GLGeometryViewer, wxGLCanvas)
     EVT_MOTION(GLGeometryViewer::mouseMoved)
@@ -40,12 +39,24 @@ struct camera {
 } camera;
 
 // some useful events to use
-void GLGeometryViewer::mouseMoved(wxMouseEvent& event) {}
+void GLGeometryViewer::mouseMoved(wxMouseEvent& event) 
+{
+    if (event.Dragging() && event.RightDown())
+    {
+        wxPoint PositionChange = event.GetLogicalPosition(wxClientDC(this)) - initialPos;
+        GLfloat deltax = (GLfloat) PositionChange.x;
+        GLfloat deltay = (GLfloat) PositionChange.y;
+        longitude_current += 0.01f * deltax;
+        latitude_current += 0.01f * deltay;
+        render_again(longitude_current, latitude_current, zoom);
+    }
+
+}
 void GLGeometryViewer::mouseDown(wxMouseEvent& event) {
 
     //used while testing
-    //longitude_current -= 10.0f;
-    //render_again(longitude_current, latitude_current);
+    longitude_current -= 10.0f;
+    render_again(longitude_current, latitude_current, zoom);
 
 }
 void GLGeometryViewer::mouseWheelMoved(wxMouseEvent& event) 
@@ -57,8 +68,10 @@ void GLGeometryViewer::mouseWheelMoved(wxMouseEvent& event)
 void GLGeometryViewer::mouseReleased(wxMouseEvent& event) {}
 void GLGeometryViewer::rightClick(wxMouseEvent& event) {
 
-    //longitude_current += 10.0f;
-    //render_again(longitude_current, latitude_current);
+    initialPos = event.GetLogicalPosition(wxClientDC(this));
+    
+    longitude_current += 10.0f;
+    render_again(longitude_current, latitude_current, zoom);
 }
 void GLGeometryViewer::mouseLeftWindow(wxMouseEvent& event) {}
 
@@ -388,6 +401,7 @@ void GLGeometryViewer::render(wxPaintEvent& evt)
     glTranslatef(0, 0, -15);
     glRotatef(longitude_current, 0.0f, 1.0f, 0.0f);
     glRotatef(latitude_current, 1.0f/*(GLfloat)sin(M_PI / 180.0 * (double)latitude)*/, 0.0f, /*(GLfloat)-cos(M_PI / 180.0 * (double)latitude)*/0.0f);
+    glScalef(zoom, zoom, zoom);
 
     /*glColor4f(1, 0, 0, 1);
     for (int i = 0; i < 6; i++)

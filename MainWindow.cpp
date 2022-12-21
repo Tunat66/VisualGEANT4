@@ -74,10 +74,23 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting 
 	RightPanel->SetBackgroundColour(wxColor(205, 205, 205));
 	
 //TOOLBAR, which changes the RightPanel:	
-	wxToolBar* RightPanelNav = this->CreateToolBar(wxTB_HORIZONTAL, wxID_ANY);;
-	wxToolBarToolBase* RunTool = RightPanelNav->AddTool(20001, wxT("Run"), wxNullBitmap, wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
-	wxToolBarToolBase* GeomteryTool = RightPanelNav->AddTool(20002, wxT("Geometry"), wxNullBitmap, wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);;
-	wxToolBarToolBase* SourceTool = RightPanelNav->AddTool(20003, wxT("Particle Source"), wxNullBitmap, wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);;
+	wxToolBar* RightPanelNav = this->CreateToolBar(wxTB_HORIZONTAL, wxID_ANY);
+	//add the bitmap images
+	//wxString ngeomIcon("geomIcon.png");
+	//wxString nrunIcon("runIcon.png");
+	//wxString ngunIcon("gunIcon.png");
+	//wxBitmap* geomIcon = new wxBitmap();
+	//geomIcon->LoadFile(ngeomIcon, wxBITMAP_TYPE_PNG);
+	//wxBitmap* runIcon = new wxBitmap();
+	//runIcon->LoadFile(nrunIcon, wxBITMAP_TYPE_PNG);
+	//wxBitmap* gunIcon = new wxBitmap();
+	//gunIcon->LoadFile(ngunIcon, wxBITMAP_TYPE_PNG);
+
+	//append to the toolbar
+	wxInitAllImageHandlers();
+	wxToolBarToolBase* RunTool = RightPanelNav->AddTool(20001, wxT("Run"), wxBITMAP_PNG(runIcon), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
+	wxToolBarToolBase* GeomteryTool = RightPanelNav->AddTool(20002, wxT("Geometry"), wxBITMAP_PNG(geomIcon), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
+	wxToolBarToolBase* SourceTool = RightPanelNav->AddTool(20003, wxT("Particle Source"), wxBITMAP_PNG(gunIcon), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
 	RightPanelNav->Realize();
 	
 	

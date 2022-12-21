@@ -23,6 +23,7 @@ public:
 
 	std::string FileName;
 
+	
 	void open_obj(std::string Filename);
 	void obj_parse(char* file_line); //parses a line
 	void PrintToFile(std::string File);

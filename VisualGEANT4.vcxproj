@@ -181,6 +181,7 @@
     <ClInclude Include="GetCommand.h" />
     <ClInclude Include="GLGeometryViewer.h" />
     <ClInclude Include="NewDirPicker.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SourcePanel.h" />
     <ClInclude Include="SystemVariables.h" />
     <ClInclude Include="MainWindow.h" />
@@ -189,6 +190,15 @@
     <ClInclude Include="WavefrontObj.h" />
     <ClInclude Include="WavefrontOBJUtility.h" />
     <ClInclude Include="wxChoiceVector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="bitmap1.bmp" />
+    <Image Include="geomIcon.png" />
+    <Image Include="gunIcon.png" />
+    <Image Include="runIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

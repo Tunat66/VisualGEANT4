@@ -1,6 +1,7 @@
 #pragma once
 #include "wx/wx.h"
 #include "wx/filepicker.h"
+#include "wx/imagpng.h"
 #include <string>
 #include <vector>
 #include "SystemVariables.h"

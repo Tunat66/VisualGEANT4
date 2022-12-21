@@ -12,6 +12,8 @@ WavefrontObj::~WavefrontObj()
 {
 }
 
+
+
 void WavefrontObj::calculate_normal(face_triangle f, GLdouble* normal) {
     // x
     normal[0] = (vertices[f.v2 - 1].y - vertices[f.v1 - 1].y) * (vertices[f.v3 - 1].z - vertices[f.v1 - 1].z)
