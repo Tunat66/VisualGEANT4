@@ -224,8 +224,18 @@ void MainWindow::OnCommandLine(wxCommandEvent& event)
 	SetStatusText(Out);
 	GetCommand* Parse = new GetCommand(2, std::string(Out.mb_str()));
 	
+	
+
 	SystemManager.Kernel_args = Parse->Kernel_args;
 	delete Parse;
+
+	//debug
+	for (int i = 0; i < SystemManager.Kernel_args.size(); i++) {
+		wxString message(SystemManager.Kernel_args.at(i));
+		wxLogMessage(message);
+	}
+
+
 	SystemManager.Conclude();
 
 	//try testing with the command:

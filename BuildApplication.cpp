@@ -83,6 +83,7 @@ void BuildApplication::Build_MSBuild()
 
 void BuildApplication::create_wrl(std::string ProjectDir)
 {
+	
 	std::filesystem::path Existing(ProjectDir + "/g4_00.wrl");
 	if (std::filesystem::exists(Existing))
 		std::filesystem::remove(Existing);

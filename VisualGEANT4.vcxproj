@@ -165,6 +165,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\VisualGEANT4\sdks\freeglut-3.2.2\include;D:\wxWidgets-3.1.5\include\msvc;D:\wxWidgets-3.1.5\include</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="RunPanel.cpp" />
+    <ClCompile Include="Source.cpp" />
     <ClCompile Include="SourcePanel.cpp" />
     <ClCompile Include="SystemVariables.cpp" />
     <ClCompile Include="WavefrontObj.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="GLGeometryViewer.h" />
     <ClInclude Include="NewDirPicker.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Source.h" />
     <ClInclude Include="SourcePanel.h" />
     <ClInclude Include="SystemVariables.h" />
     <ClInclude Include="MainWindow.h" />

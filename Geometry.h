@@ -26,7 +26,7 @@ public:
 	bool isValid = true; //to check the Kernel_args has an illegal word
 	int level = 1; //this class is invoked by the first argument of Kernel_args, so it is "level 1"
 
-	//METHODS:
+	//OUT METHODS:
 	//please note that these methods both modify the obj file and the g
 	void AddObject();
 	void DeleteObject();

@@ -1,4 +1,5 @@
 #include "Configure.h"
+#include "wx/wx.h"
 
 using namespace std;
 
@@ -58,7 +59,7 @@ void Configure::VisHandle()
 	{
 		std::ifstream f("Templates/" + Args.at(3) + ".mac"); //taking file as inputstream, templates exist at VisualGEANT4 Install
 		string Template;
-		//get contents
+		//get contents, I took this small bit of code from StackOverflow ADD LINK
 		if (f) {
 			std::ostringstream ss;
 			ss << f.rdbuf(); // reading data
@@ -111,7 +112,7 @@ void Configure::VisHandle()
 void Configure::RunHandle()
 {
 	//usual console syntax
-	std::string FileToModify = Args.at(Args.size() - 1);
+	std::string FileToModify = Args.at(Args.size() - 2);
 	
 	//create a new file if requested as: config run <projectdir> <neworexistingfilename.mac>
 	if (Args.at(2) == "new")
@@ -135,7 +136,7 @@ void Configure::RunHandle()
 void Configure::GunHandle()
 {
 	//usual console syntax
-	std::string FileToModify = Args.at(Args.size() - 1);
+	std::string FileToModify = Args.at(Args.size() - 2);
 	
 	//create a new file if requested as: config run <projectdir> <neworexistingfilename.mac>
 	if (Args.at(2) == "new")
@@ -187,9 +188,15 @@ void Configure::ChangeWithRegex(std::string FileWithDir, std::string Prefix, std
 	f.close();
 
 	cout << "OLD:\n" + TempContent << endl;
-	TempContent = std::regex_replace(TempContent, std::regex("(" + Prefix + ")(.*)"), Prefix + " " + NewValue);
+	std::string beginning = "(";
+	std::string end = ")(.*)";
+	std::string middle = Prefix;
+	std::string PrefixCStr = beginning + middle + end;
+	TempContent = std::regex_replace(TempContent, std::regex(PrefixCStr.c_str()), Prefix + " " + NewValue);
 	f.close();
 	cout << "NEW:\n" + TempContent << endl;
+	wxString tmp(PrefixCStr);
+	wxLogMessage(tmp);
 
 	ofstream ofs;
 	ofs.open(FileWithDir, std::ofstream::out | std::ofstream::trunc);

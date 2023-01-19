@@ -48,6 +48,7 @@ void WavefrontObj::open_obj(std::string filename) {
 
     file_stream.close();
 
+    //this line creates a huge bug!
     is_quad = (faces_quads.size() > faces_triangles.size());
 
     wxLogMessage("Object loaded succesfully");

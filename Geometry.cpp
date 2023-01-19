@@ -53,10 +53,16 @@ void Geometry::ChangeWithRegex(std::string FileWithDir, std::string Prefix, std:
 	}
 	f.close();
 
-	//std::cout << "OLD:\n" + TempContent << std::endl;
-	TempContent = std::regex_replace(TempContent, std::regex("(" + Prefix + ")(.*)"), Prefix + " " + NewValue);
+	std::cout << "OLD:\n" + TempContent << std::endl;
+	std::string beginning = "(";
+	std::string end = ")(.*)";
+	std::string middle = Prefix;
+	std::string PrefixCStr = beginning + middle + end;
+	TempContent = std::regex_replace(TempContent, std::regex(PrefixCStr.c_str()), Prefix + " " + NewValue);
 	f.close();
-	//std::cout << "NEW:\n" + TempContent << std::endl;
+	std::cout << "NEW:\n" + TempContent << std::endl;
+	//wxString tmp(PrefixCStr);
+	//wxLogMessage(tmp);
 
 	std::ofstream ofs;
 	ofs.open(FileWithDir, std::ofstream::out | std::ofstream::trunc);
@@ -77,10 +83,16 @@ void Geometry::FullChangeWithRegex(std::string FileWithDir, std::string Prefix, 
 	}
 	f.close();
 
-	//std::cout << "OLD:\n" + TempContent << std::endl;
-	TempContent = std::regex_replace(TempContent, std::regex("(" + Prefix + ")(.*)"), NewValue);
+	std::cout << "OLD:\n" + TempContent << std::endl;
+	std::string beginning = "(";
+	std::string end = ")(.*)";
+	std::string middle = Prefix;
+	std::string PrefixCStr = beginning + middle + end;
+	TempContent = std::regex_replace(TempContent, std::regex(PrefixCStr.c_str()), NewValue);
 	f.close();
-	//std::cout << "NEW:\n" + TempContent << std::endl;
+	std::cout << "NEW:\n" + TempContent << std::endl;
+	//wxString tmp(PrefixCStr);
+	//wxLogMessage(tmp);
 
 	std::ofstream ofs;
 	ofs.open(FileWithDir, std::ofstream::out | std::ofstream::trunc);

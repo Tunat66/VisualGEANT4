@@ -186,10 +186,10 @@ void ConfigureWindow::VisStyleEditf(wxCommandEvent& event) {
 
 	switch (index) {
 	case 0:
-		Push("Wireframe");
+		Push("wireframe");
 		break;
 	case 1:
-		Push("Surface");
+		Push("surface");
 		break;
 	}
 	Push("vis.mac");

@@ -67,9 +67,10 @@ void RunPanel::ApplyChanges(wxCommandEvent& event)
 		std::string ProjectDir = SystemManager.CurrentProjectDir;
 
 		//first remove the old file (so that meshconv creates a new one, does not append to the old one!)
-		std::filesystem::path Existing(ProjectDir + "/setup.obj");
-		if (std::filesystem::exists(Existing))
-			std::filesystem::remove(Existing);
+		//this bit is evil: it causes the app to die by deleting setup.obj
+		//std::filesystem::path Existing(ProjectDir + "/setup.obj");
+		//if (std::filesystem::exists(Existing))
+			//std::filesystem::remove(Existing);
 
 		//creates a wavefront file setup.obj to view the experiment geometry, using 
 		//the file g4_00.wrl created by the compiled Geant4 executables
@@ -134,7 +135,7 @@ void RunPanel::ApplyChanges(wxCommandEvent& event)
 		//another wait
 		bool flag = false;
 		while (!flag) {
-			if (exitCode != STILL_ACTIVE) { flag = true; }
+			if (exitCode != STILL_ACTIVE) { flag = true;}
 		}
 
 		//another wait

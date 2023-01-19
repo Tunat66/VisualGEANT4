@@ -1,9 +1,9 @@
-//code from source: https://wiki.wxwidgets.org/WxGLCanvas
+//minimal cube code from source: https://wiki.wxwidgets.org/WxGLCanvas
 #include "GLGeometryViewer.h"
 BEGIN_EVENT_TABLE(GLGeometryViewer, wxGLCanvas)
     EVT_MOTION(GLGeometryViewer::mouseMoved)
     EVT_LEFT_DOWN(GLGeometryViewer::mouseDown)
-    EVT_LEFT_UP(GLGeometryViewer::mouseReleased)
+    EVT_RIGHT_UP(GLGeometryViewer::mouseReleased)
     EVT_RIGHT_DOWN(GLGeometryViewer::rightClick)
     EVT_LEAVE_WINDOW(GLGeometryViewer::mouseLeftWindow)
     EVT_SIZE(GLGeometryViewer::resized)
@@ -39,24 +39,41 @@ struct camera {
 } camera;
 
 // some useful events to use
+
+/*TRASH
+template <typename doubleType> 
+doubleType GLGeometryViewer::ArcSinMod(doubleType value)
+{
+    //value is in radians
+    doubleType rotation_value = value / (2 * M_PI);
+    int complete_rotation_value = (int) rotation_value;
+    doubleType rotation_modulo = rotaton_value - (doubleType)complete_rotation_value;
+    //case less than pi
+}*/
+
 void GLGeometryViewer::mouseMoved(wxMouseEvent& event) 
 {
-    if (event.Dragging() && event.RightDown())
+    GLfloat longinit = longitude_current;
+    GLfloat latinit = latitude_current;
+    if (event.Dragging() && isRightMouseButtonDown)
     {
-        wxPoint PositionChange = event.GetLogicalPosition(wxClientDC(this)) - initialPos;
-        GLfloat deltax = (GLfloat) PositionChange.x;
-        GLfloat deltay = (GLfloat) PositionChange.y;
-        longitude_current += 0.01f * deltax;
-        latitude_current += 0.01f * deltay;
-        render_again(longitude_current, latitude_current, zoom);
+        PositionChange = event.GetLogicalPosition(wxClientDC(this)) - initialPos;
+        //GLfloat longtmp = 180 / M_PI * asin((-shiftRate * deltay + sin(M_PI / 180 * longinit)));
+        //GLfloat lattmp = 180 / M_PI * asin((-shiftRate * deltay + sin(M_PI / 180 * latinit)));
+        deltax = (GLfloat)PositionChange.x;
+        deltay = (GLfloat)PositionChange.y;
+        GLfloat longtmp = shiftRate * deltax + longinit;
+        GLfloat lattmp = -shiftRate * deltay + latinit;
+        render_again(longtmp, lattmp, zoom);
     }
 
 }
+
 void GLGeometryViewer::mouseDown(wxMouseEvent& event) {
 
     //used while testing
-    longitude_current -= 10.0f;
-    render_again(longitude_current, latitude_current, zoom);
+    //longitude_current -= 10.0f;
+    //render_again(longitude_current, latitude_current, zoom);
 
 }
 void GLGeometryViewer::mouseWheelMoved(wxMouseEvent& event) 
@@ -65,16 +82,33 @@ void GLGeometryViewer::mouseWheelMoved(wxMouseEvent& event)
     render_again(longitude_current, latitude_current, zoom);
 
 }
-void GLGeometryViewer::mouseReleased(wxMouseEvent& event) {}
+void GLGeometryViewer::mouseReleased(wxMouseEvent& event) 
+{ // this method fixes final view when mouse is released
+    isRightMouseButtonDown = false;
+    InitialPositionOriginalReset = true;
+    latitude_current = -shiftRate * deltay + latitude_current;
+    longitude_current = shiftRate * deltax + longitude_current;
+    PositionChange = wxPoint(0, 0);
+    deltax = 0.0f;
+    deltay = 0.0f;
+}
 void GLGeometryViewer::rightClick(wxMouseEvent& event) {
 
-    initialPos = event.GetLogicalPosition(wxClientDC(this));
-    
-    longitude_current += 10.0f;
-    render_again(longitude_current, latitude_current, zoom);
+    if (InitialPositionOriginalReset)
+    {
+        initialPos = event.GetLogicalPosition(wxClientDC(this));
+        InitialPositionOriginalReset = false;
+    }
+    //initialPos2 = event.GetLogicalPosition(wxClientDC(this));
+    //longitude_current += 10.0f;
+    //render_again(longitude_current, latitude_current, zoom);
+
+    isRightMouseButtonDown = true;
+
 }
 void GLGeometryViewer::mouseLeftWindow(wxMouseEvent& event) {}
 
+//WASD control
 void GLGeometryViewer::keyPressed(wxKeyEvent& event) 
 {
     enum {
@@ -223,7 +257,7 @@ void GLGeometryViewer::draw_obj() {
         else {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         }
-        if (is_quad) {
+        if (/*is_quad*/true) {
             for (face_quad f : faces_quads) {
                 // Calculate normal by calculating two tri normals & averaging
                 face_triangle f_tri1 = { f.v1, f.v2, f.v3 };
@@ -248,7 +282,7 @@ void GLGeometryViewer::draw_obj() {
                 glEnd();
             }
         }
-        else {
+        if(true) {
             for (face_triangle f : faces_triangles) {
                 GLdouble normal[3];
                 calculate_normal(f, normal);
@@ -263,7 +297,7 @@ void GLGeometryViewer::draw_obj() {
         }
         glFlush();
     }
-    else {
+    else { //show the dummy cube
         glColor4f(1, 0, 0, 1);
         for (int i = 0; i < 6; i++)
         {

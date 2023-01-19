@@ -48,6 +48,7 @@ public:
 	GLfloat longitude_current = 50.0f;
 	GLfloat zoom=1; 
 	wxPoint initialPos;
+	wxPoint initialPos2;
 
 
 	void prepare3DViewport(int topleft_x, int topleft_y, int bottomrigth_x, int bottomrigth_y);
@@ -62,6 +63,15 @@ public:
 	void mouseLeftWindow(wxMouseEvent& event);
 	void keyPressed(wxKeyEvent& event);
 	void keyReleased(wxKeyEvent& event);
+	bool isRightMouseButtonDown = false;
+	wxPoint InitialPositionOriginal = wxPoint(0, 0);
+	bool InitialPositionOriginalReset = true;
+	GLfloat deltax = 0;
+	GLfloat deltay = 0;
+	wxPoint PositionChange = wxPoint(0, 0);
+	GLfloat shiftRate = 0.2f;
+	//TRASH modulo arcsin method:
+	//template <typename doubleType> doubleType ArcSinMod(doubleType value);
 
 	//obj renderer methods
 	void init();

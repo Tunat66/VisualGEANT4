@@ -21,6 +21,10 @@ Process::Process(std::vector<std::string> Kernel_args) {
 		Geometry* GeometryModifier = new Geometry(Kernel_args);
 		delete GeometryModifier;
 	}
+	else if (FirstCommand == "source") {
+		Source* SourceModifier = new Source(Kernel_args);
+		delete SourceModifier;
+	}
 	else
 		isValidCommand = false;
 		
@@ -37,18 +41,19 @@ Process::~Process() {
 void Process::OpenExisting(std::vector<std::string> Kernel_args) { //NTS: add a checker to see if CONFIG EXISTS
 	std::string LastArg /*which is always the app dir*/ = Kernel_args.at(Kernel_args.size() - 1);
 	std::string ChildDir = LastArg;
+	wxLogMessage(wxString(LastArg));
 	//all app executables are saved as main.exe, otherwise an error will be raised (this issue may be solved in future versions)
-	LastArg += "/main.exe";
+	LastArg += "\\main.exe";
 	//allocation to C type string and then casting to wchar_t (the type used by CreateProcess)
 	char* AppDirectory = new char[LastArg.length() + 1];
 	strcpy(AppDirectory, LastArg.c_str());
 	wchar_t wtext[100];
-	mbstowcs(wtext, AppDirectory, strlen(AppDirectory) + 1);//Plus null
+	mbstowcs(wtext, AppDirectory, strlen(AppDirectory) + 1);//Plus nullchar at the end
 	LPWSTR ptr = wtext;
 	char* ChildDirectory = new char[LastArg.length() + 1];
 	strcpy(ChildDirectory, ChildDir.c_str());
 	wchar_t wtext2[100];
-	mbstowcs(wtext2, ChildDirectory, strlen(ChildDirectory) + 1);//Plus null
+	mbstowcs(wtext2, ChildDirectory, strlen(ChildDirectory) + 1);//Plus nullchar at the end
 	LPWSTR dir = wtext2;
 	// additional information
 	STARTUPINFO si;
