@@ -3,6 +3,8 @@
 wxBEGIN_EVENT_TABLE(GeometryPanel, wxWindow)
 	EVT_BUTTON(RefreshViewer_ID, ApplyChanges) //link button with ID 10001 to method OnButtonClicked
 	EVT_BUTTON(CreateNew_ID, FCreateNew)
+	EVT_CHOICE(SelectBody_ID, SelectBodyf)
+	EVT_BUTTON(DeleteBody_ID, DeleteBodyf)
 wxEND_EVENT_TABLE()
 
 wxBEGIN_EVENT_TABLE(NewObject, wxFrame)
@@ -27,7 +29,7 @@ GeometryPanel::GeometryPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewe
 
 	//the layout (from top to bottom)
 	//std::vector<wxString> DummyChoices = {"ahcjbhknklml", "b"};
-	SelectBody = new wxChoiceVector(this, wxID_ANY, ObjectNameList);
+	SelectBody = new wxChoiceVector(this, SelectBody_ID, ObjectNameList);
 	CreateNew = new wxButton(this, CreateNew_ID, "Create New Body", wxDefaultPosition, wxSize(150, 50));
 	//now aligned horizontally
 	XValue = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -100000, 100000, 0, "wxSpinCtrl");
@@ -39,7 +41,8 @@ GeometryPanel::GeometryPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewe
 	//Euler2Value = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -6.28, 6.28, 0, "wxSpinCtrl");
 	//Euler3Value = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -6.28, 6.28, 0, "wxSpinCtrl");
 	//continue vertical
-	wxButton* RefreshViewer = new wxButton(this, RefreshViewer_ID, "Refresh Viewer", wxDefaultPosition, wxSize(150, 50));
+	RefreshViewer = new wxButton(this, RefreshViewer_ID, "Refresh Viewer", wxDefaultPosition, wxSize(150, 50));
+	DeleteBody = new wxButton(this, DeleteBody_ID, "Delete Body", wxDefaultPosition, wxSize(150, 50));
 
 	//add them to sizers
 	TranslationSizer->Add(x, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2);
@@ -65,6 +68,7 @@ GeometryPanel::GeometryPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewe
 	//VerticalLayout->Add(SetRotation, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	//VerticalLayout->Add(RotationSizer, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	VerticalLayout->Add(RefreshViewer, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
+	VerticalLayout->Add(DeleteBody, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	this->SetSizer(VerticalLayout);
 
 }
@@ -159,13 +163,42 @@ void GeometryPanel::FCreateNew(wxCommandEvent& event)
 void GeometryPanel::ApplyChanges(wxCommandEvent& event) //To developer: this function has a slight memory leak, fix ASAP!
 {
 	//gather data from input fields and manifest them onto the g4geom.txt file
-	
+	Push("geom");
+	Push("translate");
+
+	//name
+	int TranslatedBodyIndex = SelectBody->GetSelection();
+	wxString TranslatedBodyName = SelectBody->GetString(TranslatedBodyIndex);
+	std::string TranslatedBodyName_arg = std::string(TranslatedBodyName.mb_str());
+	Push(TranslatedBodyName_arg);
+
+	//dimensions
+	std::string x = std::to_string(XValue->GetValue());
+	std::string y = std::to_string(YValue->GetValue());
+	std::string z = std::to_string(ZValue->GetValue());
+	Push(x);
+	Push(y);
+	Push(z);
+	//end gathering data and manifest modification on g4geom.txt
+	SystemManager.Conclude();
+
+	//now reallocate the ObjectList, thus updating it
+	if (SystemManager.Project_isOpen)
+		ParseGeometryFile(); //this will fill in ObjectList
+	//now just extract the names from ObjectList and put them into ObjectNameList
+	for (int i = 0; i < ObjectList.size(); i++)
+	{
+		Body AccessedBody = ObjectList.at(i);
+		wxString wxBodyName(AccessedBody.BodyName);
+		ObjectNameList.push_back(wxBodyName);
+	}
 	
 	//AFTER HERE: Recompilationd and Reset of the viewer to show changed state:
 	if (SystemManager.Project_isOpen)
 	{
 		//OLD VERSION: body addition required program to be recompiled, hence this bit of code was included:
 		//SetStatusText("Compiling Project...");
+		/*
 		SystemManager.Kernel_args.push_back("build");
 
 		//read the G4DIR and push back to kernel args
@@ -177,67 +210,125 @@ void GeometryPanel::ApplyChanges(wxCommandEvent& event) //To developer: this fun
 		//after that concludes, instruct GLGeometryViewer to load the new object:
 
 		//finally
-		SystemManager.Conclude();
+		SystemManager.Conclude();*/
 		//SetStatusText("Compile Complete.");
 		//END OLD VERSION
 
-		//wait for the setup.obj file to be created (it takes time) before the following is executed
-		//there should be a proper winAPI way of doing this but I'd rather do it the villager way: (dear winAPI: wtf is a LPCSTR I mean)
-		//I don't want to deal with LPCSTR types!
-
 		std::string ProjectDir = SystemManager.CurrentProjectDir;
-
-		//first remove the old file (so that meshconv creates a new one, does not append to the old one!)
-		std::filesystem::path Existing(ProjectDir + "/setup.obj");
+		std::filesystem::path Existing(ProjectDir + "/g4_00.wrl");
 		if (std::filesystem::exists(Existing))
 			std::filesystem::remove(Existing);
 
-		//creates a wavefront file setup.obj to view the experiment geometry, using 
-		//the file g4_00.wrl created by the compiled Geant4 executables
-		//std::string LastArg = ProjectDir + "\\testopener.exe";
-		std::string LastArg = ProjectDir + "\\meshconvOpener.exe";
-		std::string ChildDir = ProjectDir;
-		wxString dir2(LastArg);
-		wxLogMessage(dir2);
+		//creates a wavefront file setup.obj to view the experiment geometry, using the file g4_00.wrl created by the compiled Geant4 executables
+		std::string MainPath = ProjectDir + "/main.exe"; //former LastArg
+		std::string MainDir = ProjectDir; //former ChildDir
+		char cmdArgs[] = "main.exe vis2.mac";
 
-		//char cmdArgs[] = "meshconv.exe -c obj g4_00.wrl";
 		//all app executables are saved as main.exe, otherwise an error will be raised (this issue may be solved in future versions)
 		//allocation to C type string and then casting to wchar_t (the type used by CreateProcess)
-		char* AppDirectory = new char[LastArg.length() + 1];
-		strcpy(AppDirectory, LastArg.c_str());
+		char* AppDirectory = new char[MainPath.length() + 1];
+		strcpy(AppDirectory, MainPath.c_str());
 		//system(AppDirectory);
 		wchar_t* wtext = new wchar_t[100];
 		mbstowcs(wtext, AppDirectory, strlen(AppDirectory) + 1);//Plus null
 		LPWSTR ptr = wtext;
 		delete[] wtext;
-		char* ChildDirectory = new char[LastArg.length() + 1];
-		strcpy(ChildDirectory, ChildDir.c_str());
+		char* ChildDirectory = new char[MainPath.length() + 1];
+		strcpy(ChildDirectory, MainDir.c_str());
 		wchar_t* wtext2 = new wchar_t[100];
 		mbstowcs(wtext2, ChildDirectory, strlen(ChildDirectory) + 1);//Plus null
 		LPWSTR dir = wtext2;
 		delete[] wtext2;
+		wchar_t wtext3[100];
+		mbstowcs(wtext3, cmdArgs, strlen(cmdArgs) + 1);//Plus null
+		LPWSTR cmd = wtext3;
+
 
 		// additional information
-		STARTUPINFO si;
-		PROCESS_INFORMATION pi;
+		STARTUPINFO si_wrlcreate;
+		PROCESS_INFORMATION pi_wrlcreate;
 
 		// set the size of the structures
-		ZeroMemory(&si, sizeof(si));
-		si.cb = sizeof(si);
-		ZeroMemory(&pi, sizeof(pi));
+		ZeroMemory(&si_wrlcreate, sizeof(si_wrlcreate));
+		si_wrlcreate.cb = sizeof(si_wrlcreate);
+		ZeroMemory(&pi_wrlcreate, sizeof(pi_wrlcreate));
 
-		// start the program up, test 
-
-		if (CreateProcess(ptr,   // the path
-			NULL,        // Command line
+		// start the program to create wrl files up
+		CreateProcess(ptr,   // the path
+			cmd,        // Command line
 			NULL,           // Process handle not inheritable
 			NULL,           // Thread handle not inheritable
 			FALSE,          // Set handle inheritance to FALSE
 			0,              // No creation flags
 			NULL,           // Use parent's environment block
-			dir,            // Use local directory as starting directory 
-			&si,            // Pointer to STARTUPINFO structure
-			&pi             // Pointer to PROCESS_INFORMATION structure (removed extra parentheses)
+			dir,           // Use project directory as starting directory 
+			&si_wrlcreate,            // Pointer to STARTUPINFO structure
+			&pi_wrlcreate             // Pointer to PROCESS_INFORMATION structure (removed extra parentheses)
+		);
+		
+
+		//wxLogMessage("wrl creation complete!");
+		delete[] AppDirectory;
+		delete[] ChildDirectory;
+		//wait for the wrl file to be created before running meshconv on it:
+		WaitForSingleObject(pi_wrlcreate.hProcess, INFINITE);
+
+		//NOW: update the setup.obj file in accordance to the contents of the wrl file
+		//first remove the old file (so that meshconv creates a new one, does not append to the old one!)
+		//std::filesystem::path SetupObjExisting(ProjectDir + "/setup.obj");
+		//if (std::filesystem::exists(SetupObjExisting))
+			//std::filesystem::remove(SetupObjExisting);
+
+		//creates a wavefront file setup.obj to view the experiment geometry, using 
+		//std::string LastArg = ProjectDir + "\\testopener.exe";
+		std::string OpenerPath = ProjectDir + "\\meshconv.exe"; //former LastArg
+		std::string OpenerDir = ProjectDir; //former ChildDir
+		wxString dir2(OpenerPath);
+		wxLogMessage(dir2);
+
+		//char cmdArgs[] = "meshconv.exe -c obj g4_00.wrl";
+		//all app executables are saved as main.exe, otherwise an error will be raised (this issue may be solved in future versions)
+		//allocation to C type string and then casting to wchar_t (the type used by CreateProcess)
+		AppDirectory = new char[OpenerPath.length() + 1];
+		strcpy(AppDirectory, OpenerPath.c_str());
+		//system(AppDirectory);
+		wtext = new wchar_t[100];
+		mbstowcs(wtext, AppDirectory, strlen(AppDirectory) + 1);//Plus null
+		ptr = wtext;
+		delete[] wtext;
+		ChildDirectory = new char[OpenerPath.length() + 1];
+		strcpy(ChildDirectory, OpenerDir.c_str());
+		wtext2 = new wchar_t[100];
+		mbstowcs(wtext2, ChildDirectory, strlen(ChildDirectory) + 1);//Plus null
+		LPWSTR Openerdir = wtext2;
+		delete[] wtext2;
+
+		char cmdArgs2[] = "meshconv.exe -c obj -o setup g4_00.wrl";
+		wchar_t wtext4[100];
+		mbstowcs(wtext4, cmdArgs2, strlen(cmdArgs2) + 1);//Plus null
+		cmd = wtext4;
+
+		// additional information
+		STARTUPINFO si_meshconvopener;
+		PROCESS_INFORMATION pi_meshconvopener;
+
+		// set the size of the structures
+		ZeroMemory(&si_meshconvopener, sizeof(si_meshconvopener));
+		si_meshconvopener.cb = sizeof(si_meshconvopener);
+		ZeroMemory(&pi_meshconvopener, sizeof(pi_meshconvopener));
+
+		// start the program up, test 
+
+		if (CreateProcess(ptr,   // the path
+			cmd,        // Command line
+			NULL,           // Process handle not inheritable
+			NULL,           // Thread handle not inheritable
+			FALSE,          // Set handle inheritance to FALSE
+			0,              // No creation flags
+			NULL,           // Use parent's environment block
+			Openerdir,            // Use local directory as starting directory 
+			&si_meshconvopener,            // Pointer to STARTUPINFO structure
+			&pi_meshconvopener             // Pointer to PROCESS_INFORMATION structure (removed extra parentheses)
 		)) {
 			wxLogMessage("Proc. successful!");
 		}
@@ -245,6 +336,7 @@ void GeometryPanel::ApplyChanges(wxCommandEvent& event) //To developer: this fun
 		//try to open the object only when the process is completed:
 		//to explain this weird syntax, refer to: 
 		//https://stackoverflow.com/questions/11725958/getexitcodeprocess-return-1-when-process-is-not-yet-finished
+		/*
 		DWORD exitCode = 0; //this allocates memory, whose address is passed as:
 		if (GetExitCodeProcess(pi.hProcess, &exitCode) == FALSE)
 		{
@@ -273,29 +365,71 @@ void GeometryPanel::ApplyChanges(wxCommandEvent& event) //To developer: this fun
 		//ViewerAccess->refresh_view_dbg();
 		//ViewerAccess->load_obj();
 
-		// Close process and thread handles. 
-		CloseHandle(pi.hProcess);
-		CloseHandle(pi.hThread);
+		
+		//wait until the creation of setup.obj completes, and meshconvopener.exe shuts down
+		WaitForSingleObject(pi_meshconvopener.hProcess, INFINITE);
+		
 
-
-		bool SetupFileExists = false;
+		//now validate if setup.obj file exists
 		std::filesystem::path SetupFilePath(SystemManager.CurrentProjectDir + "\\setup.obj");
-		while (!SetupFileExists)
+		
+		//this caused program to froze
+		/*while (!SetupFileExists)
 		{
 			if (std::filesystem::exists(SetupFilePath))
 				SetupFileExists = true;
+		}*/
+		//instead: use this
+		if (!std::filesystem::exists(SetupFilePath))
+		{
+			wxMessageBox(wxT("setup.obj file not found or deleted, VisualGEANT4 may crash!"));
 		}
 
-
-		wxMessageBox(wxT("Changes Saved. (Potential bug, do not turn off immediately)"));
+		//wxMessageBox(wxT("Changes Saved. (Potential bug, do not turn off immediately)"));
 		ViewerAccess->refresh_view();
 		ViewerAccess->load_obj();
 
 		delete[] AppDirectory;
 		delete[] ChildDirectory;
 
+
+		//finally: close process and thread handles of the two processes created within this method
+		CloseHandle(pi_wrlcreate.hProcess);
+		CloseHandle(pi_wrlcreate.hThread);
+		CloseHandle(pi_meshconvopener.hProcess);
+		CloseHandle(pi_meshconvopener.hThread);
+
 	}
 
+}
+
+void GeometryPanel::SelectBodyf(wxCommandEvent& event)
+{
+	Body BodySelected = ObjectList.at(SelectBody->GetSelection());
+	XValue->SetValue(BodySelected.posX);
+	YValue->SetValue(BodySelected.posY);
+	ZValue->SetValue(BodySelected.posZ);
+}
+
+void GeometryPanel::DeleteBodyf(wxCommandEvent& event)
+{
+	Push("geom");
+	SystemManager.Kernel_args.push_back("delete");
+
+	//the order of appearence of bodies in g4geom.txt MATTERS! they are referenced by their order index, not their name!
+	int DeletedBodyIndex = SelectBody->GetSelection();
+	wxString DeletedBodyName = SelectBody->GetString(DeletedBodyIndex);
+	
+	//first delete the body from the lists
+	ObjectList.erase(ObjectList.begin() + DeletedBodyIndex);
+	ObjectNameList.erase(ObjectNameList.begin() + DeletedBodyIndex);
+	SelectBody->Delete(DeletedBodyIndex);
+
+	//then, pass the command to delete the body
+	std::string DeletedBodyName_arg = std::string(DeletedBodyName.mb_str());
+	SystemManager.Kernel_args.push_back(DeletedBodyName_arg);
+	SystemManager.Conclude();
+	wxMessageBox(wxT("Deleted Body: " + DeletedBodyName_arg + " Click \'Refresh Viewer\' to see the effect."));
 }
 
 
@@ -400,6 +534,11 @@ NewObject::NewObject() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-New Object", /
 }
 
 void NewObject::Push(std::string arg)
+{
+	SystemManager.Kernel_args.push_back(arg);
+}
+
+void GeometryPanel::Push(std::string arg)
 {
 	SystemManager.Kernel_args.push_back(arg);
 }

@@ -9,7 +9,6 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
 	//file menu	
 	EVT_MENU(ID_NewProject, MainWindow::OnNewProject)
 	EVT_MENU(ID_OpenProject, MainWindow::OnOpenProject)
-	EVT_MENU(ID_Save, MainWindow::OnSave)
 	EVT_MENU(ID_SaveAs, MainWindow::OnSaveAs)
 	EVT_MENU(wxID_EXIT, MainWindow::OnExit)
 	//command menu
@@ -38,9 +37,9 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting 
 	menuFile->Append(ID_NewProject, "&New...\tCtrl-N", //wxWidgets can naturally sense the shortcut from this string!!
 		"Create a new project."); //3rd argument is shown in status bar
 	menuFile->Append(ID_OpenProject, "&Open...\t", "Open an existing project by navigating to its directory.");
-	menuFile->Append(ID_Save, "&Save...\tCtrl-S",
-		"Save changes in project.");
-	menuFile->Append(ID_SaveAs, "&Save As...\t",
+	//menuFile->Append(ID_Save, "&Save...\tCtrl-S",
+		//"Save changes in project.");
+	menuFile->Append(ID_SaveAs, "&Save Copy As...\tCtrl-S",
 		"Save changes in project.");
 	menuFile->AppendSeparator();
 	menuFile->Append(wxID_EXIT);
@@ -99,7 +98,9 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting 
 	wxInitAllImageHandlers();
 	wxToolBarToolBase* RunTool = RightPanelNav->AddTool(20001, wxT("Run"), wxBITMAP_PNG(runIcon), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
 	wxToolBarToolBase* GeomteryTool = RightPanelNav->AddTool(20002, wxT("Geometry"), wxBITMAP_PNG(geomIcon), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
-	wxToolBarToolBase* SourceTool = RightPanelNav->AddTool(20003, wxT("Particle Source"), wxBITMAP_PNG(gunIcon), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
+	
+	//ALPHA RELEASE DOES NOT INCLUDE A CONNECTION TO THE SOURCE TOOL: it is still under construction
+	//wxToolBarToolBase* SourceTool = RightPanelNav->AddTool(20003, wxT("Particle Source"), wxBITMAP_PNG(gunIcon), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
 	RightPanelNav->Realize();
 	
 	
@@ -160,13 +161,19 @@ void MainWindow::OnNewProject(wxCommandEvent& event)
 
 		//copy the contents of the "default project" into this "new project"
 		//ADD HERE IMMEDIATELY
+		//Taken from: https://stackoverflow.com/questions/37325875/copy-directory-content
+		std::filesystem::path DefaultProjectPath("DefaultProject");
+		std::filesystem::copy(DefaultProjectPath, New, std::filesystem::copy_options::recursive);
 		
 		//lastly, set it as the current project dir:
-		SystemManager.CurrentProjectDir = ProjectPath.mb_str(); //convert wxString to std::string
+		SystemManager.CurrentProjectDir = ProjectFolderName.mb_str(); //convert wxString to std::string
 
 	}
 
 	SystemManager.Project_isOpen = true; //some methods will run only if this is true;
+
+	GeometryViewer->refresh_view();
+	GeometryViewer->load_obj();
 
 	//delete the status text "please select a project"
 	SetStatusText("Project Selected.");
@@ -203,43 +210,81 @@ void MainWindow::OnOpenProject(wxCommandEvent& event)
 	//view setup geometry by instantiaitng the opengl canvas:
 	GeometryViewer->refresh_view();
 	GeometryViewer->load_obj();
-
+	
 	//delete the status text "please select a project"
-}
-void MainWindow::OnSave(wxCommandEvent& event) {
-	wxLogMessage("Will be available when custom app build is implemented");
-}
-void MainWindow::OnSaveAs(wxCommandEvent& event) {
-	wxLogMessage("Will be available when custom app build is implemented");
+	SetStatusText("Project Selected.");
 }
 
-void MainWindow::OnCommandLine(wxCommandEvent& event)
+
+void MainWindow::OnSaveAs(wxCommandEvent& event) //the contents of this method are very similar to new project
 {
-	//creates text entry
-	wxTextEntryDialog* CommandEntry = new wxTextEntryDialog();
-	CommandEntry->Create(this, "Enter command, refer to documentation for syntax:");
-	CommandEntry->ShowModal();
+	static const wxChar* FILETYPES = _T(
+		"VisualGEANT4 files |*.vg4|"
+		"All files|*.*"
+	);
 
-	wxString Out = CommandEntry->GetValue();
-	SetStatusText(Out);
-	GetCommand* Parse = new GetCommand(2, std::string(Out.mb_str()));
-	
-	
+	wxFileDialog* openFileDialog =
+		new wxFileDialog(this, _("Create VisualGEANT4 Project"), "", "", FILETYPES,
+			wxFD_SAVE, wxDefaultPosition);
 
-	SystemManager.Kernel_args = Parse->Kernel_args;
-	delete Parse;
+	if (openFileDialog->ShowModal() == wxID_OK)
+	{
+		wxString ProjectPath;
+		ProjectPath.append(openFileDialog->GetDirectory());
+		wxString ProjectName = openFileDialog->GetFilename();
+		wxString ProjectFolderName = ProjectPath + "/" + ProjectName;
 
-	//debug
-	for (int i = 0; i < SystemManager.Kernel_args.size(); i++) {
-		wxString message(SystemManager.Kernel_args.at(i));
-		wxLogMessage(message);
+		//create a new folder to put the project files in it
+		std::filesystem::path New = std::string(ProjectFolderName.mb_str());
+		std::filesystem::create_directories(New);
+
+		//create a vg4proj file inside this new folder, opened by the user when accessing the project later
+		std::ofstream ProjectFile(std::string(ProjectFolderName.mb_str()) + "/" + std::string(ProjectName.mb_str()) + "proj");
+
+		//copy the contents of the "default project" into this "new project"
+		//ADD HERE IMMEDIATELY
+		//Taken from: https://stackoverflow.com/questions/37325875/copy-directory-content
+		std::filesystem::path OriginalProjectPath(SystemManager.CurrentProjectDir); //This is where this method differs from OnNewProject method
+		std::filesystem::copy(OriginalProjectPath, New, std::filesystem::copy_options::recursive);
+
+		//since we save a copy, the following is disabled (put in comment)
+		//SystemManager.CurrentProjectDir = ProjectFolderName.mb_str(); //convert wxString to std::string
+
 	}
 
+	SystemManager.Project_isOpen = true; //some methods will run only if this is true;
 
-	SystemManager.Conclude();
+	GeometryViewer->refresh_view();
+	GeometryViewer->load_obj();
+}
 
-	//try testing with the command:
+void MainWindow::OnCommandLine(wxCommandEvent& event) //a nice command line tool to test and troubleshoot the application
+//allows user to pass command strings to backend manually
+{
+	try {
+		//creates text entry
+		wxTextEntryDialog* CommandEntry = new wxTextEntryDialog();
+		CommandEntry->Create(this, "Enter command, refer to documentation for syntax:");
+		CommandEntry->ShowModal();
 
+		wxString Out = CommandEntry->GetValue();
+		SetStatusText(Out);
+		GetCommand* Parse = new GetCommand(2, std::string(Out.mb_str()));
+
+		SystemManager.Kernel_args = Parse->Kernel_args;
+		delete Parse;
+
+		//debug
+		for (int i = 0; i < SystemManager.Kernel_args.size(); i++) {
+			wxString message(SystemManager.Kernel_args.at(i));
+			wxLogMessage(message);
+		}
+
+		SystemManager.Conclude();
+	}
+	catch (const std::exception& e) {
+		wxMessageBox(wxT("Invalid Command! Exited Normally..."));
+	}
 
 }
 

@@ -1,0 +1,3 @@
+#Set particle and energy
+/gun/particle gamma
+/gun/energy 6 MeV

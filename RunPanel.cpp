@@ -11,7 +11,7 @@ RunPanel::RunPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewer) : wxPan
 {
 	RightPanelSizer = new wxBoxSizer(wxVERTICAL);
 	button_RunProject = new wxButton(this, 10003, "Run Project", wxDefaultPosition, wxSize(150, 50));
-	button_ApplyChanges = new wxButton(this, 10001, "Apply Changes", wxDefaultPosition, wxSize(150, 50));
+	button_ApplyChanges = new wxButton(this, 10001, "Recompile Project", wxDefaultPosition, wxSize(150, 50));
 	button_ConfigureProject = new wxButton(this, 10004, "Configure Project", wxDefaultPosition, wxSize(150, 50));
 	RightPanelSizer->Add(button_RunProject, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 20);
 	RightPanelSizer->Add(button_ApplyChanges, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 20);

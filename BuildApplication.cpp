@@ -139,7 +139,8 @@ void BuildApplication::create_wrl(std::string ProjectDir)
 	delete[] AppDirectory;
 	delete[] ChildDirectory;
 
-	wxMessageBox(wxT("Hello World!"));
+	//for debugging
+	wxMessageBox(wxT("Race Condition Debugging: wrl file creation complete, now proceed with"));
 }
 
 

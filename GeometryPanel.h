@@ -21,6 +21,7 @@ public:
 
 	//to access the backend, and some aliases for clean code made with address matching, possible bugs with assignment
 	SystemVariables SystemManager;
+	void Push(std::string arg);
 
 private:
 	//the layout (from top to bottom)
@@ -51,7 +52,11 @@ private:
 	
 	//continue vertical
 	wxButton* RefreshViewer = nullptr;
-	void ApplyChanges(wxCommandEvent& event);
+	wxButton* DeleteBody = nullptr;
+	//when clicked
+	void ApplyChanges(wxCommandEvent& event); //when refreshviewer is clicked
+	void DeleteBodyf(wxCommandEvent& event);
+	void SelectBodyf(wxCommandEvent& event);
 
 	//the sizer to manage layout:
 	wxBoxSizer* VerticalLayout = new wxBoxSizer(wxVERTICAL);
@@ -68,7 +73,9 @@ private:
 
 	enum {
 		RefreshViewer_ID,
-		CreateNew_ID
+		CreateNew_ID,
+		DeleteBody_ID,
+		SelectBody_ID
 	};
 };
 
