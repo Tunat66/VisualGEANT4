@@ -100,7 +100,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting 
 	wxToolBarToolBase* GeomteryTool = RightPanelNav->AddTool(20002, wxT("Geometry"), wxBITMAP_PNG(geomIcon), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
 	
 	//ALPHA RELEASE DOES NOT INCLUDE A CONNECTION TO THE SOURCE TOOL: it is still under construction
-	//wxToolBarToolBase* SourceTool = RightPanelNav->AddTool(20003, wxT("Particle Source"), wxBITMAP_PNG(gunIcon), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
+	wxToolBarToolBase* SourceTool = RightPanelNav->AddTool(20003, wxT("Particle Source"), wxBITMAP_PNG(gunIcon), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
 	RightPanelNav->Realize();
 	
 	
@@ -158,6 +158,7 @@ void MainWindow::OnNewProject(wxCommandEvent& event)
 
 		//create a vg4proj file inside this new folder, opened by the user when accessing the project later
 		std::ofstream ProjectFile(std::string(ProjectFolderName.mb_str()) + "/" + std::string(ProjectName.mb_str()) + "proj");
+		ProjectFile.close();
 
 		//copy the contents of the "default project" into this "new project"
 		//ADD HERE IMMEDIATELY
@@ -238,17 +239,40 @@ void MainWindow::OnSaveAs(wxCommandEvent& event) //the contents of this method a
 		std::filesystem::path New = std::string(ProjectFolderName.mb_str());
 		std::filesystem::create_directories(New);
 
-		//create a vg4proj file inside this new folder, opened by the user when accessing the project later
-		std::ofstream ProjectFile(std::string(ProjectFolderName.mb_str()) + "/" + std::string(ProjectName.mb_str()) + "proj");
-
 		//copy the contents of the "default project" into this "new project"
-		//ADD HERE IMMEDIATELY
 		//Taken from: https://stackoverflow.com/questions/37325875/copy-directory-content
 		std::filesystem::path OriginalProjectPath(SystemManager.CurrentProjectDir); //This is where this method differs from OnNewProject method
 		std::filesystem::copy(OriginalProjectPath, New, std::filesystem::copy_options::recursive);
 
+
+		//BEGIN snippet take from: https://stackoverflow.com/questions/6935279/delete-all-txt-in-a-directory-with-c and modified:
+		if (std::filesystem::exists(New) && std::filesystem::is_directory(New))
+		{
+			std::filesystem::directory_iterator end;
+			for (std::filesystem::directory_iterator it(New); it != end; ++it)
+			{
+				try
+				{
+					if (std::filesystem::is_regular_file(it->status()) && (it->path().extension().compare(".vg4proj") == 0))
+					{
+						std::filesystem::remove(it->path());
+					}
+				}
+				catch (const std::exception& ex)
+				{
+					wxMessageBox(wxT("An Exception Occured while deleting the old .vg4proj file!"));
+					ex;
+				}
+			}
+		}
+		//END taken snippet
+
 		//since we save a copy, the following is disabled (put in comment)
 		//SystemManager.CurrentProjectDir = ProjectFolderName.mb_str(); //convert wxString to std::string
+
+		//create a vg4proj file inside this new folder, opened by the user when accessing the project later
+		std::ofstream ProjectFile(std::string(ProjectFolderName.mb_str()) + "/" + std::string(ProjectName.mb_str()) + "proj");
+		ProjectFile.close();
 
 	}
 

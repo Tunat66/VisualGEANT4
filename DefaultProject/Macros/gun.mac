@@ -1,3 +1,7 @@
 #Set particle and energy
 /gun/particle gamma
 /gun/energy 6 MeV
+
+#Set beam position and direction
+/gun/direction 1 1 1
+/gun/position 0.5 0.5 1.0

@@ -50,6 +50,9 @@ int main(int argc, char** argv)
 		// interactive mode
 		UImanager->ApplyCommand("/control/macroPath Macros");
 		UImanager->ApplyCommand("/control/execute init_vis.mac");
+		//UImanager->ApplyCommand("/control/execute gun.mac");
+		UImanager->ApplyCommand("/control/execute run.mac");
+		UImanager->ApplyCommand("/vis/viewer/rebuild");
 		//this is to create a wrl file used by VisualGEANT4
 		//UImanager->ApplyCommand("/control/execute vis2.mac");
 		ui->SessionStart();

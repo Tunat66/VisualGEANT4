@@ -41,6 +41,7 @@ ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Co
 	GunUnitText = new wxStaticText(gunPage, wxID_ANY, wxT("Energy Unit"), wxDefaultPosition, wxDefaultSize, 0);
 	//wxChoice* GunUnitEdit = new wxChoice(gunPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0, wxDefaultValidator, "Particle");
 	GunUnitEdit = new wxChoiceVector(gunPage, GunUnitEdit_ID, EnergyUnits);
+	wxStaticText* GunInstructionText = new wxStaticText(gunPage, wxID_ANY, wxT("Changes are saved automatically, close this window after performing the changes."), wxDefaultPosition, wxDefaultSize, 0);
 
 	wxBoxSizer* GunPageSizer = new wxBoxSizer(wxVERTICAL);
 	GunPageSizer->Add(GunParticleText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10); //these 0's are essential, since they allow these elements to be "stacked" without any prior scaling
@@ -49,16 +50,19 @@ ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Co
 	GunPageSizer->Add(GunEnergyEdit, 0, wxALIGN_LEFT | wxLEFT, 10);
 	GunPageSizer->Add(GunUnitText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
 	GunPageSizer->Add(GunUnitEdit, 0, wxALIGN_LEFT | wxLEFT, 10);
+	GunPageSizer->Add(GunInstructionText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
 	gunPage->SetSizer(GunPageSizer);
 	//END: Particle Gun
 
 	//BEGIN: Run Options
 	BeamOnTimesText = new wxStaticText(runPage, wxID_ANY, wxT("Number of Particles to be shot"), wxDefaultPosition, wxDefaultSize, 0);
 	BeamOnTimesEdit = new wxSpinCtrl(runPage, BeamOnTimesEdit_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10000000, 0, "wxSpinCtrl");
+	wxStaticText* RunInstructionText = new wxStaticText(runPage, wxID_ANY, wxT("Changes are saved automatically, close this window after performing the changes."), wxDefaultPosition, wxDefaultSize, 0);
 
 	wxBoxSizer* RunPageSizer = new wxBoxSizer(wxVERTICAL);
 	RunPageSizer->Add(BeamOnTimesText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10); //these 0's are essential, since they allow these elements to be "stacked" without any prior scaling
 	RunPageSizer->Add(BeamOnTimesEdit, 0, wxALIGN_LEFT | wxLEFT, 10);
+	RunPageSizer->Add(RunInstructionText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
 	runPage->SetSizer(RunPageSizer);
 	//END: Run Options
 
@@ -86,7 +90,8 @@ ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Co
 	//implement pions and muons later
 	//to be added:
 	//color picker for trajectories (not yet in backend)
-	
+	wxStaticText* VisInstructionText = new wxStaticText(visPage, wxID_ANY, wxT("Changes are saved automatically, close this window after performing the changes."), wxDefaultPosition, wxDefaultSize, 0);
+
 
 	wxBoxSizer* VisPageSizer = new wxBoxSizer(wxVERTICAL);
 	VisPageSizer->Add(VisStyleText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10); //these 0's are essential, since they allow these elements to be "stacked" without any prior scaling
@@ -96,6 +101,7 @@ ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Co
 	VisPageSizer->Add(VisSelectParticleText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
 	//VisPageSizer->Add(CBHolder, 0, wxALIGN_LEFT | wxLEFT, 10);
 	VisPageSizer->Add(ParticleCBSizer, 0, wxALIGN_LEFT | wxLEFT, 10);
+	VisPageSizer->Add(VisInstructionText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
 	visPage->SetSizer(VisPageSizer);
 	//END: Vis Options
 
@@ -202,11 +208,12 @@ std::vector<wxString> FilterBy{ "Particle", "Charge" };*/
 	Push("config");
 	Push("vis");
 	Push("trajectories");
-	int index = VisStyleEdit->GetSelection();
+	int index = VisFilterEdit->GetSelection();
 
 	switch (index) {
 	case 0:
 		Push("drawByParticleID");
+		wxLogMessage(wxT("done!"));
 		break;
 	case 1:
 		Push("drawByCharge");

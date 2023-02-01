@@ -57,9 +57,10 @@ void Configure::VisHandle()
 	}
 	else if (Args.at(2) == "trajectories")
 	{
+		//wxLogMessage(wxString(Args.at(3)));
 		std::ifstream f("Templates/" + Args.at(3) + ".mac"); //taking file as inputstream, templates exist at VisualGEANT4 Install
 		string Template;
-		//get contents, I took this small bit of code from StackOverflow ADD LINK
+		//get contents, I took this small bit of code from: https://www.tutorialspoint.com/what-is-the-best-way-to-read-an-entire-file-into-a-std-string-in-cplusplus
 		if (f) {
 			std::ostringstream ss;
 			ss << f.rdbuf(); // reading data

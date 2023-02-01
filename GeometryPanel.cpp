@@ -5,6 +5,9 @@ wxBEGIN_EVENT_TABLE(GeometryPanel, wxWindow)
 	EVT_BUTTON(CreateNew_ID, FCreateNew)
 	EVT_CHOICE(SelectBody_ID, SelectBodyf)
 	EVT_BUTTON(DeleteBody_ID, DeleteBodyf)
+	EVT_SPIN(XValue_ID, TranslateBodies)
+	EVT_SPIN(YValue_ID, TranslateBodies)
+	EVT_SPIN(ZValue_ID, TranslateBodies)
 wxEND_EVENT_TABLE()
 
 wxBEGIN_EVENT_TABLE(NewObject, wxFrame)
@@ -30,11 +33,15 @@ GeometryPanel::GeometryPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewe
 	//the layout (from top to bottom)
 	//std::vector<wxString> DummyChoices = {"ahcjbhknklml", "b"};
 	SelectBody = new wxChoiceVector(this, SelectBody_ID, ObjectNameList);
+	//Found an essential bug: if this field is left empty, it causes all object names to be deleted in the g4geom.txt file
+	//solution: initialize this field
+	SelectBody->SetSelection(0);
+
 	CreateNew = new wxButton(this, CreateNew_ID, "Create New Body", wxDefaultPosition, wxSize(150, 50));
 	//now aligned horizontally
-	XValue = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -100000, 100000, 0, "wxSpinCtrl");
-	YValue = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -100000, 100000, 0, "wxSpinCtrl");
-	ZValue = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -100000, 100000, 0, "wxSpinCtrl");
+	XValue = new wxSpinCtrl(this, XValue_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -100000, 100000, 0, "wxSpinCtrl");
+	YValue = new wxSpinCtrl(this, YValue_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -100000, 100000, 0, "wxSpinCtrl");
+	ZValue = new wxSpinCtrl(this, ZValue_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -100000, 100000, 0, "wxSpinCtrl");
 	//continue vertical
 	//now aligned horizontally
 	//Euler1Value = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -6.28, 6.28, 0, "wxSpinCtrl");
@@ -159,8 +166,7 @@ void GeometryPanel::FCreateNew(wxCommandEvent& event)
 	NewObjectAdder->Show();
 }
 
-
-void GeometryPanel::ApplyChanges(wxCommandEvent& event) //To developer: this function has a slight memory leak, fix ASAP!
+void GeometryPanel::TranslateBodies(wxSpinEvent& event)
 {
 	//gather data from input fields and manifest them onto the g4geom.txt file
 	Push("geom");
@@ -181,6 +187,11 @@ void GeometryPanel::ApplyChanges(wxCommandEvent& event) //To developer: this fun
 	Push(z);
 	//end gathering data and manifest modification on g4geom.txt
 	SystemManager.Conclude();
+}
+
+
+void GeometryPanel::ApplyChanges(wxCommandEvent& event) //To developer: this function has a slight memory leak, fix ASAP!
+{
 
 	//now reallocate the ObjectList, thus updating it
 	if (SystemManager.Project_isOpen)
@@ -413,13 +424,21 @@ void GeometryPanel::SelectBodyf(wxCommandEvent& event)
 
 void GeometryPanel::DeleteBodyf(wxCommandEvent& event)
 {
+	//here is a guard: projects with no bodies are not allowed, thus if such an attempt it raised, it is stopped here
+	int NumberOfBodies = ObjectList.size();
+	if (NumberOfBodies == 1)
+	{
+		wxMessageBox(wxT("Projects with no bodies are not allowed, you cannot delete the last remaining body!"));
+		return;
+	}
+	
 	Push("geom");
 	SystemManager.Kernel_args.push_back("delete");
 
 	//the order of appearence of bodies in g4geom.txt MATTERS! they are referenced by their order index, not their name!
 	int DeletedBodyIndex = SelectBody->GetSelection();
 	wxString DeletedBodyName = SelectBody->GetString(DeletedBodyIndex);
-	
+
 	//first delete the body from the lists
 	ObjectList.erase(ObjectList.begin() + DeletedBodyIndex);
 	ObjectNameList.erase(ObjectNameList.begin() + DeletedBodyIndex);
@@ -430,20 +449,22 @@ void GeometryPanel::DeleteBodyf(wxCommandEvent& event)
 	SystemManager.Kernel_args.push_back(DeletedBodyName_arg);
 	SystemManager.Conclude();
 	wxMessageBox(wxT("Deleted Body: " + DeletedBodyName_arg + " Click \'Refresh Viewer\' to see the effect."));
+
+
 }
 
 
 //now for newobject
-NewObject::NewObject() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-New Object", /*setting initial position*/ wxPoint(50, 50), wxSize(600, 350))
+NewObject::NewObject() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-New Object", /*setting initial position*/ wxPoint(50, 50), wxSize(600, 400))
 {
 	/*OLD CODE
-	
+
 	std::vector<wxString> ObjectTypes{ "Box", "Sphere" };
 	Name = new wxStaticText(Backdrop, wxID_ANY, wxT("Name (no spaces allowed):"), wxDefaultPosition, wxDefaultSize, 0);
 	NameEdit = new wxTextCtrl();
 	Type = Name = new wxStaticText(Backdrop, wxID_ANY, wxT("Type: "), wxDefaultPosition, wxDefaultSize, 0);
 	TypeEdit = new wxChoiceVector(Backdrop, wxID_ANY, ObjectTypes);
-	
+
 
 	wxBoxSizer* EmbedBackdrop = new wxBoxSizer(wxVERTICAL);
 	EmbedBackdrop->Add(Backdrop, 1, wxALL | wxEXPAND);
@@ -455,7 +476,7 @@ NewObject::NewObject() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-New Object", /
 	StackingSizer->Add(Type, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
 	StackingSizer->Add(TypeEdit, 0, wxALIGN_LEFT | wxLEFT, 10);
 	Backdrop->SetSizer(StackingSizer);
-	
+
 
 	*/
 	//wxButton* Test = new wxButton(this, 20001);
@@ -463,10 +484,10 @@ NewObject::NewObject() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-New Object", /
 	//add a tabbed window for the user to access different options, add this to a panel
 	//wxPanel* Background = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200, 100));
 	//Background->SetTransparent(1);
-	
+
 
 	//BEGIN: Cube Page
-	std::vector<wxString> Materials{ "Air", "Water" , "Iron", "Aluminum", "Copper", "Polystyrene", "Plexiglass", "Polyethylene", "Gold"};
+	std::vector<wxString> Materials{ "Air", "Water" , "Iron", "Aluminum", "Copper", "Polystyrene", "Plexiglass", "Polyethylene", "Gold" };
 
 	box_Name = new wxStaticText(cubePage, wxID_ANY, wxT("Name"), wxDefaultPosition, wxDefaultSize, 0);
 	box_NameEdit = new wxTextCtrl(cubePage, box_NameEdit_ID);
@@ -479,6 +500,7 @@ NewObject::NewObject() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-New Object", /
 	box_zHeight = new wxStaticText(cubePage, wxID_ANY, wxT("zHeight"), wxDefaultPosition, wxDefaultSize, 0);
 	box_zHeightEdit = new wxSpinCtrl(cubePage, box_zHeightEdit_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
 	box_Create = new wxButton(cubePage, box_Create_ID, "Create New Cube", wxDefaultPosition, wxSize(150, 50));
+	
 
 
 	wxBoxSizer* CubePageSizer = new wxBoxSizer(wxVERTICAL);
@@ -493,6 +515,7 @@ NewObject::NewObject() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-New Object", /
 	CubePageSizer->Add(box_zHeight, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
 	CubePageSizer->Add(box_zHeightEdit, 0, wxALIGN_LEFT | wxLEFT, 10);
 	CubePageSizer->Add(box_Create, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
+	CubePageSizer->Add(WarningText(cubePage), 0, wxALIGN_LEFT | wxLEFT, 10);
 	cubePage->SetSizer(CubePageSizer);
 	//END: Cube Page
 
@@ -515,6 +538,7 @@ NewObject::NewObject() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-New Object", /
 	SpherePageSizer->Add(sphere_Radius, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10); 
 	SpherePageSizer->Add(sphere_RadiusEdit, 0, wxALIGN_LEFT | wxLEFT, 10);
 	SpherePageSizer->Add(sphere_Create, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
+	//CubePageSizer->Add(WarningText, 0, wxALIGN_LEFT | wxLEFT, 10);
 	spherePage->SetSizer(SpherePageSizer);
 
 	//END: Sphere Page

@@ -55,6 +55,7 @@ private:
 	wxButton* DeleteBody = nullptr;
 	//when clicked
 	void ApplyChanges(wxCommandEvent& event); //when refreshviewer is clicked
+	void TranslateBodies(wxSpinEvent& event); //when the translation setting is adjusted
 	void DeleteBodyf(wxCommandEvent& event);
 	void SelectBodyf(wxCommandEvent& event);
 
@@ -75,7 +76,10 @@ private:
 		RefreshViewer_ID,
 		CreateNew_ID,
 		DeleteBody_ID,
-		SelectBody_ID
+		SelectBody_ID,
+		XValue_ID,
+		YValue_ID,
+		ZValue_ID
 	};
 };
 
@@ -116,11 +120,15 @@ enum class BodyTypes
 };
 
 
+
 //a small wxFrame for adding new objects
 class NewObject : public wxFrame
 {
 public:
 	NewObject();
+	//~NewObject(); //{ delete[] WarningTextBoxArray; }
+	//update this number when you add elements to the enum: it is the number of elements in enum BodyTypes
+	int BodyImplementedNumber = 3;
 	//~NewObject();
 	SystemVariables SystemManager;
 	//wxPanel* Backdrop = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200, 100));
@@ -141,6 +149,7 @@ public:
 	wxStaticText* box_zHeight;
 	wxSpinCtrl* box_zHeightEdit;
 	wxButton* box_Create;
+	
 
 	//for sphere:
 	wxStaticText* sphere_Name;
@@ -151,14 +160,22 @@ public:
 	wxSpinCtrl* sphere_RadiusEdit;
 	wxButton* sphere_Create;
 
+	//wxStaticText** WarningTextBoxArray = new wxStaticText*[BodyImplementedNumber];
+		//new wxStaticText(this, wxID_ANY, wxT("WARNING: Body names with whitespaces are not allowed!"));
+
+	
+	wxStaticText* WarningText(wxPanel* ParentPage)
+	{
+		wxStaticText* WarningTextInstance = new wxStaticText(ParentPage, wxID_ANY, wxT("WARNING: Body names with whitespaces are not allowed!"));
+		return WarningTextInstance;
+	}
+
 	wxNotebook* ConfigureOptions;
 	//pages and their methods
 	wxPanel* spherePage = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200, 100));
 	wxPanel* cubePage = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200, 100));
 
 	//some reusable methods
-	void CreateNewConfig();
-	void ModifyExistingConfig();
 	void Push(std::string arg);
 
 	//create methods
