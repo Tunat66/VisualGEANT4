@@ -107,6 +107,8 @@ void GeometryPanel::ParseGeometryFile()
 		return;
 	}
 
+	//first delete the old object list:
+	ObjectList.clear();
 	//read the file line by line, and then parse the line into a vector:
 	//we will be looking for the following information:
 	//read according to the geant4 text format
@@ -425,7 +427,13 @@ void GeometryPanel::SelectBodyf(wxCommandEvent& event)
 void GeometryPanel::DeleteBodyf(wxCommandEvent& event)
 {
 	//here is a guard: projects with no bodies are not allowed, thus if such an attempt it raised, it is stopped here
-	int NumberOfBodies = ObjectList.size();
+	
+	//DBG:
+	int NumberOfBodies = ObjectNameList.size();
+	std::string Num = std::to_string(NumberOfBodies);
+	//wxMessageBox(wxString(Num));
+	//END DBG
+
 	if (NumberOfBodies == 1)
 	{
 		wxMessageBox(wxT("Projects with no bodies are not allowed, you cannot delete the last remaining body!"));
