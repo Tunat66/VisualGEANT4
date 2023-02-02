@@ -35,6 +35,14 @@ public:
 	wxStaticText* GunUnitText;
 	//wxChoice* GunUnitEdit = new wxChoice(gunPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0, wxDefaultValidator, "Particle");
 	wxChoiceVector* GunUnitEdit;
+	wxStaticText* GunPositionText;
+	wxSpinCtrl* GunPosX;
+	wxSpinCtrl* GunPosY;
+	wxSpinCtrl* GunPosZ;
+	wxStaticText* GunDirectionText;
+	wxSpinCtrl* GunDirX;
+	wxSpinCtrl* GunDirY;
+	wxSpinCtrl* GunDirZ;
 
 	wxStaticText* BeamOnTimesText;// = new wxStaticText(runPage, wxID_ANY, wxT("Number of Particles to be shot"), wxDefaultPosition, wxDefaultSize, 0);
 	wxSpinCtrl* BeamOnTimesEdit;// = new wxSpinCtrl(runPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10000000, 0, "wxSpinCtrl");
@@ -55,6 +63,8 @@ public:
 	void GunParticleEditf(wxCommandEvent& event);
 	void GunEnergyEditf(wxSpinEvent& event);
 	void GunUnitEditf(wxCommandEvent& event);
+	void GunDirectionEditf(wxSpinEvent& event);
+	void GunPositionEditf(wxSpinEvent& event);
 
 	void BeamOnTimesEditf(wxSpinEvent& event);
 
@@ -65,6 +75,11 @@ public:
 	void PositronCBf(wxCommandEvent& event);
 	void ElectronCBf(wxCommandEvent& event);
 	void GammaCBf(wxCommandEvent& event);
+
+	//for initializing the controls to where they were left previously
+	void ParseVisFile();
+	void ParseRunFile();
+	void ParseGunFile();
 
 	enum {
 		GunParticleEdit_ID,
@@ -77,7 +92,13 @@ public:
 		NeutronCB_ID,
 		ElectronCB_ID,
 		PositronCB_ID,
-		GammaCB_ID
+		GammaCB_ID,
+		GunPosX_ID,
+		GunPosY_ID,
+		GunPosZ_ID,
+		GunDirX_ID,
+		GunDirY_ID,
+		GunDirZ_ID
 	};
 
 	//macro for event handling

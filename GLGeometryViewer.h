@@ -7,15 +7,6 @@
 #include "wx/wx.h"
 #include "wx/sizer.h"
 
-// include OpenGL
-#ifdef __WXMAC__
-#include "OpenGL/glu.h"
-#include "OpenGL/gl.h"
-#else
-#include <GL/glu.h>
-#include <GL/gl.h>
-#endif
-
 #include "WavefrontObj.h"
 #include "SystemVariables.h"
 #include <cmath>
@@ -31,9 +22,10 @@ public:
 	void refresh_view_dbg();
 	std::string File;
 	WavefrontObj* DisplayedObj;
+	bool IsNotFirst = false;
 
 	//rest is:
-	GLGeometryViewer(wxWindow* parent);
+	GLGeometryViewer(wxWindow* parent, GLfloat latitude_current_in, GLfloat longitude_current_in, GLfloat zoom_in);
 	virtual ~GLGeometryViewer();
 
 	void resized(wxSizeEvent& evt);
@@ -44,9 +36,18 @@ public:
 
 	void render(wxPaintEvent& evt);
 	void render_again(GLfloat longitude, GLfloat latitude, GLfloat zoom); //to manually force render
-	GLfloat latitude_current = 0.0f;
-	GLfloat longitude_current = 50.0f;
-	GLfloat zoom=1; 
+	
+	//old: hard coded initialization
+	//GLfloat latitude_current = 0.0f;
+	//GLfloat longitude_current = 50.0f;
+	//GLfloat zoom=1; 
+
+	//new: smart initialization using values recorded in SystemManager, , add to Crit C!!
+	void UpdateSystemVariablesViewpointSnapshots();
+	GLfloat latitude_current;
+	GLfloat longitude_current;
+	GLfloat zoom;
+
 	wxPoint initialPos;
 	wxPoint initialPos2;
 

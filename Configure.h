@@ -7,7 +7,8 @@
 #include <fstream>
 #include <filesystem>
 #include <regex> //to modifiy files
-#include<sstream> //to get file content
+#include <sstream> //to get file content
+#include "wx/wx.h"
 
 
 class Configure //this class essentially creates and modifies .mac files which are fed into GEANT4
@@ -40,6 +41,7 @@ public:
 	//REULSABLE METHODS:
 	//to change patterns with regex
 	void ChangeWithRegex(std::string File, std::string Prefix, std::string NewValue);
+	void FullChangeWithRegex(std::string FileWithDir, std::string OldValue, std::string NewValue);
 private:
 	std::vector<std::string> Args; //set to Kernel_args by constructor
 };

@@ -69,10 +69,11 @@ public:
 	void ReallocatePanel()
 	{
 		RightPanel->Destroy();
-		RightPanel = new RightPanelType(this, GeometryViewer);
+		RightPanel = new RightPanelType(this, GeometryViewer); 
 		RightPanel->SetBackgroundColour(wxColor(205, 205, 205));
 		MainWindowSizer->Add(RightPanel, 1, wxEXPAND | wxRIGHT | wxBOTTOM | wxTOP, 5);
-		MainWindowSizer->Layout();
+		MainWindowSizer->Layout(); //this may cause some bugs like reverting viewer to the default position, as the GeometryViewer is reallocated
+		//to fix it, the geometry panel "remembers" its position by recording the viewpoint to SystemVaribles and reallocating back to those
 	}
 
 	//FOR LEFT PANEL (Geometry Viewers)

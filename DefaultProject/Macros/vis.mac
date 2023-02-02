@@ -15,7 +15,7 @@
 /vis/viewer/set/lightsVector -1 0 0
 #
 # Specify style (surface, wireframe, auxiliary edges,...)
-/vis/viewer/set/style surface
+/vis/viewer/set/style wireframe
 /vis/viewer/set/auxiliaryEdge true
 /vis/viewer/set/lineSegmentsPerCircle 100
 #
@@ -23,13 +23,10 @@
 # as markers 2 pixels wide:
 # To select colour by particle ID:(dont delect capital comments, they are used by Regex)
 #TRAJMOD
-# Draw smooth trajectories at end of event, showing trajectory points
-# as markers 2 pixels wide:
-/vis/scene/add/trajectories smooth
-/vis/modeling/trajectories/create/drawByCharge
-/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
-/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
-# (if too many tracks cause core dump => /tracking/storeTrajectory 0)
+# To select colour by particle ID:
+/vis/modeling/trajectories/create/drawByParticleID
+/vis/modeling/trajectories/drawByParticleID-0/default/setDrawStepPts true
+/vis/modeling/trajectories/drawByParticleID-0/default/setStepPtsSize 2
 #TRAJMOD
 
 #
@@ -44,7 +41,7 @@
 # Make the "World" box invisible
 /vis/geometry/set/visibility world 0 false
 
-#/vis/viewer/set/style surface
+#/vis/viewer/set/style wireframe
 /vis/viewer/set/hiddenMarker true
 /vis/viewer/set/viewpointThetaPhi 120 150
 #
@@ -52,3 +49,8 @@
 /vis/viewer/set/autoRefresh true
 /vis/verbose warnings
 
+#Particle filtering section:
+/vis/filtering/trajectories/create/particleFilter
+
+/vis/filtering/trajectories/particleFilter-0/add e-
+/vis/filtering/trajectories/particleFilter-0/add proton

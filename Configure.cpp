@@ -1,5 +1,5 @@
 #include "Configure.h"
-#include "wx/wx.h"
+
 
 using namespace std;
 
@@ -89,9 +89,10 @@ void Configure::VisHandle()
 		ofs << newstr2;
 		ofs.close();
 	}
-	else if (Args.at(2) == "filtering")
+	else if (Args.at(2) == "filter")
 	{
-		int j = 3;
+		//OLD: (was not working)
+		/*int j = 3;
 		ofstream ofs;
 		ofs.open(ProjectDir + "/Macros/" + FileToModify, std::ofstream::app); //open in append mode
 		ofs << "/vis/filtering/trajectories/create/particleFilter" << endl;
@@ -100,7 +101,19 @@ void Configure::VisHandle()
 			ofs << "/vis/filtering/trajectories/particleFilter-0/add " + Args.at(j + 1) << endl;
 			j += 2;
 		}
-		ofs.close();
+		ofs.close();*/
+		//NEW:
+		ofstream ofs;
+		std::string VisFile = ProjectDir + "/Macros/" + FileToModify;
+		ofs.open(VisFile, std::ofstream::app); //open in append mode
+		if (Args.at(3) == "addparticle")
+		{
+			ofs << "/vis/filtering/trajectories/particleFilter-0/add " + Args.at(4) << endl;
+		}
+		else if (Args.at(3) == "removeparticle")
+		{
+			FullChangeWithRegex(VisFile, "/vis/filtering/trajectories/particleFilter-0/add " + Args.at(4), "");
+		}
 	}
 	else if (Args.at(2) == "style")
 	{
@@ -180,7 +193,7 @@ void Configure::ChangeWithRegex(std::string FileWithDir, std::string Prefix, std
 {
 	std::ifstream f(FileWithDir); //taking file as inputstream, templates exist at VisualGEANT4 Install
 	string TempContent;
-	//get contents
+	//get contents taken from https://www.tutorialspoint.com/what-is-the-best-way-to-read-an-entire-file-into-a-std-string-in-cplusplus
 	if (f) {
 		std::ostringstream ss;
 		ss << f.rdbuf(); // reading data
@@ -196,8 +209,37 @@ void Configure::ChangeWithRegex(std::string FileWithDir, std::string Prefix, std
 	TempContent = std::regex_replace(TempContent, std::regex(PrefixCStr.c_str()), Prefix + " " + NewValue);
 	f.close();
 	cout << "NEW:\n" + TempContent << endl;
-	wxString tmp(PrefixCStr);
-	wxLogMessage(tmp);
+	//wxString tmp(PrefixCStr);
+	//wxLogMessage(tmp);
+
+	ofstream ofs;
+	ofs.open(FileWithDir, std::ofstream::out | std::ofstream::trunc);
+	ofs << TempContent;
+	ofs.close();
+}
+
+void Configure::FullChangeWithRegex(std::string FileWithDir, std::string OldValue, std::string NewValue)
+{
+	std::ifstream f(FileWithDir); //taking file as inputstream, templates exist at VisualGEANT4 Install
+	string TempContent;
+	//get contents taken from https://www.tutorialspoint.com/what-is-the-best-way-to-read-an-entire-file-into-a-std-string-in-cplusplus
+	if (f) {
+		std::ostringstream ss;
+		ss << f.rdbuf(); // reading data
+		TempContent = ss.str();
+	}
+	f.close();
+
+	cout << "OLD:\n" + TempContent << endl;
+	std::string beginning = "(";
+	std::string end = ")";
+	std::string middle = OldValue;
+	std::string OldValueCStr = beginning + middle + end;
+	TempContent = std::regex_replace(TempContent, std::regex(OldValueCStr.c_str()), NewValue);
+	f.close();
+	cout << "NEW:\n" + TempContent << endl;
+	//wxString tmp(PrefixCStr);
+	//wxLogMessage(tmp);
 
 	ofstream ofs;
 	ofs.open(FileWithDir, std::ofstream::out | std::ofstream::trunc);

@@ -51,6 +51,14 @@ doubleType GLGeometryViewer::ArcSinMod(doubleType value)
     //case less than pi
 }*/
 
+//to load a snapshot of view parameters to SystemVariables
+void GLGeometryViewer::UpdateSystemVariablesViewpointSnapshots()
+{
+    GLSystemManager.latitude_current = latitude_current;
+    GLSystemManager.longitude_current = longitude_current;
+    GLSystemManager.zoom = zoom;
+}
+
 void GLGeometryViewer::mouseMoved(wxMouseEvent& event) 
 {
     GLfloat longinit = longitude_current;
@@ -66,7 +74,7 @@ void GLGeometryViewer::mouseMoved(wxMouseEvent& event)
         GLfloat lattmp = -shiftRate * deltay + latinit;
         render_again(longtmp, lattmp, zoom);
     }
-
+    UpdateSystemVariablesViewpointSnapshots();
 }
 
 void GLGeometryViewer::mouseDown(wxMouseEvent& event) {
@@ -80,8 +88,9 @@ void GLGeometryViewer::mouseWheelMoved(wxMouseEvent& event)
 {
     zoom = zoom*exp((GLfloat) 0.0001*event.GetWheelRotation());
     render_again(longitude_current, latitude_current, zoom);
-
+    UpdateSystemVariablesViewpointSnapshots();
 }
+
 void GLGeometryViewer::mouseReleased(wxMouseEvent& event) 
 { // this method fixes final view when mouse is released
     isRightMouseButtonDown = false;
@@ -99,6 +108,7 @@ void GLGeometryViewer::rightClick(wxMouseEvent& event) {
         initialPos = event.GetLogicalPosition(wxClientDC(this));
         InitialPositionOriginalReset = false;
     }
+    //RMB control, now defunct:
     //initialPos2 = event.GetLogicalPosition(wxClientDC(this));
     //longitude_current += 10.0f;
     //render_again(longitude_current, latitude_current, zoom);
@@ -108,9 +118,10 @@ void GLGeometryViewer::rightClick(wxMouseEvent& event) {
 }
 void GLGeometryViewer::mouseLeftWindow(wxMouseEvent& event) {}
 
-//WASD control
-void GLGeometryViewer::keyPressed(wxKeyEvent& event) 
-{
+//WASD control, now defunct
+
+void GLGeometryViewer::keyPressed(wxKeyEvent& event) {}
+    /*
     enum {
         wKey=87,
         aKey=65,
@@ -140,7 +151,7 @@ void GLGeometryViewer::keyPressed(wxKeyEvent& event)
         break;
     }
 
-}
+}*/
 void GLGeometryViewer::keyReleased(wxKeyEvent& event) {}
 
 // Vertices and faces of a simple cube to demonstrate 3D render
@@ -152,7 +163,7 @@ GLint faces[6][4] = {  /* Vertex indices for the 6 faces of a cube. */
 
 
 
-GLGeometryViewer::GLGeometryViewer(wxWindow* parent) :
+GLGeometryViewer::GLGeometryViewer(wxWindow* parent, GLfloat latitude_current_in, GLfloat longitude_current_in, GLfloat zoom_in) :
     wxGLCanvas(parent, wxID_ANY, NULL, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE), WavefrontOBJUtility()//, //WavefrontObj(File) //changed: args to NULL
 {
     m_context = new wxGLContext(this);
@@ -171,6 +182,11 @@ GLGeometryViewer::GLGeometryViewer(wxWindow* parent) :
     //set the file source
     File = GLSystemManager.CurrentProjectDir + "\\setup.obj"; //note that for any project, the obj file is called "setup.obj"
     DisplayedObj = new WavefrontObj(File);
+
+    latitude_current = latitude_current_in;
+    longitude_current = longitude_current_in;
+    zoom = zoom_in;
+
 
     //initialize, see below for the method
     init();
@@ -409,6 +425,7 @@ int GLGeometryViewer::getHeight()
 void GLGeometryViewer::render(wxPaintEvent& evt)
 {
     if (!IsShown()) return; //may require modification
+    if (IsNotFirst) return;
     wxGLCanvas::SetCurrent(*m_context);
     wxPaintDC(this); // only to be used in paint events. use wxClientDC to paint outside the paint event
 
@@ -443,9 +460,9 @@ void GLGeometryViewer::render(wxPaintEvent& evt)
 
     glColor4f(0, 0, 1, 1);
     glTranslatef(0, 0, -15);
-    glRotatef(longitude_current, 0.0f, 1.0f, 0.0f);
-    glRotatef(latitude_current, 1.0f/*(GLfloat)sin(M_PI / 180.0 * (double)latitude)*/, 0.0f, /*(GLfloat)-cos(M_PI / 180.0 * (double)latitude)*/0.0f);
-    glScalef(zoom, zoom, zoom);
+    //glRotatef(longitude_current, 0.0f, 1.0f, 0.0f);
+    //glRotatef(latitude_current, 1.0f/*(GLfloat)sin(M_PI / 180.0 * (double)latitude)*/, 0.0f, /*(GLfloat)-cos(M_PI / 180.0 * (double)latitude)*/0.0f);
+    //glScalef(zoom, zoom, zoom);
 
     /*glColor4f(1, 0, 0, 1);
     for (int i = 0; i < 6; i++)
@@ -462,6 +479,7 @@ void GLGeometryViewer::render(wxPaintEvent& evt)
 
     //glFlush();
     SwapBuffers();
+    IsNotFirst = true;
 }
 
 void GLGeometryViewer::render_again(GLfloat longitude, GLfloat latitude, GLfloat zoom)

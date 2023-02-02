@@ -1,10 +1,13 @@
 #include "SystemVariables.h"
 #include "wx/wx.h"
 
-//dont forget to initialize the statics, as it gives a compiler error
+//dont forget to initialize the statics, as it gives compiler and linker errors
 bool SystemVariables::Project_isOpen = false;
 std::vector<std::string> SystemVariables::Kernel_args = {"init"};
 std::string SystemVariables::CurrentProjectDir = "";
+GLfloat SystemVariables::latitude_current = 0.0f;
+GLfloat SystemVariables::longitude_current = 0.0f;
+GLfloat SystemVariables::zoom = 1;
 
 //to send the variables to an invoked backend
 void SystemVariables::Conclude()

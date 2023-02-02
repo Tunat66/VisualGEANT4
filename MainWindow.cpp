@@ -66,10 +66,16 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting 
 	SetStatusText("Please Select A Project...");
 
 //LEFT PANEL: This will be mostly for embedding geometry view:
+	//first initialize the viewpoint settings
+	SystemManager.latitude_current = 0.0f;
+	SystemManager.longitude_current = 50.0f;
+	SystemManager.zoom = 1;
+	
+	//then, create the left panel
 	LeftPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200,100));
 	LeftPanel->SetBackgroundColour(wxColor(205, 205, 205));
 	//view setup geometry by instantiaitng the opengl canvas:
-	GeometryViewer = new GLGeometryViewer(LeftPanel);
+	GeometryViewer = new GLGeometryViewer(LeftPanel, SystemManager.latitude_current, SystemManager.longitude_current, SystemManager.zoom);
 	//SetupViewer = new G4OpenGLImmediateXViewer();
 	ViewerSizer->Add(GeometryViewer, 5, wxEXPAND | wxALL);
 	LeftPanel->SetSizer(ViewerSizer);
