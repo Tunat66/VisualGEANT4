@@ -180,8 +180,8 @@ GLGeometryViewer::GLGeometryViewer(wxWindow* parent, GLfloat latitude_current_in
     SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
     //set the file source
-    File = GLSystemManager.CurrentProjectDir + "\\setup.obj"; //note that for any project, the obj file is called "setup.obj"
-    DisplayedObj = new WavefrontObj(File);
+    CurrentFile = GLSystemManager.CurrentProjectDir + "\\setup.obj"; //note that for any project, the obj file is called "setup.obj"
+    DisplayedObj = new WavefrontObj(CurrentFile);
 
     latitude_current = latitude_current_in;
     longitude_current = longitude_current_in;
@@ -204,8 +204,8 @@ void GLGeometryViewer::refresh_view()
     SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
     //set the file source
-    File = GLSystemManager.CurrentProjectDir + "\\setup.obj"; //note that for any project, the obj file is called "setup.obj"
-    DisplayedObj = new WavefrontObj(File);
+    CurrentFile = GLSystemManager.CurrentProjectDir + "\\setup.obj"; //note that for any project, the obj file is called "setup.obj"
+    DisplayedObj = new WavefrontObj(CurrentFile);
 
     //initialize, see below for the method
     init();
@@ -219,8 +219,8 @@ void GLGeometryViewer::refresh_view_dbg()
     SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
     //set the file source
-    File = GLSystemManager.CurrentProjectDir + "\\dummy.obj"; //note that for any project, the obj file is called "setup.obj"
-    DisplayedObj = new WavefrontObj(File);
+    CurrentFile = GLSystemManager.CurrentProjectDir + "\\dummy.obj"; //note that for any project, the obj file is called "setup.obj"
+    DisplayedObj = new WavefrontObj(CurrentFile);
 
     //initialize, see below for the method
     init();
@@ -249,9 +249,9 @@ void GLGeometryViewer::init() {
 void GLGeometryViewer::load_obj() {
 
     if (GLSystemManager.Project_isOpen) {
-        wxString str(File);
+        wxString str(CurrentFile);
         wxLogMessage(str);
-        DisplayedObj->open_obj(File);
+        DisplayedObj->open_obj(CurrentFile);
 
         //load wavefrontobj data to this viewer class:
         vertices = DisplayedObj->vertices;

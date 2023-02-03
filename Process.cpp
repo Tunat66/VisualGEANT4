@@ -25,6 +25,10 @@ Process::Process(std::vector<std::string> Kernel_args) {
 		Source* SourceModifier = new Source(Kernel_args);
 		delete SourceModifier;
 	}
+	else if (FirstCommand == "counterbox") {
+		Counterbox* CounterboxModifier = new Counterbox(Kernel_args);
+		delete CounterboxModifier;
+	}
 	else
 		isValidCommand = false;
 		

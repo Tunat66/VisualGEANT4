@@ -4,15 +4,14 @@
 
 wxBEGIN_EVENT_TABLE(ConfigureWindow, wxFrame)
 	EVT_CHOICE(GunParticleEdit_ID, GunParticleEditf)
-	EVT_SPINCTRL(GunEnergyEdit_ID, GunEnergyEditf)
-	EVT_CHOICE(GunParticleEdit_ID, GunUnitEditf)
+	EVT_SPINCTRLDOUBLE(GunEnergyEdit_ID, GunEnergyEditf)
 	EVT_SPINCTRL(BeamOnTimesEdit_ID, BeamOnTimesEditf)
-	EVT_SPINCTRL(GunPosX_ID, GunPositionEditf)
-	EVT_SPINCTRL(GunPosY_ID, GunPositionEditf)
-	EVT_SPINCTRL(GunPosZ_ID, GunPositionEditf)
-	EVT_SPINCTRL(GunDirX_ID, GunDirectionEditf)
-	EVT_SPINCTRL(GunDirY_ID, GunDirectionEditf)
-	EVT_SPINCTRL(GunDirZ_ID, GunDirectionEditf)
+	EVT_SPINCTRLDOUBLE(GunPosX_ID, GunPositionEditf)
+	EVT_SPINCTRLDOUBLE(GunPosY_ID, GunPositionEditf)
+	EVT_SPINCTRLDOUBLE(GunPosZ_ID, GunPositionEditf)
+	EVT_SPINCTRLDOUBLE(GunDirX_ID, GunDirectionEditf)
+	EVT_SPINCTRLDOUBLE(GunDirY_ID, GunDirectionEditf)
+	EVT_SPINCTRLDOUBLE(GunDirZ_ID, GunDirectionEditf)
 	EVT_CHOICE(VisStyleEdit_ID, VisStyleEditf)
 	EVT_CHOICE(VisFilterEdit_ID, VisFilterEditf)
 	EVT_CHECKBOX(ProtonCB_ID, ProtonCBf)
@@ -22,7 +21,7 @@ wxBEGIN_EVENT_TABLE(ConfigureWindow, wxFrame)
 	EVT_CHECKBOX(GammaCB_ID, GammaCBf)
 wxEND_EVENT_TABLE()
 
-void ConfigureWindow::GunDirectionEditf(wxSpinEvent& event)
+void ConfigureWindow::GunDirectionEditf(wxSpinDoubleEvent& event)
 {
 	//for debug wxMessageBox(wxT("WorkingDir"));
 	Push("source");
@@ -33,7 +32,7 @@ void ConfigureWindow::GunDirectionEditf(wxSpinEvent& event)
 	SystemManager.Conclude();
 }
 
-void ConfigureWindow::GunPositionEditf(wxSpinEvent& event)
+void ConfigureWindow::GunPositionEditf(wxSpinDoubleEvent& event)
 {
 	//for debug wxMessageBox(wxT("WorkingPos"));
 	Push("source");
@@ -63,19 +62,19 @@ ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Co
 	GunParticleText = new wxStaticText(gunPage, wxID_ANY, wxT("Particle"), wxDefaultPosition, wxDefaultSize, 0);
 	//wxChoice* GunParticleEdit = new wxChoice(gunPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0, wxDefaultValidator, "Particle");
 	GunParticleEdit = new wxChoiceVector(gunPage, GunParticleEdit_ID, Particles);
-	GunEnergyText = new wxStaticText(gunPage, wxID_ANY, wxT("Energy"), wxDefaultPosition, wxDefaultSize, 0);
-	GunEnergyEdit = new wxSpinCtrl(gunPage, GunEnergyEdit_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
-	GunUnitText = new wxStaticText(gunPage, wxID_ANY, wxT("Energy Unit"), wxDefaultPosition, wxDefaultSize, 0);
+	GunEnergyText = new wxStaticText(gunPage, wxID_ANY, wxT("Energy (KeV)"), wxDefaultPosition, wxDefaultSize, 0);
+	GunEnergyEdit = new wxSpinCtrlDouble(gunPage, GunEnergyEdit_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0., 100000., 0, 0.1, "wxSpinCtrl");
+	//GunUnitText = new wxStaticText(gunPage, wxID_ANY, wxT("Energy Unit"), wxDefaultPosition, wxDefaultSize, 0);
 	//wxChoice* GunUnitEdit = new wxChoice(gunPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0, wxDefaultValidator, "Particle");
-	GunUnitEdit = new wxChoiceVector(gunPage, GunUnitEdit_ID, EnergyUnits);
+	//GunUnitEdit = new wxChoiceVector(gunPage, GunUnitEdit_ID, EnergyUnits);
 	GunPositionText = new wxStaticText(gunPage, wxID_ANY, wxT("Set Gun Position (units in cm, -25 to 25 allowed):"), wxDefaultPosition, wxDefaultSize, 0);
-	GunPosX = new wxSpinCtrl(gunPage, GunPosX_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0.1, "wxSpinCtrl");
-	GunPosY = new wxSpinCtrl(gunPage, GunPosY_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0.1, "wxSpinCtrl");
-	GunPosZ = new wxSpinCtrl(gunPage, GunPosZ_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0.1, "wxSpinCtrl");
+	GunPosX = new wxSpinCtrlDouble(gunPage, GunPosX_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0, 0.1, "wxSpinCtrl");
+	GunPosY = new wxSpinCtrlDouble(gunPage, GunPosY_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0, 0.1, "wxSpinCtrl");
+	GunPosZ = new wxSpinCtrlDouble(gunPage, GunPosZ_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0, 0.1, "wxSpinCtrl");
 	GunDirectionText = new wxStaticText(gunPage, wxID_ANY, wxT("Set Gun Direction (Enter the components of the direction vector, it needn't be a unit vector):"), wxDefaultPosition, wxDefaultSize, 0);
-	GunDirX = new wxSpinCtrl(gunPage, GunDirX_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0.1, "wxSpinCtrl");
-	GunDirY = new wxSpinCtrl(gunPage, GunDirY_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0.1, "wxSpinCtrl");
-	GunDirZ = new wxSpinCtrl(gunPage, GunDirZ_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0.1, "wxSpinCtrl");
+	GunDirX = new wxSpinCtrlDouble(gunPage, GunDirX_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0, 0.1, "wxSpinCtrl");
+	GunDirY = new wxSpinCtrlDouble(gunPage, GunDirY_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0, 0.1, "wxSpinCtrl");
+	GunDirZ = new wxSpinCtrlDouble(gunPage, GunDirZ_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0, 0.1, "wxSpinCtrl");
 	wxStaticText* GunInstructionText = new wxStaticText(gunPage, wxID_ANY, wxT("Changes are saved automatically, close this window after performing the changes."), wxDefaultPosition, wxDefaultSize, 0);
 	
 
@@ -84,8 +83,8 @@ ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Co
 	GunPageSizer->Add(GunParticleEdit, 0, wxALIGN_LEFT | wxLEFT, 10);
 	GunPageSizer->Add(GunEnergyText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
 	GunPageSizer->Add(GunEnergyEdit, 0, wxALIGN_LEFT | wxLEFT, 10);
-	GunPageSizer->Add(GunUnitText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
-	GunPageSizer->Add(GunUnitEdit, 0, wxALIGN_LEFT | wxLEFT, 10);
+	//GunPageSizer->Add(GunUnitText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
+	//GunPageSizer->Add(GunUnitEdit, 0, wxALIGN_LEFT | wxLEFT, 10);
 	GunPageSizer->Add(GunPositionText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
 	wxBoxSizer* GunPosSizer = new wxBoxSizer(wxHORIZONTAL);
 	GunPosSizer->Add(GunPosX, 0, wxLEFT | wxRIGHT, 3);
@@ -100,6 +99,7 @@ ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Co
 	GunPageSizer->Add(GunDirSizer, 0, wxALIGN_LEFT | wxLEFT, 10);
 	GunPageSizer->Add(GunInstructionText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
 	gunPage->SetSizer(GunPageSizer);
+	ParseGunFile();
 	//END: Particle Gun
 
 	//BEGIN: Run Options
@@ -112,6 +112,7 @@ ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Co
 	RunPageSizer->Add(BeamOnTimesEdit, 0, wxALIGN_LEFT | wxLEFT, 10);
 	RunPageSizer->Add(RunInstructionText, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10);
 	runPage->SetSizer(RunPageSizer);
+	ParseRunFile();
 	//END: Run Options
 
 	//BEGIN: Vis Options (shit this is a bit more complex),
@@ -257,12 +258,117 @@ void ConfigureWindow::ParseVisFile()
 //for run.mac
 void ConfigureWindow::ParseRunFile()
 {
-	//MORNING TASK
+	std::ifstream RunFile;
+	std::string FileDir = SystemManager.CurrentProjectDir + "/Macros/run.mac";
+	RunFile.open(FileDir);
+	if (!RunFile.is_open())
+	{
+		wxMessageBox(wxT("run.mac file for this project cannot be opened due to an unknown reason, please consult to the developers of the project."));
+		wxMessageBox(wxT("File not found: " + FileDir));
+		return;
+	}
+
+	//now read the file line by line and perform checks in each line
+	while (!RunFile.eof()) //to read until the end of the file
+	{
+		std::string Token;
+		std::getline(RunFile, Token);
+		//now parse this line into words according to whitespaces
+		//note that line elements with whitespaces, but in quotation marks are not
+		//supported by this parser
+		std::istringstream StringParser(Token);
+		std::string Element;
+		std::vector<std::string> RunInformation;
+		while (StringParser >> Element)
+		{
+			RunInformation.push_back(Element);
+		}
+
+		//now check if the line has a certain value or prefix
+		if (!RunInformation.empty())
+		{
+			std::string Prefix = RunInformation.at(0); //the first element seperated by whitespace of a line is taken as prefix
+			//style
+			if (Prefix == "/run/beamOn")
+			{
+				std::string NofParticlesToBeShot = RunInformation.at(1);
+				BeamOnTimesEdit->SetValue(std::stoi(NofParticlesToBeShot));
+			}
+		}
+	}
+	RunFile.close();
 }
 //for gun.mac
 void ConfigureWindow::ParseGunFile()
 {
-	//MORNING TASK
+	std::ifstream GunFile;
+	std::string FileDir = SystemManager.CurrentProjectDir + "/Macros/gun.mac";
+	GunFile.open(FileDir);
+	if (!GunFile.is_open())
+	{
+		wxMessageBox(wxT("gun.mac file for this project cannot be opened due to an unknown reason, please consult to the developers of the project."));
+		wxMessageBox(wxT("File not found: " + FileDir));
+		return;
+	}
+
+	//now read the file line by line and perform checks in each line
+	while (!GunFile.eof()) //to read until the end of the file
+	{
+		std::string Token;
+		std::getline(GunFile, Token);
+		//now parse this line into words according to whitespaces
+		//note that line elements with whitespaces, but in quotation marks are not
+		//supported by this parser
+		std::istringstream StringParser(Token);
+		std::string Element;
+		std::vector<std::string> GunInformation;
+		while (StringParser >> Element)
+		{
+			GunInformation.push_back(Element);
+		}
+
+		//now check if the line has a certain value or prefix
+		if (!GunInformation.empty())
+		{
+			std::string Prefix = GunInformation.at(0); //the first element seperated by whitespace of a line is taken as prefix
+			//style
+			if (Prefix == "/gun/particle")
+			{
+				std::string GunParticle = GunInformation.at(1);
+				//select according to the order defined in wxchoicevector
+				if (GunParticle == "e-") { GunParticleEdit->SetSelection(0); }
+				if (GunParticle == "e+") { GunParticleEdit->SetSelection(1); }
+				if (GunParticle == "proton") { GunParticleEdit->SetSelection(2); }
+				if (GunParticle == "neutron") { GunParticleEdit->SetSelection(3); }
+				if (GunParticle == "gamma") { GunParticleEdit->SetSelection(4); }
+			}
+			else if (Prefix == "/gun/energy")
+			{
+				double EnergyInKev = std::stod(GunInformation.at(1));
+				GunEnergyEdit->SetValue(EnergyInKev);
+			}
+			else if (Prefix == "/gun/direction")
+			{
+				double XDir = std::stod(GunInformation.at(1));
+				double YDir = std::stod(GunInformation.at(2));
+				double ZDir = std::stod(GunInformation.at(3));
+				GunDirX->SetValue(XDir);
+				GunDirY->SetValue(YDir);
+				GunDirZ->SetValue(ZDir);
+
+			}
+			else if (Prefix == "/gun/position")
+			{
+				double XPos = std::stod(GunInformation.at(1));
+				double YPos = std::stod(GunInformation.at(2));
+				double ZPos = std::stod(GunInformation.at(3));
+				GunPosX->SetValue(XPos);
+				GunPosY->SetValue(YPos);
+				GunPosZ->SetValue(ZPos);
+			}
+		}
+	}
+	GunFile.close();
 }
 
 //for utility
@@ -304,11 +410,11 @@ void ConfigureWindow::GunParticleEditf(wxCommandEvent& event) {
 }
 
 
-void ConfigureWindow::GunEnergyEditf(wxSpinEvent& event) {
+void ConfigureWindow::GunEnergyEditf(wxSpinDoubleEvent& event) {
 	Push("config");
 	Push("gun");
 	Push("setEnergy");
-	Push(std::to_string(GunEnergyEdit->GetValue()) + "KeV"); //capitalization be carful
+	Push(std::to_string(GunEnergyEdit->GetValue()) + " keV"); //capitalization be carful
 	Push("gun.mac");
 	SystemManager.Conclude();
 }

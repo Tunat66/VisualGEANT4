@@ -1,0 +1,6 @@
+/run/initialize
+/control/verbose 2
+/run/verbose 2
+#send particles as many particles as given below
+/control/execute gun.mac
+/run/beamOn 1000

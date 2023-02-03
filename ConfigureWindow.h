@@ -31,18 +31,18 @@ public:
 	wxStaticText* GunParticleText;
 	wxChoiceVector* GunParticleEdit;
 	wxStaticText* GunEnergyText; 
-	wxSpinCtrl* GunEnergyEdit;
+	wxSpinCtrlDouble* GunEnergyEdit;
 	wxStaticText* GunUnitText;
 	//wxChoice* GunUnitEdit = new wxChoice(gunPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0, wxDefaultValidator, "Particle");
 	wxChoiceVector* GunUnitEdit;
 	wxStaticText* GunPositionText;
-	wxSpinCtrl* GunPosX;
-	wxSpinCtrl* GunPosY;
-	wxSpinCtrl* GunPosZ;
+	wxSpinCtrlDouble* GunPosX;
+	wxSpinCtrlDouble* GunPosY;
+	wxSpinCtrlDouble* GunPosZ;
 	wxStaticText* GunDirectionText;
-	wxSpinCtrl* GunDirX;
-	wxSpinCtrl* GunDirY;
-	wxSpinCtrl* GunDirZ;
+	wxSpinCtrlDouble* GunDirX;
+	wxSpinCtrlDouble* GunDirY;
+	wxSpinCtrlDouble* GunDirZ;
 
 	wxStaticText* BeamOnTimesText;// = new wxStaticText(runPage, wxID_ANY, wxT("Number of Particles to be shot"), wxDefaultPosition, wxDefaultSize, 0);
 	wxSpinCtrl* BeamOnTimesEdit;// = new wxSpinCtrl(runPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10000000, 0, "wxSpinCtrl");
@@ -61,10 +61,10 @@ public:
 
 	//functions bound to every single control:
 	void GunParticleEditf(wxCommandEvent& event);
-	void GunEnergyEditf(wxSpinEvent& event);
+	void GunEnergyEditf(wxSpinDoubleEvent& event);
 	void GunUnitEditf(wxCommandEvent& event);
-	void GunDirectionEditf(wxSpinEvent& event);
-	void GunPositionEditf(wxSpinEvent& event);
+	void GunDirectionEditf(wxSpinDoubleEvent& event);
+	void GunPositionEditf(wxSpinDoubleEvent& event);
 
 	void BeamOnTimesEditf(wxSpinEvent& event);
 

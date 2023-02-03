@@ -13,16 +13,13 @@
 /vis/sceneHandler/attach
 /vis/viewer/set/viewpointVector -1 0 0
 /vis/viewer/set/lightsVector -1 0 0
-/vis/viewer/set/style surface
+/vis/viewer/set/style wireframe
 /vis/viewer/set/auxiliaryEdge true
 /vis/viewer/set/lineSegmentsPerCircle 100
-/vis/scene/add/trajectories smooth
-/tracking/storeTrajectory 2
-/vis/scene/notifyHandlers
-/vis/modeling/trajectories/create/drawByCharge
-/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
+/vis/modeling/trajectories/create/drawByParticleID
+/vis/modeling/trajectories/drawByParticleID-0/default/setDrawStepPts true
 /vis/scene/notifyHandlers scene-0
-/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
+/vis/modeling/trajectories/drawByParticleID-0/default/setStepPtsSize 2
 /vis/scene/notifyHandlers scene-0
 /vis/scene/add/hits
 /vis/scene/notifyHandlers
@@ -34,15 +31,29 @@
 /vis/viewer/set/autoRefresh true
 /vis/viewer/refresh
 /vis/verbose warnings
+/vis/filtering/trajectories/create/particleFilter
+/vis/filtering/trajectories/particleFilter-0/add e-
+/vis/scene/notifyHandlers scene-0
+/vis/filtering/trajectories/particleFilter-0/add proton
+/vis/scene/notifyHandlers scene-0
 /control/execute run.mac
 /run/initialize
 /control/verbose 2
 /run/verbose 2
+/score/create/boxMesh Geiger
+/score/mesh/boxSize 10. 15. 1. mm
+/score/mesh/nBin 1 1 1
+/score/mesh/translate/xyz 0. 0. 20. mm
+/score/quantity/flatSurfaceFlux flux0
+/score/close
 /control/execute gun.mac
 /gun/particle gamma
 /gun/energy 6 MeV
-/gun/direction 1 1 1
-/gun/position 0.5 0.5 1.0
+/gun/direction 1 22 5
+/gun/position 3 1 1
 /run/beamOn 1000
+/run/geometryModified
+/vis/scene/notifyHandlers scene-0
+/score/dumpAllQuantitiesToFile Geiger ExperimentData/ExperimentData.txt
 /vis/viewer/rebuild
 /vis/viewer/refresh

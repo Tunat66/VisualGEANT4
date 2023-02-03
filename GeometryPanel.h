@@ -181,6 +181,7 @@ public:
 	//create methods
 	void box_createf(wxCommandEvent& event);
 	void sphere_createf(wxCommandEvent& event);
+	void counterbox_createf(wxCommandEvent& event);
 
 	enum {
 		box_NameEdit_ID = 100,
@@ -196,4 +197,8 @@ public:
 	};
 	wxDECLARE_EVENT_TABLE();
 };
+
+
+
+
 

@@ -11,6 +11,7 @@
 #include "RunPanel.h"
 #include "GeometryPanel.h"
 #include "SourcePanel.h"
+#include "CounterPanel.h"
 
 //left panels
 #include "GLGeometryViewer.h"
@@ -85,6 +86,7 @@ public:
 	void RunPanelShow(wxCommandEvent& event);
 	void GeometryPanelShow(wxCommandEvent& event);
 	void SourcePanelShow(wxCommandEvent& event);
+	void CounterPanelShow(wxCommandEvent& event);
 
 
 	//conclusion method setting the final form of Kernel_args

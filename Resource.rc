@@ -38,6 +38,8 @@ gunIcon                 RCDATA                     "gunIcon.png"
 
 runIcon                 RCDATA                     "runIcon.png"
 
+counterIcon             RCDATA                     "counterIcon.png"
+
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 

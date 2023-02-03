@@ -54,11 +54,13 @@ namespace stop {
 		G4String filename = "Geometry/g4geom.txt";
 		G4tgbVolumeMgr* volmgr = G4tgbVolumeMgr::GetInstance();
 		volmgr->AddTextFile(filename);
+		
 
 		//------------------------------------------------ 
 		// Read the text files and construct the GEANT4 geometry
 		//------------------------------------------------ 
 		G4VPhysicalVolume* physiWorld = volmgr->ReadAndConstructDetector();
+
 
 		return physiWorld;
 	}

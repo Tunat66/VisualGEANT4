@@ -150,6 +150,8 @@
     <ClCompile Include="BuildApplication.cpp" />
     <ClCompile Include="Configure.cpp" />
     <ClCompile Include="ConfigureWindow.cpp" />
+    <ClCompile Include="Counterbox.cpp" />
+    <ClCompile Include="CounterPanel.cpp" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="GeometryPanel.cpp" />
     <ClCompile Include="GetCommand.cpp" />
@@ -177,6 +179,8 @@
     <ClInclude Include="cApp.h" />
     <ClInclude Include="Configure.h" />
     <ClInclude Include="ConfigureWindow.h" />
+    <ClInclude Include="Counterbox.h" />
+    <ClInclude Include="CounterPanel.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="GeometryPanel.h" />
     <ClInclude Include="GetCommand.h" />
@@ -195,6 +199,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="bitmap1.bmp" />
+    <Image Include="counterIcon.png" />
     <Image Include="geomIcon.png" />
     <Image Include="gunIcon.png" />
     <Image Include="runIcon.png" />

@@ -1,5 +1,6 @@
 #include "G4RunManagerFactory.hh"
 #include "G4UImanager.hh"
+#include "G4ScoringManager.hh"
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
 
@@ -17,6 +18,9 @@ int main(int argc, char** argv)
 
 	// construct the default run manager
 	auto* runManager = G4RunManagerFactory::CreateRunManager();
+
+	G4ScoringManager* scoringManager =
+		G4ScoringManager::GetScoringManager();
 
 	// set mandatory initialization classes
 	runManager->SetUserInitialization(new DetectorConstruction);

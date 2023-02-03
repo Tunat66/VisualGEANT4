@@ -10,12 +10,14 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
 	EVT_MENU(ID_NewProject, MainWindow::OnNewProject)
 	EVT_MENU(ID_OpenProject, MainWindow::OnOpenProject)
 	EVT_MENU(ID_SaveAs, MainWindow::OnSaveAs)
+	EVT_MENU(wxID_ABOUT, MainWindow::OnAbout)
 	EVT_MENU(wxID_EXIT, MainWindow::OnExit)
 	//command menu
 	EVT_MENU(ID_CommandLine, MainWindow::OnCommandLine)
 	EVT_TOOL(20001, RunPanelShow)
 	EVT_TOOL(20002, GeometryPanelShow)
 	EVT_TOOL(20003, SourcePanelShow)
+	EVT_TOOL(20004, CounterPanelShow)
 	//EVT_BUTTON(10001, RunPanel::ApplyChanges)
 wxEND_EVENT_TABLE()
 
@@ -104,9 +106,10 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting 
 	wxInitAllImageHandlers();
 	wxToolBarToolBase* RunTool = RightPanelNav->AddTool(20001, wxT("Run"), wxBITMAP_PNG(runIcon), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
 	wxToolBarToolBase* GeomteryTool = RightPanelNav->AddTool(20002, wxT("Geometry"), wxBITMAP_PNG(geomIcon), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
-	
-	//ALPHA RELEASE DOES NOT INCLUDE A CONNECTION TO THE SOURCE TOOL: it is still under construction
-	wxToolBarToolBase* SourceTool = RightPanelNav->AddTool(20003, wxT("Particle Source"), wxBITMAP_PNG(gunIcon), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
+	wxToolBarToolBase* CounterTool = RightPanelNav->AddTool(20004, wxT("Counter"), wxBITMAP_PNG(counterIcon), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
+	//In ALPHA 1.1, this functionality is integrated entirely into the Configure menu of the Run Panel
+	// uncomment the line below to access the hidden UI:
+	//wxToolBarToolBase* SourceTool = RightPanelNav->AddTool(20003, wxT("Particle Source"), wxBITMAP_PNG(gunIcon), wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString, NULL);
 	RightPanelNav->Realize();
 	
 	
@@ -135,106 +138,136 @@ void MainWindow::OnExit(wxCommandEvent& event)
 void MainWindow::OnAbout(wxCommandEvent& event)
 {
 	wxMessageBox("VisualGEANT4\nVersion: 1.0.0\n2022",
-		"About Hello World", wxOK | wxICON_INFORMATION);
+		"About", wxOK | wxICON_INFORMATION);
 }
 void MainWindow::OnNewProject(wxCommandEvent& event)
 {
+	//this snippet is modified from: https://docs-wxwidgets-org.translate.goog/3.0/classwx_file_dialog.html?_x_tr_sl=en&_x_tr_tl=tr&_x_tr_hl=tr&_x_tr_pto=sc
 	
-	//NewDirPicker* Picker = new NewDirPicker();
-	//Picker->Show();
-	static const wxChar* FILETYPES = _T(
-		"VisualGEANT4 files |*.vg4|"
-		"All files|*.*"
-	);
-
-	wxFileDialog* openFileDialog =
-		new wxFileDialog(this, _("Create VisualGEANT4 Project"), "", "", FILETYPES,
-			wxFD_SAVE, wxDefaultPosition);
-
-	if (openFileDialog->ShowModal() == wxID_OK)
+	try
 	{
-		wxString ProjectPath;
-		ProjectPath.append(openFileDialog->GetDirectory());
-		wxString ProjectName = openFileDialog->GetFilename();
-		wxString ProjectFolderName = ProjectPath + "/" + ProjectName;
+		//NewDirPicker* Picker = new NewDirPicker();
+	//Picker->Show();
+		static const wxChar* FILETYPES = _T(
+			"VisualGEANT4 files |*.vg4|"
+			"All files|*.*"
+		);
 
-		//create a new folder to put the project files in it
-		std::filesystem::path New = std::string(ProjectFolderName.mb_str());
-		std::filesystem::create_directories(New);
+		wxFileDialog* openFileDialog =
+			new wxFileDialog(this, _("Create VisualGEANT4 Project"), "", "", FILETYPES,
+				wxFD_SAVE, wxDefaultPosition);
 
-		//create a vg4proj file inside this new folder, opened by the user when accessing the project later
-		std::ofstream ProjectFile(std::string(ProjectFolderName.mb_str()) + "/" + std::string(ProjectName.mb_str()) + "proj");
-		ProjectFile.close();
+		int Status = openFileDialog->ShowModal();
 
-		//copy the contents of the "default project" into this "new project"
-		//ADD HERE IMMEDIATELY
-		//Taken from: https://stackoverflow.com/questions/37325875/copy-directory-content
-		std::filesystem::path DefaultProjectPath("DefaultProject");
-		std::filesystem::copy(DefaultProjectPath, New, std::filesystem::copy_options::recursive);
+		if (Status == wxID_OK)
+		{
+			wxString ProjectPath;
+			ProjectPath.append(openFileDialog->GetDirectory());
+			wxString ProjectName = openFileDialog->GetFilename();
+			wxString ProjectFolderName = ProjectPath + "/" + ProjectName;
+
+			//create a new folder to put the project files in it
+			std::filesystem::path New = std::string(ProjectFolderName.mb_str());
+			std::filesystem::create_directories(New);
+
+			//create a vg4proj file inside this new folder, opened by the user when accessing the project later
+			std::ofstream ProjectFile(std::string(ProjectFolderName.mb_str()) + "/" + std::string(ProjectName.mb_str()) + "proj");
+			ProjectFile.close();
+
+			//copy the contents of the "default project" into this "new project"
+			//ADD HERE IMMEDIATELY
+			//Taken from: https://stackoverflow.com/questions/37325875/copy-directory-content
+			std::filesystem::path DefaultProjectPath("DefaultProject");
+			std::filesystem::copy(DefaultProjectPath, New, std::filesystem::copy_options::recursive);
+
+			//lastly, set it as the current project dir:
+			SystemManager.CurrentProjectDir = ProjectFolderName.mb_str(); //convert wxString to std::string
+
+			SystemManager.Project_isOpen = true; //some methods will run only if this is true;
+
+			GeometryViewer->refresh_view();
+			GeometryViewer->load_obj();
+
+			//delete the status text "please select a project"
+			SetStatusText("Project Selected: " + wxString(SystemManager.CurrentProjectDir));
+
+		}
+		else if (Status == wxID_CANCEL) { return; } //if the user closes the dialog prematurely
+
 		
-		//lastly, set it as the current project dir:
-		SystemManager.CurrentProjectDir = ProjectFolderName.mb_str(); //convert wxString to std::string
-
 	}
-
-	SystemManager.Project_isOpen = true; //some methods will run only if this is true;
-
-	GeometryViewer->refresh_view();
-	GeometryViewer->load_obj();
-
-	//delete the status text "please select a project"
-	SetStatusText("Project Selected.");
+	catch (const std::exception& ex)
+	{
+		ex;
+	}
+	
 }
 void MainWindow::OnOpenProject(wxCommandEvent& event)
 {
-	static const wxChar* FILETYPES = _T(
-		"VisualGEANT4 marker files |*.vg4proj|"
-		"All files|*.*"
-	);
+	//this snippet is modified from: https://docs-wxwidgets-org.translate.goog/3.0/classwx_file_dialog.html?_x_tr_sl=en&_x_tr_tl=tr&_x_tr_hl=tr&_x_tr_pto=sc
 	
-	wxFileDialog* openFileDialog =
-		new wxFileDialog(this, _("Open VisualGEANT4 Project"), "", "", FILETYPES,
-			wxFD_OPEN, wxDefaultPosition);
-
-	if (openFileDialog->ShowModal() == wxID_OK)
+	try
 	{
-		wxString path;
-		path.append(openFileDialog->GetDirectory());
-		//path.append(wxFileName::GetPathSeparator());
-		//path.append(openFileDialog->GetFilename());
-		//theText->LoadFile(path);
-		
-		//MOST IMPORTANT PART
-		SystemManager.CurrentProjectDir = path.mb_str(); //convert wxString to std::string
-		
-		SetStatusText(path, 0);
-		//SetStatusText(openFileDialog->GetDirectory(), 1);
-	}
-	
-	SystemManager.Project_isOpen = true; //some methods will run if only this is true;
+		static const wxChar* FILETYPES = _T(
+			"VisualGEANT4 marker files |*.vg4proj|"
+			"All files|*.*"
+		);
 
-	//CRUCIAL: refresh the geomerty viewer with the new geometry
-	//view setup geometry by instantiaitng the opengl canvas:
-	GeometryViewer->refresh_view();
-	GeometryViewer->load_obj();
-	
-	//delete the status text "please select a project"
-	SetStatusText("Project Selected.");
+		wxFileDialog* openFileDialog =
+			new wxFileDialog(this, _("Open VisualGEANT4 Project"), "", "", FILETYPES,
+				wxFD_OPEN, wxDefaultPosition);
+
+		int Status = openFileDialog->ShowModal();
+		
+		if (Status == wxID_OK)
+		{
+			wxString path;
+			path.append(openFileDialog->GetDirectory());
+			//path.append(wxFileName::GetPathSeparator());
+			//path.append(openFileDialog->GetFilename());
+			//theText->LoadFile(path);
+
+			//MOST IMPORTANT PART
+			SystemManager.CurrentProjectDir = path.mb_str(); //convert wxString to std::string
+
+			SetStatusText(path, 0);
+			//SetStatusText(openFileDialog->GetDirectory(), 1);
+			SystemManager.Project_isOpen = true; //some methods will run if only this is true;
+
+			//CRUCIAL: refresh the geomerty viewer with the new geometry
+			//view setup geometry by instantiaitng the opengl canvas:
+			GeometryViewer->refresh_view();
+			GeometryViewer->load_obj();
+
+			//delete the status text "please select a project"
+			SetStatusText("Project Selected: " + wxString(SystemManager.CurrentProjectDir));
+		}
+		if (Status == wxID_CANCEL) { return; } //if the user closes the dialog prematurely
+		
+	}
+	catch (const std::exception& ex)
+	{
+		ex;
+	}
 }
 
 
 void MainWindow::OnSaveAs(wxCommandEvent& event) //the contents of this method are very similar to new project
 {
+	//this snippet is modified from: https://docs-wxwidgets-org.translate.goog/3.0/classwx_file_dialog.html?_x_tr_sl=en&_x_tr_tl=tr&_x_tr_hl=tr&_x_tr_pto=sc
+	
 	static const wxChar* FILETYPES = _T(
 		"VisualGEANT4 files |*.vg4|"
 		"All files|*.*"
 	);
 
 	wxFileDialog* openFileDialog =
-		new wxFileDialog(this, _("Create VisualGEANT4 Project"), "", "", FILETYPES,
+		new wxFileDialog(this, _("Save VisualGEANT4 Project As"), "", "", FILETYPES,
 			wxFD_SAVE, wxDefaultPosition);
 
-	if (openFileDialog->ShowModal() == wxID_OK)
+	int Status = openFileDialog->ShowModal();
+
+	if (Status == wxID_OK)
 	{
 		wxString ProjectPath;
 		ProjectPath.append(openFileDialog->GetDirectory());
@@ -279,13 +312,13 @@ void MainWindow::OnSaveAs(wxCommandEvent& event) //the contents of this method a
 		//create a vg4proj file inside this new folder, opened by the user when accessing the project later
 		std::ofstream ProjectFile(std::string(ProjectFolderName.mb_str()) + "/" + std::string(ProjectName.mb_str()) + "proj");
 		ProjectFile.close();
+		SystemManager.Project_isOpen = true; //some methods will run only if this is true;
 
+		GeometryViewer->refresh_view();
+		GeometryViewer->load_obj();
 	}
+	if (Status == wxID_CANCEL) { return; } //if the user closes the dialog prematurely
 
-	SystemManager.Project_isOpen = true; //some methods will run only if this is true;
-
-	GeometryViewer->refresh_view();
-	GeometryViewer->load_obj();
 }
 
 void MainWindow::OnCommandLine(wxCommandEvent& event) //a nice command line tool to test and troubleshoot the application
@@ -319,9 +352,6 @@ void MainWindow::OnCommandLine(wxCommandEvent& event) //a nice command line tool
 }
 
 
-
-
-
 //RIGHT PANEL METHODS, accessed by toolbar
 void MainWindow::RunPanelShow(wxCommandEvent& event)
 {
@@ -335,12 +365,15 @@ void MainWindow::GeometryPanelShow(wxCommandEvent& event)
 	ReallocatePanel<GeometryPanel>();
 	
 }
-//begin sourcepanel
+void MainWindow::CounterPanelShow(wxCommandEvent& event)
+{
+	ReallocatePanel<CounterPanel>();
+}
 void MainWindow::SourcePanelShow(wxCommandEvent& event)
 {
 	ReallocatePanel<SourcePanel>();
 }
-//end sourcepanel
+
 
 
 //FINALLY: Conclude method applying to all completed tasks, MOVED TO A SEPERATE CLASS

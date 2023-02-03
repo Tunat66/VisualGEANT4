@@ -5,9 +5,9 @@ wxBEGIN_EVENT_TABLE(GeometryPanel, wxWindow)
 	EVT_BUTTON(CreateNew_ID, FCreateNew)
 	EVT_CHOICE(SelectBody_ID, SelectBodyf)
 	EVT_BUTTON(DeleteBody_ID, DeleteBodyf)
-	EVT_SPIN(XValue_ID, TranslateBodies)
-	EVT_SPIN(YValue_ID, TranslateBodies)
-	EVT_SPIN(ZValue_ID, TranslateBodies)
+	EVT_SPINCTRL(XValue_ID, GeometryPanel::TranslateBodies)
+	EVT_SPINCTRL(YValue_ID, GeometryPanel::TranslateBodies)
+	EVT_SPINCTRL(ZValue_ID, GeometryPanel::TranslateBodies)
 wxEND_EVENT_TABLE()
 
 wxBEGIN_EVENT_TABLE(NewObject, wxFrame)
@@ -48,6 +48,7 @@ GeometryPanel::GeometryPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewe
 	//Euler2Value = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -6.28, 6.28, 0, "wxSpinCtrl");
 	//Euler3Value = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -6.28, 6.28, 0, "wxSpinCtrl");
 	//continue vertical
+	wxButton *ApplyTranslation = new wxButton(this, RefreshViewer_ID, "Apply Translation", wxDefaultPosition, wxSize(150, 50));
 	RefreshViewer = new wxButton(this, RefreshViewer_ID, "Refresh Viewer", wxDefaultPosition, wxSize(150, 50));
 	DeleteBody = new wxButton(this, DeleteBody_ID, "Delete Body", wxDefaultPosition, wxSize(150, 50));
 
@@ -72,6 +73,7 @@ GeometryPanel::GeometryPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewe
 	VerticalLayout->Add(CreateNew, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	VerticalLayout->Add(SetPosition, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	VerticalLayout->Add(TranslationSizer, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
+	VerticalLayout->Add(ApplyTranslation, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	//VerticalLayout->Add(SetRotation, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	//VerticalLayout->Add(RotationSizer, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	VerticalLayout->Add(RefreshViewer, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
@@ -145,10 +147,15 @@ void GeometryPanel::ParseGeometryFile()
 			else if (BodyInformation.at(0) == ":PLACE")
 			{
 				BodyName = BodyInformation.at(1);
-				posZ = std::stod(BodyInformation.at(BodyInformation.size() - 1));
-				posY = std::stod(BodyInformation.at(BodyInformation.size() - 2));
-				posX = std::stod(BodyInformation.at(BodyInformation.size() - 3));
-				PlacedBodyFoundFlag = true;
+				//accound for the special case of geiger counter, which is modified through not the Geometry Panel
+				if (BodyName == "counterbox") { PlacedBodyFoundFlag = false; }
+				else 
+				{
+					posZ = std::stod(BodyInformation.at(BodyInformation.size() - 1));
+					posY = std::stod(BodyInformation.at(BodyInformation.size() - 2));
+					posX = std::stod(BodyInformation.at(BodyInformation.size() - 3));
+					PlacedBodyFoundFlag = true;
+				}
 			}
 
 			//if found, add the body to ObjectList
@@ -551,6 +558,7 @@ NewObject::NewObject() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-New Object", /
 
 	//END: Sphere Page
 
+
 	//now create the notebook/pages
 	ConfigureOptions = new wxNotebook(this, wxID_ANY, wxDefaultPosition, wxSize(500, 500), wxNB_MULTILINE);
 	ConfigureOptions->AddPage(cubePage, "Add: Cube");
@@ -573,6 +581,11 @@ void NewObject::Push(std::string arg)
 void GeometryPanel::Push(std::string arg)
 {
 	SystemManager.Kernel_args.push_back(arg);
+}
+
+void NewObject::counterbox_createf(wxCommandEvent& event)
+{
+
 }
 
 //functions bound to every single control:

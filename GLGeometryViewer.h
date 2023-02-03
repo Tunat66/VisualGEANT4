@@ -20,8 +20,9 @@ public:
 	SystemVariables GLSystemManager; //must be allocated in stack, IDK why
 	void refresh_view();
 	void refresh_view_dbg();
-	std::string File;
+	std::string CurrentFile;
 	WavefrontObj* DisplayedObj;
+	WavefrontObj* DisplayedDataCollectorObj;
 	bool IsNotFirst = false;
 
 	//rest is:
