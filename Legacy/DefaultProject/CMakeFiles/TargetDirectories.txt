@@ -1,0 +1,5 @@
+C:/Users/Dell/GEANT4TEMP/geant4-v11.0.0/examples/extended/persistency/P03/CMakeFiles/textGeom.dir
+C:/Users/Dell/GEANT4TEMP/geant4-v11.0.0/examples/extended/persistency/P03/CMakeFiles/P03.dir
+C:/Users/Dell/GEANT4TEMP/geant4-v11.0.0/examples/extended/persistency/P03/CMakeFiles/INSTALL.dir
+C:/Users/Dell/GEANT4TEMP/geant4-v11.0.0/examples/extended/persistency/P03/CMakeFiles/ALL_BUILD.dir
+C:/Users/Dell/GEANT4TEMP/geant4-v11.0.0/examples/extended/persistency/P03/CMakeFiles/ZERO_CHECK.dir

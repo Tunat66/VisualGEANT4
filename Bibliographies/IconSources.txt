@@ -1,0 +1,3 @@
+runIcon.png: https://pixabay.com/tr/vectors/ye%C5%9Fil-ok-yukar%C4%B1-2304008/
+geomIcon.png: https://www.pngwing.com/tr/free-png-vhcpu
+counterIcon.png: https://www.flaticon.com/free-icon/geiger-counter_3000230

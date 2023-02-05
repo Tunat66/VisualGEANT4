@@ -1,0 +1,7 @@
+#Set particle and energy
+/gun/particle gamma
+/gun/energy 6000.200000 keV
+
+#Set beam position and direction
+/gun/direction 0.000000 0.000000 1.000000
+/gun/position 0.000000 0.000000 -60.000000

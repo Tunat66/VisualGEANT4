@@ -6,6 +6,10 @@
 #include<fstream>
 #include<filesystem>
 //this allows the application to be built from its sources
+//#include "MainWindow.h"
+//one exception, it includes the main window (overriding the frontend-backend relationship we described)
+//class MainWindow;
+
 class BuildApplication
 {
 public:
@@ -14,5 +18,7 @@ public:
 	std::string GEANT4_DIR;
 	bool CMakeGenerate();
 	void Build_MSBuild();
+	void create_wrl(std::string ProjectDir);
+	void create_obj_from_wrl(std::string ProjectDir);
 };
 

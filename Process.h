@@ -5,11 +5,16 @@
 #include<string>
 #include<vector>
 #include<iostream>
+#include<windows.h>
 //this is the class which activates when the user starts VisualGEANT4 kernel via itself or the GUI
 //it contains all the functionalities of the kernel connected to it as:
 #include"BuildApplication.h"
 #include"Configure.h"
 #include"GetCommand.h"
+#include"Geometry.h"
+#include"Source.h"
+#include"Counterbox.h"
+#include"wx/wx.h"
 
 
 class Process

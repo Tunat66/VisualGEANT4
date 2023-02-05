@@ -1,0 +1,21 @@
+/run/initialize
+/control/verbose 2
+/run/verbose 2
+
+#define a scoring mesh
+/score/create/boxMesh Geiger
+/score/mesh/boxSize 15. 15. 1. mm
+/score/mesh/nBin 1 1 1
+/score/mesh/translate/xyz 0. 0. 17. mm
+/score/mesh/rotate/rotateY 0 deg
+/score/mesh/rotate/rotateX 0 deg
+/score/mesh/rotate/rotateZ 0 deg
+/score/quantity/flatSurfaceFlux flux0
+/score/close
+
+#send particles as many particles as given below
+/control/execute gun.mac
+/run/beamOn 1000
+
+#finally, dump the collected data
+/score/dumpAllQuantitiesToFile Geiger ExperimentData/ExperimentData.txt

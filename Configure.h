@@ -7,9 +7,9 @@
 #include <fstream>
 #include <filesystem>
 #include <regex> //to modifiy files
-#include<sstream> //to get file content
+#include <sstream> //to get file content
+#include "wx/wx.h"
 
-using namespace std;
 
 class Configure //this class essentially creates and modifies .mac files which are fed into GEANT4
 //the generation/modification of files is handled by the seperate method, 
@@ -25,23 +25,23 @@ public:
 	void SetArgs(std::vector<std::string> val);
 	std::vector<std::string> GetArgs();
 	
+	//METHODS
 	//creating a new config:
 	void NewConfig(std::string type, std::string FileName);
-	
 	//vis methods
 	void VisHandle();
-	void WriteVisMac();
-
+	//void WriteVisMac();
 	//run methods
 	void RunHandle();
-	
 	//gun methods (particle type and energy)
 	void GunHandle();
 
 	//IN FUTURE VERSIONS, a plane irradiator (instead of a point gun) will also be available.
 
+	//REULSABLE METHODS:
 	//to change patterns with regex
 	void ChangeWithRegex(std::string File, std::string Prefix, std::string NewValue);
+	void FullChangeWithRegex(std::string FileWithDir, std::string OldValue, std::string NewValue);
 private:
 	std::vector<std::string> Args; //set to Kernel_args by constructor
 };

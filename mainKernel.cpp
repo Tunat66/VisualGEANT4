@@ -1,4 +1,4 @@
-#include"Process.h"
+/*#include"Process.h"
 #include"GetCommand.h"
 #pragma warning(disable:4996)
 //this is just the kernel, which is called by the ui with an argument to execute a specific task
@@ -6,6 +6,9 @@
 using namespace std;
 
 int main(int argc, char** argv) {
+	
+	//now adapted to gui:
+
 	
 	bool exit = false;
 	while (!exit) {
@@ -18,4 +21,4 @@ int main(int argc, char** argv) {
 	}
 
 	return 0;
-}
+}*/
