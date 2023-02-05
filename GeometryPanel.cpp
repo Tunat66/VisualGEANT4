@@ -35,7 +35,6 @@ GeometryPanel::GeometryPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewe
 	SelectBody = new wxChoiceVector(this, SelectBody_ID, ObjectNameList);
 	//Found an essential bug: if this field is left empty, it causes all object names to be deleted in the g4geom.txt file
 	//solution: initialize this field
-	SelectBody->SetSelection(0);
 
 	CreateNew = new wxButton(this, CreateNew_ID, "Create New Body", wxDefaultPosition, wxSize(150, 50));
 	//now aligned horizontally
@@ -51,6 +50,12 @@ GeometryPanel::GeometryPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewe
 	wxButton *ApplyTranslation = new wxButton(this, RefreshViewer_ID, "Apply Translation", wxDefaultPosition, wxSize(150, 50));
 	RefreshViewer = new wxButton(this, RefreshViewer_ID, "Refresh Viewer", wxDefaultPosition, wxSize(150, 50));
 	DeleteBody = new wxButton(this, DeleteBody_ID, "Delete Body", wxDefaultPosition, wxSize(150, 50));
+	
+	//display the material of the selected body;
+	SelectedBodyMaterial = new wxStaticText(this, wxID_ANY, " ", wxDefaultPosition, wxDefaultSize, 0);
+
+	//initializations
+	SelectBodyf_auto(0);
 
 	//add them to sizers
 	TranslationSizer->Add(x, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2);
@@ -78,9 +83,13 @@ GeometryPanel::GeometryPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewe
 	//VerticalLayout->Add(RotationSizer, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	VerticalLayout->Add(RefreshViewer, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	VerticalLayout->Add(DeleteBody, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
+	VerticalLayout->Add(SelectedBodyMaterial, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	this->SetSizer(VerticalLayout);
 
+
 }
+
+
 
 void GeometryPanel::ParseGeometryFile() 
 {
@@ -111,6 +120,7 @@ void GeometryPanel::ParseGeometryFile()
 
 	//first delete the old object list:
 	ObjectList.clear();
+	ObjectNameList.clear();
 	//read the file line by line, and then parse the line into a vector:
 	//we will be looking for the following information:
 	//read according to the geant4 text format
@@ -143,6 +153,8 @@ void GeometryPanel::ParseGeometryFile()
 			if (BodyInformation.at(0) == ":VOLU")
 			{
 				BodyMaterial = BodyInformation.at(BodyInformation.size() - 1);
+				//debug
+				//wxMessageBox(wxString(BodyMaterial));
 			}
 			else if (BodyInformation.at(0) == ":PLACE")
 			{
@@ -161,7 +173,7 @@ void GeometryPanel::ParseGeometryFile()
 			//if found, add the body to ObjectList
 			if (PlacedBodyFoundFlag)
 			{
-				ObjectList.push_back(Body(BodyName, posX, posY, posZ)); //add material and body type in later versions
+				ObjectList.push_back(Body(BodyName, posX, posY, posZ, BodyMaterial)); //add material and body type in later versions
 			}
 		}
 	}
@@ -171,7 +183,7 @@ void GeometryPanel::ParseGeometryFile()
 void GeometryPanel::FCreateNew(wxCommandEvent& event)
 {
 	//it should open a new window with choices of objects to add, and a naming bar
-	NewObject* NewObjectAdder = new NewObject();
+	NewObject* NewObjectAdder = new NewObject(this);
 	NewObjectAdder->Show();
 }
 
@@ -421,6 +433,9 @@ void GeometryPanel::ApplyChanges(wxCommandEvent& event) //To developer: this fun
 
 	}
 
+	//finally (different from others) refresh the selector
+	RefreshSelectBody();
+
 }
 
 void GeometryPanel::SelectBodyf(wxCommandEvent& event)
@@ -429,6 +444,30 @@ void GeometryPanel::SelectBodyf(wxCommandEvent& event)
 	XValue->SetValue(BodySelected.posX);
 	YValue->SetValue(BodySelected.posY);
 	ZValue->SetValue(BodySelected.posZ);
+
+	//find the index of the Geant4 material literal on the vector G4_materials
+	int index_G4_Materials = std::find(NewObject::G4_Materials.begin(), NewObject::G4_Materials.end(), BodySelected.BodyMaterial) - NewObject::G4_Materials.begin();
+	//the indices of G4_Materials correspond to the indices of Materials
+	int index_Materials = index_G4_Materials;
+	SelectedBodyMaterial->SetLabel(wxString("Material: ") + NewObject::Materials.at(index_Materials));
+	
+	
+	//SelectedBodyMaterial->SetLabel(wxString("Material: ") + wxString(BodySelected.BodyMaterial));
+}
+
+void GeometryPanel::SelectBodyf_auto(int index)
+{
+	Body BodySelected = ObjectList.at(index);
+	XValue->SetValue(BodySelected.posX);
+	YValue->SetValue(BodySelected.posY);
+	ZValue->SetValue(BodySelected.posZ);
+	SelectBody->SetSelection(index);
+	
+	//find the index of the Geant4 material literal on the vector G4_materials
+	int index_G4_Materials = std::find(NewObject::G4_Materials.begin(), NewObject::G4_Materials.end(), BodySelected.BodyMaterial) - NewObject::G4_Materials.begin();
+	//the indices of G4_Materials correspond to the indices of Materials
+	int index_Materials = index_G4_Materials;
+	SelectedBodyMaterial->SetLabel(wxString("Material: ") + NewObject::Materials.at(index_Materials));
 }
 
 void GeometryPanel::DeleteBodyf(wxCommandEvent& event)
@@ -457,7 +496,13 @@ void GeometryPanel::DeleteBodyf(wxCommandEvent& event)
 	//first delete the body from the lists
 	ObjectList.erase(ObjectList.begin() + DeletedBodyIndex);
 	ObjectNameList.erase(ObjectNameList.begin() + DeletedBodyIndex);
-	SelectBody->Delete(DeletedBodyIndex);
+	
+	//SelectBody->Delete(DeletedBodyIndex);
+	//the above approach caused some fatal bugs
+	//delete and reallocate body selector entirely
+	//So instead, we realloacte the panel elements entirely through replacement
+	RefreshSelectBody();
+
 
 	//then, pass the command to delete the body
 	std::string DeletedBodyName_arg = std::string(DeletedBodyName.mb_str());
@@ -469,9 +514,34 @@ void GeometryPanel::DeleteBodyf(wxCommandEvent& event)
 }
 
 
-//now for newobject
-NewObject::NewObject() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-New Object", /*setting initial position*/ wxPoint(50, 50), wxSize(600, 400))
+void GeometryPanel::RefreshSelectBody()
 {
+	//debug
+	//wxMessageBox(wxT("Running!"));
+	//since the index of this body is 1 (starting from 0)
+	VerticalLayout->Remove(1);
+	SelectBody->Destroy();
+	SelectBody = new wxChoiceVector(this, SelectBody_ID, ObjectNameList);
+	VerticalLayout->Insert(1, SelectBody, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
+	VerticalLayout->Layout();
+	//new:
+	SelectBodyf_auto(0);
+
+	//old:
+	/*SelectBody->SetSelection(0);
+
+	//finally, initialize the values to where they were set:
+	Body BodySelected = ObjectList.at(SelectBody->GetSelection());
+	XValue->SetValue(BodySelected.posX);
+	YValue->SetValue(BodySelected.posY);
+	ZValue->SetValue(BodySelected.posZ);*/
+}
+
+//now for newobject
+NewObject::NewObject(GeometryPanel* Parent) : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-New Object", /*setting initial position*/ wxPoint(50, 50), wxSize(600, 400))
+{
+	//IsOpen = true;
+	CurrentParent = Parent;
 	/*OLD CODE
 
 	std::vector<wxString> ObjectTypes{ "Box", "Sphere" };
@@ -500,14 +570,16 @@ NewObject::NewObject() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-New Object", /
 	//wxPanel* Background = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200, 100));
 	//Background->SetTransparent(1);
 
-
+	//initialize every mandatory entry field you create
 	//BEGIN: Cube Page
-	std::vector<wxString> Materials{ "Air", "Water" , "Iron", "Aluminum", "Copper", "Polystyrene", "Plexiglass", "Polyethylene", "Gold" };
+	
 
 	box_Name = new wxStaticText(cubePage, wxID_ANY, wxT("Name"), wxDefaultPosition, wxDefaultSize, 0);
 	box_NameEdit = new wxTextCtrl(cubePage, box_NameEdit_ID);
+	box_NameEdit->SetValue(wxString("untitled_box"));
 	box_Material = new wxStaticText(cubePage, wxID_ANY, wxT("Material"), wxDefaultPosition, wxDefaultSize, 0);
 	box_MaterialEdit = new wxChoiceVector(cubePage, box_MaterialEdit_ID, Materials);
+	box_MaterialEdit->SetSelection(0);
 	box_xLength = new wxStaticText(cubePage, wxID_ANY, wxT("xLength"), wxDefaultPosition, wxDefaultSize, 0);
 	box_xLengthEdit = new wxSpinCtrl(cubePage, box_xLengthEdit_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
 	box_yWidth = new wxStaticText(cubePage, wxID_ANY, wxT("yWidth"), wxDefaultPosition, wxDefaultSize, 0);
@@ -538,8 +610,10 @@ NewObject::NewObject() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-New Object", /
 	//BEGIN: Sphere Page
 	sphere_Name = new wxStaticText(spherePage, wxID_ANY, wxT("Name"), wxDefaultPosition, wxDefaultSize, 0);
 	sphere_NameEdit = new wxTextCtrl(spherePage, sphere_NameEdit_ID);
+	sphere_NameEdit->SetValue(wxString("untitled_sphere"));
 	sphere_Material = new wxStaticText(spherePage, wxID_ANY, wxT("Material"), wxDefaultPosition, wxDefaultSize, 0);
 	sphere_MaterialEdit = new wxChoiceVector(spherePage, sphere_MaterialEdit_ID, Materials);
+	sphere_MaterialEdit->SetSelection(0);
 	sphere_Radius = new wxStaticText(spherePage, wxID_ANY, wxT("Radius"), wxDefaultPosition, wxDefaultSize, 0);
 	sphere_RadiusEdit = new wxSpinCtrl(spherePage, sphere_RadiusEdit_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
 	sphere_Create = new wxButton(spherePage, sphere_Create_ID, "Create New Sphere", wxDefaultPosition, wxSize(150, 50));
@@ -573,6 +647,27 @@ NewObject::NewObject() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-New Object", /
 
 }
 
+//the destructor, essentially
+void NewObject::DestroyNewObjectPanel()
+{
+	/*
+	CurrentParent->VerticalLayout->Remove(1);
+	CurrentParent->SelectBody->Destroy();
+	CurrentParent->SelectBody = new wxChoiceVector(CurrentParent, GeometryPanel::SelectBody_ID, CurrentParent->ObjectNameList);
+	CurrentParent->VerticalLayout->Insert(1, CurrentParent->SelectBody, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
+	CurrentParent->VerticalLayout->Layout();
+	CurrentParent->SelectBody->SetSelection(0);
+
+	//finally, initialize the values to where they were set:
+	Body BodySelected = CurrentParent->ObjectList.at(CurrentParent->SelectBody->GetSelection());
+	CurrentParent->XValue->SetValue(BodySelected.posX);
+	CurrentParent->YValue->SetValue(BodySelected.posY);
+	CurrentParent->ZValue->SetValue(BodySelected.posZ);
+	CurrentParent->RefreshSelectBody(); //refresh the list of new panels*/
+	this->Destroy();
+	IsOpen = false;
+}
+
 void NewObject::Push(std::string arg)
 {
 	SystemManager.Kernel_args.push_back(arg);
@@ -583,6 +678,7 @@ void GeometryPanel::Push(std::string arg)
 	SystemManager.Kernel_args.push_back(arg);
 }
 
+//unused currently
 void NewObject::counterbox_createf(wxCommandEvent& event)
 {
 
@@ -655,6 +751,7 @@ void NewObject::box_createf(wxCommandEvent& event) {
 	wxMessageBox(wxT("Box: \'" + NewBodyName_arg + "\' is succesfully created! Please click \'Refresh Viewer'\ to see it."));
 
 	SystemManager.Conclude();
+	DestroyNewObjectPanel();
 }
 
 void NewObject::sphere_createf(wxCommandEvent& event) {
@@ -662,6 +759,8 @@ void NewObject::sphere_createf(wxCommandEvent& event) {
 	Push("geom");
 	Push("add");
 	Push("sphere");
+
+	//std::find(Materials.begin(), Materials.end(), wxString("thing"));
 
 	//now get the data
 	//name
@@ -719,4 +818,5 @@ void NewObject::sphere_createf(wxCommandEvent& event) {
 	wxMessageBox(wxT("Sphere: \'" + NewBodyName_arg + "\' is succesfully created! Please click \'Refresh Viewer'\ to see it."));
 
 	SystemManager.Conclude();
+	DestroyNewObjectPanel();
 }

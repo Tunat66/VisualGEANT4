@@ -28,8 +28,9 @@ public:
 	
 	void Conclude();
 	void ReadError();
-};
 
+	static int CurrentPanel; //unused
+};
 
 
 

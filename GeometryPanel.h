@@ -5,25 +5,28 @@
 #include "wx/notebook.h"
 #include <wx/spinctrl.h>
 #include <math.h>
-#include "GLGeometryViewer.h"
+#include "GLGeometryViewer.h" 
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <algorithm>
 
 class Body;
+class NewObject;
 
 class GeometryPanel : public wxPanel
 {
-	
+
 public:
 	GeometryPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewer);
 	GLGeometryViewer* ViewerAccess;
+	friend class NewObject;
 
 	//to access the backend, and some aliases for clean code made with address matching, possible bugs with assignment
 	SystemVariables SystemManager;
 	void Push(std::string arg);
 
-private:
+public:
 	//the layout (from top to bottom)
 	wxStaticText* PickExisting = new wxStaticText(this, wxID_ANY, wxT("Pick Existing Body to Manipulate:"), wxDefaultPosition, wxDefaultSize, 0);
 	wxChoiceVector* SelectBody = nullptr;
@@ -53,11 +56,13 @@ private:
 	//continue vertical
 	wxButton* RefreshViewer = nullptr;
 	wxButton* DeleteBody = nullptr;
+	wxStaticText* SelectedBodyMaterial = nullptr; //shows the material of the selected body
 	//when clicked
 	void ApplyChanges(wxCommandEvent& event); //when refreshviewer is clicked
 	void TranslateBodies(wxSpinEvent& event); //when the translation setting is adjusted
 	void DeleteBodyf(wxCommandEvent& event);
 	void SelectBodyf(wxCommandEvent& event);
+	void SelectBodyf_auto(int index); //for the program (not the user) to select the body
 
 	//the sizer to manage layout:
 	wxBoxSizer* VerticalLayout = new wxBoxSizer(wxVERTICAL);
@@ -71,6 +76,7 @@ private:
 	std::vector<Body> ObjectList;
 	std::vector<wxString> ObjectNameList;
 	void ParseGeometryFile();
+	void RefreshSelectBody(); //to refresh the body selector;
 
 	enum {
 		RefreshViewer_ID,
@@ -86,7 +92,7 @@ private:
 class Body 
 {
 public:
-	Body(std::string in_BodyName , double in_posX, double in_posY, double in_posZ, std::string in_BodyMaterial = "", double in_eulerTheta = 0,
+	Body(std::string in_BodyName , double in_posX, double in_posY, double in_posZ, std::string in_BodyMaterial, double in_eulerTheta = 0,
 		double in_eulerPhi = 0,
 		double in_eulerPsi = 0) {
 		BodyName = in_BodyName;
@@ -124,8 +130,13 @@ enum class BodyTypes
 //a small wxFrame for adding new objects
 class NewObject : public wxFrame
 {
+
 public:
-	NewObject();
+	bool IsOpen = true;
+	NewObject(GeometryPanel* Parent);
+	GeometryPanel* CurrentParent = nullptr;
+	//serves as a destructor
+	void DestroyNewObjectPanel();
 	//~NewObject(); //{ delete[] WarningTextBoxArray; }
 	//update this number when you add elements to the enum: it is the number of elements in enum BodyTypes
 	int BodyImplementedNumber = 3;
@@ -182,6 +193,20 @@ public:
 	void box_createf(wxCommandEvent& event);
 	void sphere_createf(wxCommandEvent& event);
 	void counterbox_createf(wxCommandEvent& event);
+
+	//related to materials: (inline is needed otherwise compiler is angry)
+	inline static std::vector<wxString> Materials { "Air", "Water" , "Iron", "Aluminum", "Copper", "Polystyrene", "Plexiglass", "Polyethylene", "Gold" };
+	inline static std::vector<std::string> G4_Materials{ "G4_AIR", "G4_WATER", "G4_Fe", "G4_Al", "G4_Cu", "G4_POLYSTYRENE", "G4_PLEXIGLASS", "G4_POLYETHYLENE", "G4_Au" }; //their names as they appear on the g4geom.txt file
+
+
+
+	//std::unordered_map<std::string, int> age;
+	// Insert
+	//age["Michael"] = 16;
+	//age.insert(std::pair<std::string, int>{"Bill", 25});
+	//age.insert({ "Chris", 30 });
+
+
 
 	enum {
 		box_NameEdit_ID = 100,

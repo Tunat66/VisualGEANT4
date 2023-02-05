@@ -1,0 +1,42 @@
+// Define a parameter for later use
+//NOTE: VISUALGEANT4 DOES NOT SUPPORT BODY NAMES WITH WHITESPACES, EVEN WHEN INCLUDED IN "" MARKS!
+:P POSZ 5.
+
+// Define materials
+:ELEM Hydrogen H 1. 1.
+:ELEM Oxygen O 8 16.
+:ELEM Nitrogen N 7 14.
+:MIXT Air 1.214E-03 2
+      Nitrogen   0.75
+      Oxygen     0.25
+
+// Define rotation matrix
+:ROTM R00 90. 0. 90. 90. 0. 0.  // unit matrix
+
+// Define volumes and place them
+:VOLU world BOX 500. 500. 500. Air
+
+//the (virtual) geiger counter is found in every project
+//this is a actually a physical volume mirroring the position and shape
+//of the actual scoring volume, created for aiding in visualization
+:VOLU counterbox BOX 10. 15. 1. G4_Ar
+:PLACE counterbox 1 world R00 0. 0. 20.
+
+:VOLU mytube TUBS 0. 10. 20. 0. 360. G4_WATER
+:PLACE mytube 1 world R00 0. 0. 0.
+
+:VOLU mybox3 BOX 15. 5. 10. G4_WATER
+:PLACE mybox3 1 world R00 0. 0. 0.
+
+:VOLU cornstarch BOX 5. 30. 5. G4_Al
+:PLACE cornstarch 1 world R00 0. 0. 0.
+
+
+
+
+
+
+
+
+
+

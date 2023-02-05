@@ -236,7 +236,7 @@ GLGeometryViewer::~GLGeometryViewer()
 void GLGeometryViewer::resized(wxSizeEvent& evt)
 {
     //	wxGLCanvas::OnSize(evt);
-
+    render_again(longitude_current, latitude_current, zoom);
     Refresh();
 }
 
@@ -311,7 +311,8 @@ void GLGeometryViewer::draw_obj() {
                 glEnd();
             }
         }
-        glFlush();
+        //finally, draw the line along which the beam lies
+        draw_BeamArrow();
     }
     else { //show the dummy cube
         glColor4f(1, 0, 0, 1);
@@ -328,6 +329,122 @@ void GLGeometryViewer::draw_obj() {
     }
 }
 
+//for gun.mac
+void GLGeometryViewer::ParseGunFile()
+{
+    BeamPosition.clear();
+    BeamDirection.clear();
+    
+    std::ifstream GunFile;
+    std::string FileDir = GLSystemManager.CurrentProjectDir + "/Macros/gun.mac";
+    GunFile.open(FileDir);
+    if (!GunFile.is_open())
+    {
+        wxMessageBox(wxT("gun.mac file for this project cannot be opened due to an unknown reason, please consult to the developers of the project."));
+        wxMessageBox(wxT("File not found: " + FileDir));
+        return;
+    }
+
+    //now read the file line by line and perform checks in each line
+    while (!GunFile.eof()) //to read until the end of the file
+    {
+        std::string Token;
+        std::getline(GunFile, Token);
+        //now parse this line into words according to whitespaces
+        //note that line elements with whitespaces, but in quotation marks are not
+        //supported by this parser
+        std::istringstream StringParser(Token);
+        std::string Element;
+        std::vector<std::string> GunInformation;
+        while (StringParser >> Element)
+        {
+            GunInformation.push_back(Element);
+        }
+
+        //now check if the line has a certain value or prefix
+        if (!GunInformation.empty())
+        {
+            std::string Prefix = GunInformation.at(0); //the first element seperated by whitespace of a line is taken as prefix
+            if (Prefix == "/gun/direction")
+            {
+                double XDir = std::stod(GunInformation.at(1));
+                double YDir = std::stod(GunInformation.at(2));
+                double ZDir = std::stod(GunInformation.at(3));
+                BeamDirection.push_back(XDir);
+                BeamDirection.push_back(YDir);
+                BeamDirection.push_back(ZDir);
+
+            }
+            else if (Prefix == "/gun/position")
+            {
+                double XPos = std::stod(GunInformation.at(1));
+                double YPos = std::stod(GunInformation.at(2));
+                double ZPos = std::stod(GunInformation.at(3));
+                BeamPosition.push_back(XPos);
+                BeamPosition.push_back(YPos);
+                BeamPosition.push_back(ZPos);
+            }
+        }
+    }
+    GunFile.close();
+}
+
+void GLGeometryViewer::draw_BeamArrow()
+{
+    //when done with testing, put all code in here
+    if(GLSystemManager.Project_isOpen)
+    {
+        ParseGunFile();
+        GLdouble ArrowTip_x = (GLdouble) BeamPosition.at(0);
+        GLdouble ArrowTip_y = (GLdouble) BeamPosition.at(1);
+        GLdouble ArrowTip_z = (GLdouble) BeamPosition.at(2);
+
+        //compute the unit direction vector:
+        double nx = BeamDirection.at(0);
+        double ny = BeamDirection.at(1);
+        double nz = BeamDirection.at(2);
+        GLdouble Magnitude = (GLdouble) pow(pow(nx, 2) + pow(ny, 2) + pow(nz, 2), 0.5);
+
+        GLdouble UnitDirection_x = nx / Magnitude;
+        GLdouble UnitDirection_y = ny / Magnitude;
+        GLdouble UnitDirection_z = nz / Magnitude;
+
+
+        //use these starters in future versions where the arrows will be 3D
+        //arrows are drawn solid no matter what
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        //draw the top cone of the arrow (note that arrow is in red)
+        //glBegin(GL_TRIANGLES);
+        //glColor3f(1., 0., 0.);
+        
+        //the long strip of the arrow
+        glColor3f(0., 1., 1.);
+        GLdouble LargeScaleFactor = 1000;
+        UnitDirection_x *= LargeScaleFactor;
+        UnitDirection_y *= LargeScaleFactor;
+        UnitDirection_z *= LargeScaleFactor;
+        glBegin(GL_LINE_STRIP);
+        glLineWidth(50.);
+            glVertex3f(ArrowTip_x, ArrowTip_y, ArrowTip_z);
+            glVertex3f(ArrowTip_x + UnitDirection_x, ArrowTip_y + UnitDirection_y, ArrowTip_z + UnitDirection_z);
+        glEnd();
+
+        //the left and right tips of the arrow
+        //glBegin(GL_LINE_STRIP);
+        //glVertex2f(0.8, 0.0);
+        //glVertex2f(0.7, 0.1);
+        //glEnd();
+
+        //glBegin(GL_LINE_STRIP);
+        //glVertex2f(0.8, 0.0);
+        //glVertex2f(0.7, -0.1);
+        //glEnd();
+    }
+}
+
+
+
+//this method is also from Justin Teller's OBJ viewer referenced in Criterion C
 void reshape(int w, int h) {
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
@@ -458,11 +575,19 @@ void GLGeometryViewer::render(wxPaintEvent& evt)
     prepare3DViewport(0, 0, getWidth(), getHeight());
     glLoadIdentity();
 
+    
+
     glColor4f(0, 0, 1, 1);
     glTranslatef(0, 0, -15);
+    //
     //glRotatef(longitude_current, 0.0f, 1.0f, 0.0f);
     //glRotatef(latitude_current, 1.0f/*(GLfloat)sin(M_PI / 180.0 * (double)latitude)*/, 0.0f, /*(GLfloat)-cos(M_PI / 180.0 * (double)latitude)*/0.0f);
     //glScalef(zoom, zoom, zoom);
+
+    glRotatef(longitude_current, 0.0f, 1.0f, 0.0f);
+    ///glRotatef(latitude_current, (GLfloat)sin(M_PI / 180.0 * (double)longitude_current), 0.0f, (GLfloat)-cos(M_PI / 180.0 * (double)longitude_current));//this one rotates your head
+    glRotatef(latitude_current, -(GLfloat)cos(M_PI / 180.0 * (double)longitude_current), 0.0f, -(GLfloat)sin(M_PI / 180.0 * (double)longitude_current));
+    glScalef(zoom, zoom, zoom);
 
     /*glColor4f(1, 0, 0, 1);
     for (int i = 0; i < 6; i++)
@@ -476,6 +601,8 @@ void GLGeometryViewer::render(wxPaintEvent& evt)
         glEnd();
     }*/
     draw_obj();
+    //draw_BeamArrow();
+    glFlush();
 
     //glFlush();
     SwapBuffers();
@@ -517,6 +644,8 @@ void GLGeometryViewer::render_again(GLfloat longitude, GLfloat latitude, GLfloat
     prepare3DViewport(0, 0, getWidth(), getHeight());
     glLoadIdentity();
 
+    
+
     glColor4f(0, 0, 1, 1);
     glTranslatef(0, 0, -15);
     glRotatef(longitude, 0.0f, 1.0f, 0.0f);
@@ -524,6 +653,9 @@ void GLGeometryViewer::render_again(GLfloat longitude, GLfloat latitude, GLfloat
     glRotatef(latitude, -(GLfloat)cos(M_PI / 180.0 * (double)longitude) , 0.0f, -(GLfloat)sin(M_PI / 180.0 * (double)longitude));
     glScalef(zoom, zoom, zoom);
     draw_obj();
+    //draw_BeamArrow();
+    glFlush();
+    
 
     //glFlush();
     SwapBuffers();

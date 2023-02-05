@@ -44,7 +44,7 @@ void ConfigureWindow::GunPositionEditf(wxSpinDoubleEvent& event)
 
 }
 
-ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Configure Project", /*setting initial position*/ wxPoint(50, 50), wxSize(600, 350))
+ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Configure Project", /*setting initial position*/ wxPoint(50, 50), wxSize(800, 350))
 {
 	//wxButton* Test = new wxButton(this, 20001);
 	
@@ -67,14 +67,14 @@ ConfigureWindow::ConfigureWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Co
 	//GunUnitText = new wxStaticText(gunPage, wxID_ANY, wxT("Energy Unit"), wxDefaultPosition, wxDefaultSize, 0);
 	//wxChoice* GunUnitEdit = new wxChoice(gunPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0, wxDefaultValidator, "Particle");
 	//GunUnitEdit = new wxChoiceVector(gunPage, GunUnitEdit_ID, EnergyUnits);
-	GunPositionText = new wxStaticText(gunPage, wxID_ANY, wxT("Set Gun Position (units in cm, -25 to 25 allowed):"), wxDefaultPosition, wxDefaultSize, 0);
-	GunPosX = new wxSpinCtrlDouble(gunPage, GunPosX_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0, 0.1, "wxSpinCtrl");
-	GunPosY = new wxSpinCtrlDouble(gunPage, GunPosY_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0, 0.1, "wxSpinCtrl");
-	GunPosZ = new wxSpinCtrlDouble(gunPage, GunPosZ_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0, 0.1, "wxSpinCtrl");
-	GunDirectionText = new wxStaticText(gunPage, wxID_ANY, wxT("Set Gun Direction (Enter the components of the direction vector, it needn't be a unit vector):"), wxDefaultPosition, wxDefaultSize, 0);
-	GunDirX = new wxSpinCtrlDouble(gunPage, GunDirX_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0, 0.1, "wxSpinCtrl");
-	GunDirY = new wxSpinCtrlDouble(gunPage, GunDirY_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0, 0.1, "wxSpinCtrl");
-	GunDirZ = new wxSpinCtrlDouble(gunPage, GunDirZ_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -25, 25, 0, 0.1, "wxSpinCtrl");
+	GunPositionText = new wxStaticText(gunPage, wxID_ANY, wxT("Set Gun Position (units in cm, -250 to 250 allowed, two decimal digits allowed):"), wxDefaultPosition, wxDefaultSize, 0);
+	GunPosX = new wxSpinCtrlDouble(gunPage, GunPosX_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -250, 250, 0, 0.01, "wxSpinCtrl");
+	GunPosY = new wxSpinCtrlDouble(gunPage, GunPosY_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -250, 250, 0, 0.01, "wxSpinCtrl");
+	GunPosZ = new wxSpinCtrlDouble(gunPage, GunPosZ_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -250, 250, 0, 0.01, "wxSpinCtrl");
+	GunDirectionText = new wxStaticText(gunPage, wxID_ANY, wxT("Set Gun Direction (Enter the components of the direction vector, it needn't be a unit vector) (two decimal digits allowed):"), wxDefaultPosition, wxDefaultSize, 0);
+	GunDirX = new wxSpinCtrlDouble(gunPage, GunDirX_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -250, 250, 0, 0.01, "wxSpinCtrl");
+	GunDirY = new wxSpinCtrlDouble(gunPage, GunDirY_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -250, 250, 0, 0.01, "wxSpinCtrl");
+	GunDirZ = new wxSpinCtrlDouble(gunPage, GunDirZ_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -250, 250, 0, 0.01, "wxSpinCtrl");
 	wxStaticText* GunInstructionText = new wxStaticText(gunPage, wxID_ANY, wxT("Changes are saved automatically, close this window after performing the changes."), wxDefaultPosition, wxDefaultSize, 0);
 	
 

@@ -11,6 +11,7 @@
 #include "SystemVariables.h"
 #include <cmath>
 
+
 class GLGeometryViewer : public wxGLCanvas, public WavefrontOBJUtility//, do not subclass it, instantiate a "wavaefrontobj" object to be displayed
 {
 	wxGLContext* m_context;
@@ -105,6 +106,12 @@ public:
 	void calculate_normal(face_triangle f, GLdouble* normal);
 	void load_obj();
 	void draw_obj();
+
+	//for drawing the beam:
+	void ParseGunFile();
+	std::vector<double> BeamPosition;
+	std::vector<double> BeamDirection;
+	void draw_BeamArrow(); //this method uses the above as inputs
 
 	//and finally, or command macro:
 	DECLARE_EVENT_TABLE()

@@ -7,6 +7,11 @@
 #include <filesystem>
 #include <regex>
 #include <sstream>
+#include <math.h>
+
+#include "wx/wx.h"
+
+#define M_PI 3.14159265359
 
 class Counterbox
 {
@@ -22,6 +27,7 @@ public:
 
 	//transforms
 	void TranslateObject();
+	void RotateObject();
 	void ResizeObject();
 
 	//REUSABLE METHODS:

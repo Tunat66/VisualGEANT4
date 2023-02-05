@@ -207,7 +207,7 @@ void::Geometry::DeleteObject()
 	std::string LogicalPrefix = ":VOLU " + ObjectName;
 	std::string PhysicalPrefix = ":PLACE " + ObjectName;//prefix of physical volume
 	std::string GeometryFilePath = Project_dir + "/Geometry/g4geom.txt";
-	FullChangeWithRegex(GeometryFilePath, LogicalPrefix, "\n");
+	FullChangeWithRegex(GeometryFilePath, LogicalPrefix, "\n"); //may consider changing it to ""
 	FullChangeWithRegex(GeometryFilePath, PhysicalPrefix, "\n");
 }
 

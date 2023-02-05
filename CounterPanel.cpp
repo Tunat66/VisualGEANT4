@@ -7,6 +7,9 @@ wxBEGIN_EVENT_TABLE(CounterPanel, wxWindow)
 	EVT_SPINCTRL(XValue_ID, TranslateBodies)
 	EVT_SPINCTRL(YValue_ID, TranslateBodies)
 	EVT_SPINCTRL(ZValue_ID, TranslateBodies)
+	EVT_SPINCTRL(Euler1Value_ID, RotateBodies)
+	EVT_SPINCTRL(Euler2Value_ID, RotateBodies)
+	EVT_SPINCTRL(Euler3Value_ID, RotateBodies)
 wxEND_EVENT_TABLE()
 
 wxBEGIN_EVENT_TABLE(ModifyCounter, wxFrame)
@@ -26,12 +29,13 @@ CounterPanel::CounterPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewer)
 	YValue = new wxSpinCtrl(this, YValue_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -100000, 100000, 0, "wxSpinCtrl");
 	ZValue = new wxSpinCtrl(this, ZValue_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -100000, 100000, 0, "wxSpinCtrl");
 	//continue vertical
-	//now aligned horizontally
-	//Euler1Value = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -6.28, 6.28, 0, "wxSpinCtrl");
-	//Euler2Value = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -6.28, 6.28, 0, "wxSpinCtrl");
-	//Euler3Value = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -6.28, 6.28, 0, "wxSpinCtrl");
-	//continue vertical
 	wxButton* ApplyTranslation = new wxButton(this, RefreshViewer_ID, "Apply Translation", wxDefaultPosition, wxSize(150, 50));
+	//now aligned horizontally
+	Euler1Value = new wxSpinCtrl(this, Euler1Value_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -90, 90, 0, "wxSpinCtrl");
+	Euler2Value = new wxSpinCtrl(this, Euler2Value_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -90, 90, 0, "wxSpinCtrl");
+	Euler3Value = new wxSpinCtrl(this, Euler3Value_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -90, 90, 0, "wxSpinCtrl");
+	wxButton* ApplyRotation = new wxButton(this, RefreshViewer_ID, "Apply Rotation", wxDefaultPosition, wxSize(150, 50));
+	//continue vertical
 	RefreshViewer = new wxButton(this, RefreshViewer_ID, "Refresh Viewer", wxDefaultPosition, wxSize(150, 50));
 	//DeleteBody = new wxButton(this, DeleteBody_ID, "Delete Body", wxDefaultPosition, wxSize(150, 50));
 
@@ -43,22 +47,29 @@ CounterPanel::CounterPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewer)
 	TranslationSizer->Add(z, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2);
 	TranslationSizer->Add(ZValue, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2);
 
-	/*
-	RotationSizer->Add(Euler1, 1, wxALIGN_CENTER_VERTICAL | wxALL, 2);
+	
+	RotationSizer->Add(Euler1, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2);
 	RotationSizer->Add(Euler1Value, 1, wxALIGN_CENTER_VERTICAL | wxALL, 2);
-	RotationSizer->Add(Euler2, 1, wxALIGN_CENTER_VERTICAL | wxALL, 2);
-	RotationSizer->Add(Euler2Value, 1, wxALIGN_CENTER_VERTICAL | wxALL, 2);
-	RotationSizer->Add(Euler3, 1, wxALIGN_CENTER_VERTICAL | wxALL, 2);
-	RotationSizer->Add(Euler3Value, 1, wxALIGN_CENTER_VERTICAL | wxALL, 2);*/
+	RotationSizer->Add(Euler2, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2);
+	RotationSizer->Add(Euler2Value, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2);
+	RotationSizer->Add(Euler3, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2);
+	RotationSizer->Add(Euler3Value, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2);
+
+	//display the counts from previous run
+	wxString counts = ParseExperimentalDataFile();
+	CountsFromLastRun = new wxStaticText(this, wxID_ANY, "Count from last run: " + counts, wxDefaultPosition, wxDefaultSize, 0);
+
 
 	VerticalLayout->Add(PickExisting, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	VerticalLayout->Add(CreateNew, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	VerticalLayout->Add(SetPosition, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	VerticalLayout->Add(TranslationSizer, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	VerticalLayout->Add(ApplyTranslation, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
-	//VerticalLayout->Add(SetRotation, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
-	//VerticalLayout->Add(RotationSizer, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
+	VerticalLayout->Add(SetRotation, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
+	VerticalLayout->Add(RotationSizer, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
+	VerticalLayout->Add(ApplyRotation, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	VerticalLayout->Add(RefreshViewer, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
+	VerticalLayout->Add(CountsFromLastRun, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 	this->SetSizer(VerticalLayout);
 
 	//finally, parse the geometry file and the run macro to initialize the settings
@@ -70,9 +81,9 @@ CounterPanel::CounterPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewer)
 Counter::Counter(double in_posX, double in_posY, double in_posZ, double in_sizeX,
 	double in_sizeY,
 	double in_sizeZ,
-	double in_eulerTheta,
-	double in_eulerPhi,
-	double in_eulerPsi) {
+	double in_euler1,
+	double in_euler2,
+	double in_euler3) {
 	//BodyType = in_BodyType;
 	posX = in_posX;
 	posY = in_posY;
@@ -80,10 +91,69 @@ Counter::Counter(double in_posX, double in_posY, double in_posZ, double in_sizeX
 	sizeX = in_sizeX;
 	sizeY = in_sizeY;
 	sizeZ = in_sizeZ;
+	euler1 = in_euler1;
+	euler2 = in_euler2;
+	euler3 = in_euler3;
 }
 
 
-//MODIFY
+wxString CounterPanel::ParseExperimentalDataFile() //it returns the counts as a string
+{
+	//we first locate the file:
+	//we are going to read both files:
+	//g4geom.txt
+	std::ifstream ExperimentDataFile;
+	std::string FileDir = SystemManager.CurrentProjectDir + "/ExperimentData/ExperimentData.txt";
+	ExperimentDataFile.open(FileDir);
+	if (!ExperimentDataFile.is_open())
+	{
+		wxMessageBox(wxT("ExperimentData file for this project cannot be opened due to an unknown reason, please consult to the developers of the project."));
+		wxMessageBox(wxT("File not found: " + FileDir));
+		return wxString("Not Found");
+	}
+
+	std::vector<std::vector<std::string>> DataTable;
+
+	while (!ExperimentDataFile.eof()) //to read until the end of the file
+	{
+		std::string Token;
+		std::getline(ExperimentDataFile, Token);
+
+		//check if the Token is a comment line starting with #, and ignore it if that is the case
+		if (Token.empty()) { continue; }
+		else if (Token.at(0) == '#') { continue; }
+		
+		//otherwise, interpret it as a csv line:
+		//the code is modified from: https://stackoverflow.com/questions/1120140/how-can-i-read-and-parse-csv-files-in-c
+		std::vector<std::string> result;
+		std::stringstream lineStream(Token);
+		std::string cell;
+		while (std::getline(lineStream, cell, ','))
+		{
+			result.push_back(cell);
+		}
+		// This checks for a trailing comma with no data after it.
+		if (!lineStream && cell.empty())
+		{
+			// If there was a trailing comma then add an empty element.
+			result.push_back("");
+		}
+
+		//and then we push back the row
+		DataTable.push_back(result);
+
+	}
+
+	//we currently look for only this parameter (add more in the future)
+	std::string TotalCounts = ""; //the last parameter of the csv line
+	//it is the last column of the first row of DataTable
+	std::vector <std::string> FirstRow = DataTable.at(0);
+	TotalCounts = FirstRow.at(FirstRow.size() - 1);
+	return wxString(TotalCounts);
+}
+
+
+//Parses the geometry and run files, checks for conflicts and warns user, and initializes controls
 Counter CounterPanel::ParseGeometryAndRunFile()
 {
 
@@ -165,6 +235,10 @@ Counter CounterPanel::ParseGeometryAndRunFile()
 				CounterBoxFoundFlag = true;
 				ObjectList.push_back(Counter(geom_posX, geom_posY, geom_posZ, geom_sizeX, geom_sizeY, geom_sizeZ));
 			}
+			else if (BodyInformation.at(0) == ":ROTM" && BodyInformation.at(1) == "R_counterbox")
+			{
+				//currently, parsing for the geometry file is not implemented for these parameters
+			}
 		}
 	}
 	//notifications
@@ -174,15 +248,18 @@ Counter CounterPanel::ParseGeometryAndRunFile()
 	}
 
 	//now parsing run.mac
-	double run_posX;
-	double run_posY;
-	double run_posZ;
+	double run_posX = 0;
+	double run_posY = 0;
+	double run_posZ = 0;
 	double run_sizeX = 0;
 	double run_sizeY = 0;
 	double run_sizeZ = 0;
+	double run_Euler1 = 0;
+	double run_Euler2 = 0;
+	double run_Euler3 = 0;
 	CounterBoxFoundFlag = false;
 	bool ScorerCreated = false;
-	while (!RunFile.eof() && !CounterBoxFoundFlag) //to read until the end of the file
+	while (!RunFile.eof() /* && !CounterBoxFoundFlag*/) //to read until the end of the file
 	{
 		std::string Token;
 		std::getline(RunFile, Token);
@@ -208,18 +285,37 @@ Counter CounterPanel::ParseGeometryAndRunFile()
 				run_sizeX = std::stod(BodyInformation.at(1));
 				run_sizeY = std::stod(BodyInformation.at(2));
 				run_sizeZ = std::stod(BodyInformation.at(3));
+				CounterBoxFoundFlag = true; //though it may lack lines about translation and rotation if the file is corrupted
+				//still, no exceptions are thrown, since all parameters are initialized to zero
 			}
 			else if (BodyInformation.at(0) == "/score/mesh/translate/xyz")
 			{
 				run_posZ = std::stod(BodyInformation.at(3));
 				run_posY = std::stod(BodyInformation.at(2));
 				run_posX = std::stod(BodyInformation.at(1));
+			
 				//now that the place volume is found record it and exit loop via flag
-				CounterBoxFoundFlag = true;
-				ObjectList.push_back(Counter(run_posX, run_posY, run_posZ, run_sizeX, run_sizeY, run_sizeZ));
+			}
+			else if (BodyInformation.at(0) == "/score/mesh/rotate/rotateY")
+			{
+				run_Euler1 = std::stod(BodyInformation.at(1));
+			}
+			else if (BodyInformation.at(0) == "/score/mesh/rotate/rotateX")
+			{
+				run_Euler2 = std::stod(BodyInformation.at(1));
+			}
+			else if (BodyInformation.at(0) == "/score/mesh/rotate/rotateZ")
+			{
+				run_Euler3 = std::stod(BodyInformation.at(1));
 			}
 		}
 	}
+	//finally
+	if (CounterBoxFoundFlag)
+	{
+		ObjectList.push_back(Counter(run_posX, run_posY, run_posZ, run_sizeX, run_sizeY, run_sizeZ, run_Euler1, run_Euler2, run_Euler3));
+	}
+
 	//notifications
 	if (!ScorerCreated)
 	{
@@ -245,6 +341,7 @@ Counter CounterPanel::ParseGeometryAndRunFile()
 		Data_g4geom.sizeX == Data_run.sizeX &&
 		Data_g4geom.sizeY == Data_run.sizeY &&
 		Data_g4geom.sizeZ == Data_run.sizeZ
+		//currently no cross checks for euler angles between files
 		))
 	{
 		wxMessageBox(wxT("There is a mismatch between the counterbox data in run.mac and g4geom.txt, project might be corrupt."));
@@ -252,15 +349,21 @@ Counter CounterPanel::ParseGeometryAndRunFile()
 		//wxMessageBox(wxString(std::to_string(Data_g4geom.posX)) + " " + wxString(std::to_string(Data_run.posX)));
 	}
 	
-	//finally, set the position values
+	//run.mac paramters have priority, as they determine the dynamics of the simulation
+	//set the position values of spin controls
 	XValue->SetValue(Data_run.posX);
 	YValue->SetValue(Data_run.posY);
 	ZValue->SetValue(Data_run.posZ);
 
 
+	Euler1Value->SetValue(Data_run.euler1);
+	Euler2Value->SetValue(Data_run.euler2);
+	Euler3Value->SetValue(Data_run.euler3);
+
+
 	GeometryFile.close();
 	RunFile.close();
-	
+
 	return Data_run;
 }
 
@@ -272,7 +375,7 @@ void CounterPanel::FCreateNew(wxCommandEvent& event)
 	Modifier->Show();
 }
 
-//MODIFY
+//translation and rotation
 void CounterPanel::TranslateBodies(wxSpinEvent& event)
 {
 	
@@ -287,6 +390,23 @@ void CounterPanel::TranslateBodies(wxSpinEvent& event)
 	Push(x);
 	Push(y);
 	Push(z);
+	//end gathering data and manifest modification on g4geom.txt
+	SystemManager.Conclude();
+}
+void CounterPanel::RotateBodies(wxSpinEvent& event)
+{
+
+	//gather data from input fields and manifest them onto the g4geom.txt file
+	Push("counterbox");
+	Push("rotate");
+
+	//dimensions
+	std::string alpha = std::to_string(Euler1Value->GetValue());
+	std::string beta  = std::to_string(Euler2Value->GetValue());
+	std::string gamma = std::to_string(Euler3Value->GetValue());
+	Push(alpha);
+	Push(beta);
+	Push(gamma);
 	//end gathering data and manifest modification on g4geom.txt
 	SystemManager.Conclude();
 }
@@ -515,7 +635,7 @@ void CounterPanel::SelectBodyf(wxCommandEvent& event)
 
 //now for newobject
 ModifyCounter::ModifyCounter(double currentxSize, double currentySize, double currentzSize) 
-	: wxFrame(nullptr, wxID_ANY, "VisualGEANT4-New Object", /*setting initial position*/ wxPoint(50, 50), wxSize(600, 400))
+	: wxFrame(nullptr, wxID_ANY, "VisualGEANT4-Modify Counter", /*setting initial position*/ wxPoint(50, 50), wxSize(600, 400))
 {
 
 	//BEGIN: counterbox Page
@@ -529,6 +649,8 @@ ModifyCounter::ModifyCounter(double currentxSize, double currentySize, double cu
 	counterbox_zHeightEdit = new wxSpinCtrl(counterboxPage, counterbox_zHeightEdit_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
 	counterbox_Modify = new wxButton(counterboxPage, counterbox_Create_ID, "Apply Changes", wxDefaultPosition, wxSize(150, 50));
 	//wxStaticText* WarningTextGeiger = new wxStaticText(counterboxPage, wxID_ANY, "Warning: GEANT4 allows only 16 counters to be created, beware!");
+
+	
 
 	wxBoxSizer* counterboxPageSizer = new wxBoxSizer(wxVERTICAL);
 	//counterboxPageSizer->Add(counterbox_Name, 0, wxALIGN_LEFT | wxLEFT | wxTOP, 10); //these 0's are essential, since they allow these elements to be "stacked" without any prior scaling

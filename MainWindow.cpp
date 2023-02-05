@@ -30,6 +30,16 @@ void MainWindow::RefreshGeometryViever()
 	wxLogMessage("nothing");
 }
 
+InitialRightPanel::InitialRightPanel(wxFrame* MainFrame) : wxPanel(MainFrame, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0)
+{
+	wxStaticText* Warning = new wxStaticText(this, wxID_ANY, "Please Open or Create Project!");
+	wxBoxSizer* WarningSizer_hor = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer* WarningSizer_ver = new wxBoxSizer(wxVERTICAL);
+	WarningSizer_hor->Add(Warning, 1, wxALIGN_CENTER_VERTICAL);
+	WarningSizer_ver->Add(WarningSizer_hor, 1, wxALIGN_CENTER_HORIZONTAL);
+	SetSizer(WarningSizer_ver);
+}
+
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting initial position*/ wxPoint(30, 30), wxSize(1200, 700))
 {
 //MENU BAR ELEMENTS
@@ -71,7 +81,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting 
 	//first initialize the viewpoint settings
 	SystemManager.latitude_current = 0.0f;
 	SystemManager.longitude_current = 50.0f;
-	SystemManager.zoom = 1;
+	SystemManager.zoom = 0.5;
 	
 	//then, create the left panel
 	LeftPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(200,100));
@@ -79,14 +89,17 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "VisualGEANT4", /*setting 
 	//view setup geometry by instantiaitng the opengl canvas:
 	GeometryViewer = new GLGeometryViewer(LeftPanel, SystemManager.latitude_current, SystemManager.longitude_current, SystemManager.zoom);
 	//SetupViewer = new G4OpenGLImmediateXViewer();
-	ViewerSizer->Add(GeometryViewer, 5, wxEXPAND | wxALL);
+	ViewerSizer = new wxBoxSizer(wxVERTICAL);
+	ViewerSizer->Add(GeometryViewer, 5, wxALL | wxEXPAND);
 	LeftPanel->SetSizer(ViewerSizer);
 	
 
 	
 //RIGHT PANEL: This is the panel where buttons and controls are located, controlled by a toolbar	
-	//default window is the run window
-	RightPanel = new RunPanel(this, GeometryViewer);
+	//default window used to be the run window (which raised exceptions when interacted by user)
+	//RightPanel = new RunPanel(this, GeometryViewer);
+	//now its a warning window
+	RightPanel = new InitialRightPanel(this);
 	RightPanel->SetBackgroundColour(wxColor(205, 205, 205));
 	
 //TOOLBAR, which changes the RightPanel:	
@@ -144,8 +157,11 @@ void MainWindow::OnNewProject(wxCommandEvent& event)
 {
 	//this snippet is modified from: https://docs-wxwidgets-org.translate.goog/3.0/classwx_file_dialog.html?_x_tr_sl=en&_x_tr_tl=tr&_x_tr_hl=tr&_x_tr_pto=sc
 	
+	
+
 	try
 	{
+		
 		//NewDirPicker* Picker = new NewDirPicker();
 	//Picker->Show();
 		static const wxChar* FILETYPES = _T(
@@ -194,7 +210,10 @@ void MainWindow::OnNewProject(wxCommandEvent& event)
 		}
 		else if (Status == wxID_CANCEL) { return; } //if the user closes the dialog prematurely
 
+		//reset right panel
+		ReallocatePanel<RunPanel>();
 		
+
 	}
 	catch (const std::exception& ex)
 	{
@@ -208,6 +227,7 @@ void MainWindow::OnOpenProject(wxCommandEvent& event)
 	
 	try
 	{
+		
 		static const wxChar* FILETYPES = _T(
 			"VisualGEANT4 marker files |*.vg4proj|"
 			"All files|*.*"
@@ -229,10 +249,10 @@ void MainWindow::OnOpenProject(wxCommandEvent& event)
 
 			//MOST IMPORTANT PART
 			SystemManager.CurrentProjectDir = path.mb_str(); //convert wxString to std::string
-
+			SystemManager.Project_isOpen = true; //some methods will run only if this is true;
 			SetStatusText(path, 0);
 			//SetStatusText(openFileDialog->GetDirectory(), 1);
-			SystemManager.Project_isOpen = true; //some methods will run if only this is true;
+			
 
 			//CRUCIAL: refresh the geomerty viewer with the new geometry
 			//view setup geometry by instantiaitng the opengl canvas:
@@ -243,6 +263,10 @@ void MainWindow::OnOpenProject(wxCommandEvent& event)
 			SetStatusText("Project Selected: " + wxString(SystemManager.CurrentProjectDir));
 		}
 		if (Status == wxID_CANCEL) { return; } //if the user closes the dialog prematurely
+		
+		//reset right panel
+		ReallocatePanel<RunPanel>();
+
 		
 	}
 	catch (const std::exception& ex)
@@ -313,6 +337,8 @@ void MainWindow::OnSaveAs(wxCommandEvent& event) //the contents of this method a
 		std::ofstream ProjectFile(std::string(ProjectFolderName.mb_str()) + "/" + std::string(ProjectName.mb_str()) + "proj");
 		ProjectFile.close();
 		SystemManager.Project_isOpen = true; //some methods will run only if this is true;
+		//lastly, set it as the current project dir:
+		SystemManager.CurrentProjectDir = ProjectFolderName.mb_str(); //convert wxString to std::string
 
 		GeometryViewer->refresh_view();
 		GeometryViewer->load_obj();

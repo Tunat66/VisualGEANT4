@@ -41,24 +41,30 @@ public:
 	wxStaticText* z = new wxStaticText(this, wxID_ANY, wxT("z:"), wxDefaultPosition, wxDefaultSize, 0);
 	wxSpinCtrl* ZValue = nullptr;
 
-	//PROVISIONAL, will be implemented in later releases
-	/*
+	
 	//continue vertical
-	wxStaticText* SetRotation = new wxStaticText(this, wxID_ANY, wxT("Set Euler Rotation:"), wxDefaultPosition, wxDefaultSize, 0);
+	//see visual: https://en.wikipedia.org/wiki/File:Eulerangles.svg
+	//according to the visual Euler1:alpha, Euler2:beta, Euler3:gamma
+	wxStaticText* SetRotation = new wxStaticText(this, wxID_ANY, wxT("Set Euler Rotation (degrees):"), wxDefaultPosition, wxDefaultSize, 0);
 	//now aligned horizontally, not yet implemented
-	wxStaticText* Euler1 = new wxStaticText(this, wxID_ANY, wxT("Euler 1:"), wxDefaultPosition, wxDefaultSize, 0);
+	wxStaticText* Euler1 = new wxStaticText(this, wxID_ANY, wxT("Alpha:"), wxDefaultPosition, wxDefaultSize, 0);
 	wxSpinCtrl* Euler1Value = nullptr;// new wxSpinCtrl(gunPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
-	wxStaticText* Euler2 = new wxStaticText(this, wxID_ANY, wxT("Euler 2:"), wxDefaultPosition, wxDefaultSize, 0);
+	wxStaticText* Euler2 = new wxStaticText(this, wxID_ANY, wxT("Beta:"), wxDefaultPosition, wxDefaultSize, 0);
 	wxSpinCtrl* Euler2Value = nullptr;
-	wxStaticText* Euler3 = new wxStaticText(this, wxID_ANY, wxT("Euler 3:"), wxDefaultPosition, wxDefaultSize, 0);
-	wxSpinCtrl* Euler3Value = nullptr;*/
+	wxStaticText* Euler3 = new wxStaticText(this, wxID_ANY, wxT("Gamma:"), wxDefaultPosition, wxDefaultSize, 0);
+	wxSpinCtrl* Euler3Value = nullptr;
 
 	//continue vertical
 	wxButton* RefreshViewer = nullptr;
 	wxButton* DeleteBody = nullptr;
-	//when clicked
+	wxStaticText* CountsFromLastRun = nullptr; //shows the counts from last run 
+	//(the above static text doesn't need auto refresh outside constructor, 
+	// as the user needs to change to run panel and back to have a new run)
+	
+	//when clicked on buttons
 	void ApplyChanges(wxCommandEvent& event); //when refreshviewer is clicked
 	void TranslateBodies(wxSpinEvent& event); //when the translation setting is adjusted
+	void RotateBodies(wxSpinEvent& event); //when the rotation setting is adjusted
 	void DeleteBodyf(wxCommandEvent& event);
 	void SelectBodyf(wxCommandEvent& event);
 
@@ -74,6 +80,7 @@ public:
 	std::vector<Counter> ObjectList;
 	std::vector<wxString> ObjectNameList;
 	Counter ParseGeometryAndRunFile();
+	wxString ParseExperimentalDataFile(); //it returns the counts as a string
 
 	friend class ModifyCounter;
 
@@ -84,7 +91,10 @@ public:
 		SelectBody_ID,
 		XValue_ID,
 		YValue_ID,
-		ZValue_ID
+		ZValue_ID,
+		Euler1Value_ID,
+		Euler2Value_ID,
+		Euler3Value_ID
 	};
 };
 
@@ -94,9 +104,9 @@ public:
 	Counter(double in_posX, double in_posY, double in_posZ, double in_sizeX,
 		double in_sizeY,
 		double in_sizeZ,
-		double in_eulerTheta = 0,
-		double in_eulerPhi = 0,
-		double in_eulerPsi = 0);
+		double in_euler1 = 0,
+		double in_euler2 = 0,
+		double in_euler3 = 0);
 	//implemented
 	//BodyTypes BodyType;
 	double posX;
@@ -107,9 +117,9 @@ public:
 	double sizeZ;
 
 	//provisional, remove initializations after implementation
-	double eulerTheta = 0;
-	double eulerPhi = 0;
-	double eulerPsi = 0;
+	double euler1;
+	double euler2;
+	double euler3;
 
 };
 

@@ -23,6 +23,16 @@
 
 //Misc:
 #include "NewDirPicker.h"
+
+//a mini class for showing empty right panels before a project is selected
+
+class InitialRightPanel : public wxPanel
+{
+public:
+	InitialRightPanel(wxFrame* MainFrame);
+};
+
+
 class MainWindow : public wxFrame
 {
 public:
@@ -59,7 +69,7 @@ private:
 //PANELS
 public:
 	wxPanel* LeftPanel;
-	wxBoxSizer* ViewerSizer = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer* ViewerSizer; 
 	wxPanel* RightPanel;
 	
 	//FOR RIGHT PANEL
@@ -69,12 +79,15 @@ public:
 	template <typename RightPanelType>
 	void ReallocatePanel()
 	{
-		RightPanel->Destroy();
-		RightPanel = new RightPanelType(this, GeometryViewer); 
-		RightPanel->SetBackgroundColour(wxColor(205, 205, 205));
-		MainWindowSizer->Add(RightPanel, 1, wxEXPAND | wxRIGHT | wxBOTTOM | wxTOP, 5);
-		MainWindowSizer->Layout(); //this may cause some bugs like reverting viewer to the default position, as the GeometryViewer is reallocated
-		//to fix it, the geometry panel "remembers" its position by recording the viewpoint to SystemVaribles and reallocating back to those
+		if (SystemManager.Project_isOpen) //trying to change panels when a project isn't open can lead to exceptions
+		{
+			RightPanel->Destroy();
+			RightPanel = new RightPanelType(this, GeometryViewer);
+			RightPanel->SetBackgroundColour(wxColor(205, 205, 205));
+			MainWindowSizer->Add(RightPanel, 1, wxEXPAND | wxRIGHT | wxBOTTOM | wxTOP, 5);
+			MainWindowSizer->Layout(); //this may cause some bugs like reverting viewer to the default position, as the GeometryViewer is reallocated
+			//to fix it, the geometry panel "remembers" its position by recording the viewpoint to SystemVaribles and reallocating back to those
+		}
 	}
 
 	//FOR LEFT PANEL (Geometry Viewers)
