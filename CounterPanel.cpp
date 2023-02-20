@@ -4,12 +4,12 @@ wxBEGIN_EVENT_TABLE(CounterPanel, wxWindow)
 	EVT_BUTTON(RefreshViewer_ID, ApplyChanges) //link button with ID 10001 to method OnButtonClicked
 	EVT_BUTTON(CreateNew_ID, FCreateNew)
 	EVT_CHOICE(SelectBody_ID, SelectBodyf)
-	EVT_SPINCTRL(XValue_ID, TranslateBodies)
-	EVT_SPINCTRL(YValue_ID, TranslateBodies)
-	EVT_SPINCTRL(ZValue_ID, TranslateBodies)
-	EVT_SPINCTRL(Euler1Value_ID, RotateBodies)
-	EVT_SPINCTRL(Euler2Value_ID, RotateBodies)
-	EVT_SPINCTRL(Euler3Value_ID, RotateBodies)
+	EVT_SPINCTRLDOUBLE(XValue_ID, TranslateBodies)
+	EVT_SPINCTRLDOUBLE(YValue_ID, TranslateBodies)
+	EVT_SPINCTRLDOUBLE(ZValue_ID, TranslateBodies)
+	EVT_SPINCTRLDOUBLE(Euler1Value_ID, RotateBodies)
+	EVT_SPINCTRLDOUBLE(Euler2Value_ID, RotateBodies)
+	EVT_SPINCTRLDOUBLE(Euler3Value_ID, RotateBodies)
 wxEND_EVENT_TABLE()
 
 wxBEGIN_EVENT_TABLE(ModifyCounter, wxFrame)
@@ -25,15 +25,15 @@ CounterPanel::CounterPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewer)
 
 	CreateNew = new wxButton(this, CreateNew_ID, "Modify Dimensions", wxDefaultPosition, wxSize(150, 50));
 	//now aligned horizontally
-	XValue = new wxSpinCtrl(this, XValue_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -100000, 100000, 0, "wxSpinCtrl");
-	YValue = new wxSpinCtrl(this, YValue_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -100000, 100000, 0, "wxSpinCtrl");
-	ZValue = new wxSpinCtrl(this, ZValue_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -100000, 100000, 0, "wxSpinCtrl");
+	XValue = new wxSpinCtrlDouble(this, XValue_ID, wxEmptyString, wxDefaultPosition, wxSize(70, 20), wxSP_ARROW_KEYS, -100000, 100000, 0, 0.0001, "wxSpinCtrl");
+	YValue = new wxSpinCtrlDouble(this, YValue_ID, wxEmptyString, wxDefaultPosition, wxSize(70, 20), wxSP_ARROW_KEYS, -100000, 100000, 0, 0.0001, "wxSpinCtrl");
+	ZValue = new wxSpinCtrlDouble(this, ZValue_ID, wxEmptyString, wxDefaultPosition, wxSize(70, 20), wxSP_ARROW_KEYS, -100000, 100000, 0, 0.0001, "wxSpinCtrl");
 	//continue vertical
 	wxButton* ApplyTranslation = new wxButton(this, RefreshViewer_ID, "Apply Translation", wxDefaultPosition, wxSize(150, 50));
 	//now aligned horizontally
-	Euler1Value = new wxSpinCtrl(this, Euler1Value_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -90, 90, 0, "wxSpinCtrl");
-	Euler2Value = new wxSpinCtrl(this, Euler2Value_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -90, 90, 0, "wxSpinCtrl");
-	Euler3Value = new wxSpinCtrl(this, Euler3Value_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -90, 90, 0, "wxSpinCtrl");
+	Euler1Value = new wxSpinCtrlDouble(this, Euler1Value_ID, wxEmptyString, wxDefaultPosition, wxSize(50, 20), wxSP_ARROW_KEYS, -90, 90, 0, 0.0001, "wxSpinCtrl");
+	Euler2Value = new wxSpinCtrlDouble(this, Euler2Value_ID, wxEmptyString, wxDefaultPosition, wxSize(50, 20), wxSP_ARROW_KEYS, -90, 90, 0, 0.0001, "wxSpinCtrl");
+	Euler3Value = new wxSpinCtrlDouble(this, Euler3Value_ID, wxEmptyString, wxDefaultPosition, wxSize(50, 20), wxSP_ARROW_KEYS, -90, 90, 0, 0.0001, "wxSpinCtrl");
 	wxButton* ApplyRotation = new wxButton(this, RefreshViewer_ID, "Apply Rotation", wxDefaultPosition, wxSize(150, 50));
 	//continue vertical
 	RefreshViewer = new wxButton(this, RefreshViewer_ID, "Refresh Viewer", wxDefaultPosition, wxSize(150, 50));
@@ -376,7 +376,7 @@ void CounterPanel::FCreateNew(wxCommandEvent& event)
 }
 
 //translation and rotation
-void CounterPanel::TranslateBodies(wxSpinEvent& event)
+void CounterPanel::TranslateBodies(wxSpinDoubleEvent& event)
 {
 	
 	//gather data from input fields and manifest them onto the g4geom.txt file
@@ -393,7 +393,7 @@ void CounterPanel::TranslateBodies(wxSpinEvent& event)
 	//end gathering data and manifest modification on g4geom.txt
 	SystemManager.Conclude();
 }
-void CounterPanel::RotateBodies(wxSpinEvent& event)
+void CounterPanel::RotateBodies(wxSpinDoubleEvent& event)
 {
 
 	//gather data from input fields and manifest them onto the g4geom.txt file

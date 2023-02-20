@@ -66,8 +66,9 @@ void Source::ChangeWithRegex(std::string FileWithDir, std::string Prefix, std::s
 	TempContent = std::regex_replace(TempContent, std::regex(PrefixCStr.c_str()), Prefix + " " + NewValue);
 	f.close();
 	cout << "NEW:\n" + TempContent << endl;
-	wxString tmp(PrefixCStr);
-	wxLogMessage(tmp);
+	//debug
+	//wxString tmp(PrefixCStr);
+	//wxLogMessage(tmp);
 
 	ofstream ofs;
 	ofs.open(FileWithDir, std::ofstream::out | std::ofstream::trunc);

@@ -5,9 +5,9 @@ wxBEGIN_EVENT_TABLE(GeometryPanel, wxWindow)
 	EVT_BUTTON(CreateNew_ID, FCreateNew)
 	EVT_CHOICE(SelectBody_ID, SelectBodyf)
 	EVT_BUTTON(DeleteBody_ID, DeleteBodyf)
-	EVT_SPINCTRL(XValue_ID, GeometryPanel::TranslateBodies)
-	EVT_SPINCTRL(YValue_ID, GeometryPanel::TranslateBodies)
-	EVT_SPINCTRL(ZValue_ID, GeometryPanel::TranslateBodies)
+	EVT_SPINCTRLDOUBLE(XValue_ID, GeometryPanel::TranslateBodies)
+	EVT_SPINCTRLDOUBLE(YValue_ID, GeometryPanel::TranslateBodies)
+	EVT_SPINCTRLDOUBLE(ZValue_ID, GeometryPanel::TranslateBodies)
 wxEND_EVENT_TABLE()
 
 wxBEGIN_EVENT_TABLE(NewObject, wxFrame)
@@ -38,9 +38,9 @@ GeometryPanel::GeometryPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewe
 
 	CreateNew = new wxButton(this, CreateNew_ID, "Create New Body", wxDefaultPosition, wxSize(150, 50));
 	//now aligned horizontally
-	XValue = new wxSpinCtrl(this, XValue_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -100000, 100000, 0, "wxSpinCtrl");
-	YValue = new wxSpinCtrl(this, YValue_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -100000, 100000, 0, "wxSpinCtrl");
-	ZValue = new wxSpinCtrl(this, ZValue_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -100000, 100000, 0, "wxSpinCtrl");
+	XValue = new wxSpinCtrlDouble(this, XValue_ID, wxEmptyString, wxDefaultPosition, wxSize(70, 20), wxSP_ARROW_KEYS, -100000, 100000, 0, 0.0001, "wxSpinCtrl");
+	YValue = new wxSpinCtrlDouble(this, YValue_ID, wxEmptyString, wxDefaultPosition, wxSize(70, 20), wxSP_ARROW_KEYS, -100000, 100000, 0, 0.0001, "wxSpinCtrl");
+	ZValue = new wxSpinCtrlDouble(this, ZValue_ID, wxEmptyString, wxDefaultPosition, wxSize(70, 20), wxSP_ARROW_KEYS, -100000, 100000, 0, 0.0001, "wxSpinCtrl");
 	//continue vertical
 	//now aligned horizontally
 	//Euler1Value = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -6.28, 6.28, 0, "wxSpinCtrl");
@@ -58,11 +58,11 @@ GeometryPanel::GeometryPanel(wxFrame* MainFrame, GLGeometryViewer* GeometryViewe
 	SelectBodyf_auto(0);
 
 	//add them to sizers
-	TranslationSizer->Add(x, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2);
+	TranslationSizer->Add(x,      0, wxALL | wxALIGN_CENTER_VERTICAL, 2);
 	TranslationSizer->Add(XValue, 1, wxALL | wxALIGN_CENTER_VERTICAL, 2);
-	TranslationSizer->Add(y, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2);
+	TranslationSizer->Add(y,      0, wxALL | wxALIGN_CENTER_VERTICAL, 2);
 	TranslationSizer->Add(YValue, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2);
-	TranslationSizer->Add(z, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2);
+	TranslationSizer->Add(z,      0, wxALL | wxALIGN_CENTER_VERTICAL, 2);
 	TranslationSizer->Add(ZValue, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2);
 
 	/*
@@ -187,7 +187,7 @@ void GeometryPanel::FCreateNew(wxCommandEvent& event)
 	NewObjectAdder->Show();
 }
 
-void GeometryPanel::TranslateBodies(wxSpinEvent& event)
+void GeometryPanel::TranslateBodies(wxSpinDoubleEvent& event)
 {
 	//gather data from input fields and manifest them onto the g4geom.txt file
 	Push("geom");
@@ -580,12 +580,12 @@ NewObject::NewObject(GeometryPanel* Parent) : wxFrame(nullptr, wxID_ANY, "Visual
 	box_Material = new wxStaticText(cubePage, wxID_ANY, wxT("Material"), wxDefaultPosition, wxDefaultSize, 0);
 	box_MaterialEdit = new wxChoiceVector(cubePage, box_MaterialEdit_ID, Materials);
 	box_MaterialEdit->SetSelection(0);
-	box_xLength = new wxStaticText(cubePage, wxID_ANY, wxT("xLength"), wxDefaultPosition, wxDefaultSize, 0);
-	box_xLengthEdit = new wxSpinCtrl(cubePage, box_xLengthEdit_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
-	box_yWidth = new wxStaticText(cubePage, wxID_ANY, wxT("yWidth"), wxDefaultPosition, wxDefaultSize, 0);
-	box_yWidthEdit = new wxSpinCtrl(cubePage, box_yWidthEdit_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
-	box_zHeight = new wxStaticText(cubePage, wxID_ANY, wxT("zHeight"), wxDefaultPosition, wxDefaultSize, 0);
-	box_zHeightEdit = new wxSpinCtrl(cubePage, box_zHeightEdit_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
+	box_xLength = new wxStaticText(cubePage, wxID_ANY, wxT("xLength (mm)"), wxDefaultPosition, wxDefaultSize, 0);
+	box_xLengthEdit = new wxSpinCtrlDouble(cubePage, box_xLengthEdit_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, 0.0001, "wxSpinCtrl");
+	box_yWidth = new wxStaticText(cubePage, wxID_ANY, wxT("yWidth (mm)"), wxDefaultPosition, wxDefaultSize, 0);
+	box_yWidthEdit  = new wxSpinCtrlDouble(cubePage, box_yWidthEdit_ID,  wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, 0.0001, "wxSpinCtrl");
+	box_zHeight = new wxStaticText(cubePage, wxID_ANY, wxT("zHeight (mm)"), wxDefaultPosition, wxDefaultSize, 0);
+	box_zHeightEdit = new wxSpinCtrlDouble(cubePage, box_zHeightEdit_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, 0.0001, "wxSpinCtrl");
 	box_Create = new wxButton(cubePage, box_Create_ID, "Create New Cube", wxDefaultPosition, wxSize(150, 50));
 	
 
@@ -614,8 +614,8 @@ NewObject::NewObject(GeometryPanel* Parent) : wxFrame(nullptr, wxID_ANY, "Visual
 	sphere_Material = new wxStaticText(spherePage, wxID_ANY, wxT("Material"), wxDefaultPosition, wxDefaultSize, 0);
 	sphere_MaterialEdit = new wxChoiceVector(spherePage, sphere_MaterialEdit_ID, Materials);
 	sphere_MaterialEdit->SetSelection(0);
-	sphere_Radius = new wxStaticText(spherePage, wxID_ANY, wxT("Radius"), wxDefaultPosition, wxDefaultSize, 0);
-	sphere_RadiusEdit = new wxSpinCtrl(spherePage, sphere_RadiusEdit_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
+	sphere_Radius = new wxStaticText(spherePage, wxID_ANY, wxT("Radius (mm)"), wxDefaultPosition, wxDefaultSize, 0);
+	sphere_RadiusEdit = new wxSpinCtrlDouble(spherePage, sphere_RadiusEdit_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, 0.0001, "wxSpinCtrl");
 	sphere_Create = new wxButton(spherePage, sphere_Create_ID, "Create New Sphere", wxDefaultPosition, wxSize(150, 50));
 
 

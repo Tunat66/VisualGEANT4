@@ -34,14 +34,14 @@ void Counterbox::ResizeObject()
 	std::string newXsize = Args.at(level + 1);
 	std::string newYsize = Args.at(level + 2);
 	std::string newZsize = Args.at(level + 3);
-	std::string NewValue = newXsize + ". " + newYsize + ". " + newZsize + ". " + "G4_Ar"; //the decimal points may lead to bugs
+	std::string NewValue = newXsize + " " + newYsize + " " + newZsize + " " + "G4_Galactic"; //the decimal points may lead to bugs
 	std::string Prefix = ":VOLU " + ObjectName + " BOX";
 	std::string GeometryFilePath = Project_dir + "/Geometry/g4geom.txt";
 	ChangeWithRegex(GeometryFilePath, Prefix, NewValue);
 
 	//run.mac modifier part (affects actual functionality)
 	Prefix = "/score/mesh/boxSize";
-	NewValue = newXsize + ". " + newYsize + ". " + newZsize + ". " + "mm";
+	NewValue = newXsize + " " + newYsize + " " + newZsize + " " + "mm";
 	std::string MacroFilePath = Project_dir + "/Macros/run.mac";
 	ChangeWithRegex(MacroFilePath, Prefix, NewValue);
 
@@ -57,14 +57,14 @@ void Counterbox::TranslateObject()
 	std::string newX = Args.at(level + 1);
 	std::string newY = Args.at(level + 2);
 	std::string newZ = Args.at(level + 3);
-	std::string NewValue = "1 world R00 " + newX + ". " + newY + ". " + newZ + "."; //the decimal points may lead to bugs
+	std::string NewValue = "1 world R_" + ObjectName + " " + newX + " " + newY + " " + newZ; //the decimal points may lead to bugs
 	std::string Prefix = ":PLACE " + ObjectName;
 	std::string GeometryFilePath = Project_dir + "/Geometry/g4geom.txt";
 	ChangeWithRegex(GeometryFilePath, Prefix, NewValue);
 
 	//run.mac modifier part (affects actual functionality)
 	Prefix = "/score/mesh/translate/xyz";
-	NewValue = newX + ". " + newY + ". " + newZ + ". " + "mm";
+	NewValue = newX + " " + newY + " " + newZ + " " + "mm";
 	std::string MacroFilePath = Project_dir + "/Macros/run.mac";
 	ChangeWithRegex(MacroFilePath, Prefix, NewValue);
 }

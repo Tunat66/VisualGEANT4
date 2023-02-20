@@ -14,7 +14,7 @@ void SystemVariables::Conclude()
 {
 	//this is an instance of the class, as cpp requires it, but the class is wholly static-membered
 	//stick the current project dir at the end of Kernel_args and send it to Process class
-	wxLogMessage("Conclude Up");
+	//wxLogMessage("Conclude Up");
 	//delete the first value assigned through initialization
 	if (Kernel_args.at(0)=="init")
 		Kernel_args.erase(Kernel_args.begin());
@@ -25,7 +25,8 @@ void SystemVariables::Conclude()
 	//The delete might seem counterintuitive, but the process is handled entirely by the Process constructor
 	
 	//display the error written to error.log by the ProcessCommand object (or objects instantiated by it)
-	ReadError();
+	//activate for debugging purposes and in early access
+	//ReadError();
 	
 	//delete will not initiate before constructor (thus the Process itself) concludes
 	delete ProcessCommand;

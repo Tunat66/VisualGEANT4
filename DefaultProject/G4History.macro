@@ -41,26 +41,29 @@
 /vis/scene/notifyHandlers scene-0
 /vis/filtering/trajectories/particleFilter-0/add e+
 /vis/scene/notifyHandlers scene-0
-/vis/filtering/trajectories/particleFilter-0/add gamma
-/vis/scene/notifyHandlers scene-0
 /vis/filtering/trajectories/particleFilter-0/add proton
+/vis/scene/notifyHandlers scene-0
+/vis/filtering/trajectories/particleFilter-0/add gamma
 /vis/scene/notifyHandlers scene-0
 /control/execute run.mac
 /run/initialize
 /control/verbose 2
 /run/verbose 2
 /score/create/boxMesh Geiger
-/score/mesh/boxSize 15. 15. 1. mm
+/score/mesh/boxSize 5 5 1 mm
 /score/mesh/nBin 1 1 1
-/score/mesh/translate/xyz 0. 0. 17. mm
+/score/mesh/translate/xyz 0.000000 0.000000 60.000000 mm
+/score/mesh/rotate/rotateY 0.000000 deg
+/score/mesh/rotate/rotateX 0.000000 deg
+/score/mesh/rotate/rotateZ 0.000000 deg
 /score/quantity/flatSurfaceFlux flux0
 /score/close
 /control/execute gun.mac
-/gun/particle gamma
+/gun/particle proton
 /gun/energy 6000.200000 keV
 /gun/direction 0.000000 0.000000 1.000000
-/gun/position 0.000000 0.000000 -60.000000
-/run/beamOn 1000
+/gun/position 0.000000 0.000000 -40.000000
+/run/beamOn 10000
 /run/geometryModified
 /vis/scene/notifyHandlers scene-0
 /score/dumpAllQuantitiesToFile Geiger ExperimentData/ExperimentData.txt

@@ -32,14 +32,14 @@ public:
 	wxChoiceVector* SelectBody = nullptr;
 	wxButton* CreateNew = nullptr;
 	void FCreateNew(wxCommandEvent& event);
-	wxStaticText* SetPosition = new wxStaticText(this, wxID_ANY, wxT("Set Position:"), wxDefaultPosition, wxDefaultSize, 0);
+	wxStaticText* SetPosition = new wxStaticText(this, wxID_ANY, wxT("Set Position(mm):"), wxDefaultPosition, wxDefaultSize, 0);
 	//now aligned horizontally
 	wxStaticText* x = new wxStaticText(this, wxID_ANY, wxT("x:"), wxDefaultPosition, wxDefaultSize, 0);
-	wxSpinCtrl* XValue = nullptr;// new wxSpinCtrl(gunPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(50,50), wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
+	wxSpinCtrlDouble* XValue = nullptr;// new wxSpinCtrl(gunPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(50,50), wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
 	wxStaticText* y = new wxStaticText(this, wxID_ANY, wxT("y:"), wxDefaultPosition, wxDefaultSize, 0);
-	wxSpinCtrl* YValue = nullptr;
+	wxSpinCtrlDouble* YValue = nullptr;
 	wxStaticText* z = new wxStaticText(this, wxID_ANY, wxT("z:"), wxDefaultPosition, wxDefaultSize, 0);
-	wxSpinCtrl* ZValue = nullptr;
+	wxSpinCtrlDouble* ZValue = nullptr;
 	
 	//PROVISIONAL, will be implemented in later releases
 	/*
@@ -59,7 +59,7 @@ public:
 	wxStaticText* SelectedBodyMaterial = nullptr; //shows the material of the selected body
 	//when clicked
 	void ApplyChanges(wxCommandEvent& event); //when refreshviewer is clicked
-	void TranslateBodies(wxSpinEvent& event); //when the translation setting is adjusted
+	void TranslateBodies(wxSpinDoubleEvent& event); //when the translation setting is adjusted
 	void DeleteBodyf(wxCommandEvent& event);
 	void SelectBodyf(wxCommandEvent& event);
 	void SelectBodyf_auto(int index); //for the program (not the user) to select the body
@@ -154,11 +154,11 @@ public:
 	wxStaticText* box_Material;
 	wxChoiceVector* box_MaterialEdit;
 	wxStaticText* box_xLength;
-	wxSpinCtrl* box_xLengthEdit;
+	wxSpinCtrlDouble* box_xLengthEdit;
 	wxStaticText* box_yWidth;
-	wxSpinCtrl* box_yWidthEdit;
+	wxSpinCtrlDouble* box_yWidthEdit;
 	wxStaticText* box_zHeight;
-	wxSpinCtrl* box_zHeightEdit;
+	wxSpinCtrlDouble* box_zHeightEdit;
 	wxButton* box_Create;
 	
 
@@ -168,7 +168,7 @@ public:
 	wxStaticText* sphere_Material;
 	wxChoiceVector* sphere_MaterialEdit;
 	wxStaticText* sphere_Radius;
-	wxSpinCtrl* sphere_RadiusEdit;
+	wxSpinCtrlDouble* sphere_RadiusEdit;
 	wxButton* sphere_Create;
 
 	//wxStaticText** WarningTextBoxArray = new wxStaticText*[BodyImplementedNumber];

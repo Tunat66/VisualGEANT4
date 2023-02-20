@@ -45,7 +45,7 @@ Process::~Process() {
 void Process::OpenExisting(std::vector<std::string> Kernel_args) { //NTS: add a checker to see if CONFIG EXISTS
 	std::string LastArg /*which is always the app dir*/ = Kernel_args.at(Kernel_args.size() - 1);
 	std::string ChildDir = LastArg;
-	wxLogMessage(wxString(LastArg));
+	//wxLogMessage(wxString(LastArg));
 	//all app executables are saved as main.exe, otherwise an error will be raised (this issue may be solved in future versions)
 	LastArg += "\\main.exe";
 	//allocation to C type string and then casting to wchar_t (the type used by CreateProcess)

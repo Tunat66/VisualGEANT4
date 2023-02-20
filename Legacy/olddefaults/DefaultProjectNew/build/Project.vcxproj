@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FE57DFC9-0485-3198-921E-99AF6781F873}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>Project</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>D:\VisualGEANT4\VisualGEANT4\DefaultProject\include;C:\Users\Dell\GEANT4\Geant4-11.0\include\Geant4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>D:\VisualGEANT4\VisualGEANT4\DefaultProject\include;C:\Users\Dell\GEANT4\Geant4-11.0\include\Geant4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>D:\VisualGEANT4\VisualGEANT4\DefaultProject\include;C:\Users\Dell\GEANT4\Geant4-11.0\include\Geant4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>D:\VisualGEANT4\VisualGEANT4\DefaultProject\include;C:\Users\Dell\GEANT4\Geant4-11.0\include\Geant4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\70899109fefb30ace0c22d538c9691fa\Project.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\Debug\main.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\Project</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</VerifyInputsAndOutputsExist>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'"></Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\Release\main.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\Project</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</VerifyInputsAndOutputsExist>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'"></Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\MinSizeRel\main.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\Project</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</VerifyInputsAndOutputsExist>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'"></Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\RelWithDebInfo\main.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\Project</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+      <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</VerifyInputsAndOutputsExist>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\VisualGEANT4\VisualGEANT4\DefaultProject\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/VisualGEANT4/VisualGEANT4/DefaultProject/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/VisualGEANT4/VisualGEANT4/DefaultProject -BD:/VisualGEANT4/VisualGEANT4/DefaultProject/build --check-stamp-file D:/VisualGEANT4/VisualGEANT4/DefaultProject/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeFindDependencyMacro.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindThreads.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\WindowsPaths.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4Config.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4ConfigVersion.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4LibraryDepends-release.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4LibraryDepends.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4PackageCache.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Modules\IntelCompileFeatures.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Modules\MSVCCompileFeatures.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLConfig.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLConfigVersion.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLTargets-release.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLTargets.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\UseGeant4.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeCCompiler.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeCXXCompiler.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeRCCompiler.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeSystem.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\init_vis.mac;D:\VisualGEANT4\VisualGEANT4\DefaultProject\run2.mac;D:\VisualGEANT4\VisualGEANT4\DefaultProject\vis.mac;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/VisualGEANT4/VisualGEANT4/DefaultProject/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/VisualGEANT4/VisualGEANT4/DefaultProject -BD:/VisualGEANT4/VisualGEANT4/DefaultProject/build --check-stamp-file D:/VisualGEANT4/VisualGEANT4/DefaultProject/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeFindDependencyMacro.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindThreads.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\WindowsPaths.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4Config.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4ConfigVersion.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4LibraryDepends-release.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4LibraryDepends.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4PackageCache.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Modules\IntelCompileFeatures.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Modules\MSVCCompileFeatures.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLConfig.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLConfigVersion.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLTargets-release.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLTargets.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\UseGeant4.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeCCompiler.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeCXXCompiler.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeRCCompiler.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeSystem.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\init_vis.mac;D:\VisualGEANT4\VisualGEANT4\DefaultProject\run2.mac;D:\VisualGEANT4\VisualGEANT4\DefaultProject\vis.mac;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/VisualGEANT4/VisualGEANT4/DefaultProject/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/VisualGEANT4/VisualGEANT4/DefaultProject -BD:/VisualGEANT4/VisualGEANT4/DefaultProject/build --check-stamp-file D:/VisualGEANT4/VisualGEANT4/DefaultProject/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeFindDependencyMacro.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindThreads.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\WindowsPaths.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4Config.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4ConfigVersion.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4LibraryDepends-release.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4LibraryDepends.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4PackageCache.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Modules\IntelCompileFeatures.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Modules\MSVCCompileFeatures.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLConfig.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLConfigVersion.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLTargets-release.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLTargets.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\UseGeant4.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeCCompiler.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeCXXCompiler.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeRCCompiler.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeSystem.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\init_vis.mac;D:\VisualGEANT4\VisualGEANT4\DefaultProject\run2.mac;D:\VisualGEANT4\VisualGEANT4\DefaultProject\vis.mac;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/VisualGEANT4/VisualGEANT4/DefaultProject/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/VisualGEANT4/VisualGEANT4/DefaultProject -BD:/VisualGEANT4/VisualGEANT4/DefaultProject/build --check-stamp-file D:/VisualGEANT4/VisualGEANT4/DefaultProject/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeFindDependencyMacro.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\FindThreads.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.22\Modules\Platform\WindowsPaths.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4Config.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4ConfigVersion.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4LibraryDepends-release.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4LibraryDepends.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Geant4PackageCache.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Modules\IntelCompileFeatures.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\Modules\MSVCCompileFeatures.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLConfig.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLConfigVersion.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLTargets-release.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\PTL\PTLTargets.cmake;C:\Users\Dell\GEANT4\Geant4-11.0\lib\Geant4-11.0.0\UseGeant4.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeCCompiler.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeCXXCompiler.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeRCCompiler.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\3.22.1\CMakeSystem.cmake;D:\VisualGEANT4\VisualGEANT4\DefaultProject\init_vis.mac;D:\VisualGEANT4\VisualGEANT4\DefaultProject\run2.mac;D:\VisualGEANT4\VisualGEANT4\DefaultProject\vis.mac;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\CMakeFiles\Project">
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\ZERO_CHECK.vcxproj">
+      <Project>{47F275BB-4CE3-3E61-89CF-691D31FCC0BB}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\VisualGEANT4\VisualGEANT4\DefaultProject\build\main.vcxproj">
+      <Project>{94DD1092-0B65-3422-B808-6BB948EB1D46}</Project>
+      <Name>main</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -4,9 +4,12 @@
 
 #define a scoring mesh
 /score/create/boxMesh Geiger
-/score/mesh/boxSize 10. 15. 1. mm
+/score/mesh/boxSize 15. 15. 1. mm
 /score/mesh/nBin 1 1 1
-/score/mesh/translate/xyz 0. 0. 20. mm
+/score/mesh/translate/xyz 0. 0. 17. mm
+/score/mesh/rotate/rotateY 0 deg
+/score/mesh/rotate/rotateX 0 deg
+/score/mesh/rotate/rotateZ 0 deg
 /score/quantity/flatSurfaceFlux flux0
 /score/close
 

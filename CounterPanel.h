@@ -32,14 +32,14 @@ public:
 	wxStaticText* PickExisting = new wxStaticText(this, wxID_ANY, wxT("Manipulate the Geiger Counter"), wxDefaultPosition, wxDefaultSize, 0);
 	wxButton* CreateNew = nullptr;
 	void FCreateNew(wxCommandEvent& event);
-	wxStaticText* SetPosition = new wxStaticText(this, wxID_ANY, wxT("Set Position:"), wxDefaultPosition, wxDefaultSize, 0);
+	wxStaticText* SetPosition = new wxStaticText(this, wxID_ANY, wxT("Set Position (mm):"), wxDefaultPosition, wxDefaultSize, 0);
 	//now aligned horizontally
 	wxStaticText* x = new wxStaticText(this, wxID_ANY, wxT("x:"), wxDefaultPosition, wxDefaultSize, 0);
-	wxSpinCtrl* XValue = nullptr;// new wxSpinCtrl(gunPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(50,50), wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
+	wxSpinCtrlDouble* XValue = nullptr;// new wxSpinCtrl(gunPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(50,50), wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
 	wxStaticText* y = new wxStaticText(this, wxID_ANY, wxT("y:"), wxDefaultPosition, wxDefaultSize, 0);
-	wxSpinCtrl* YValue = nullptr;
+	wxSpinCtrlDouble* YValue = nullptr;
 	wxStaticText* z = new wxStaticText(this, wxID_ANY, wxT("z:"), wxDefaultPosition, wxDefaultSize, 0);
-	wxSpinCtrl* ZValue = nullptr;
+	wxSpinCtrlDouble* ZValue = nullptr;
 
 	
 	//continue vertical
@@ -48,11 +48,11 @@ public:
 	wxStaticText* SetRotation = new wxStaticText(this, wxID_ANY, wxT("Set Euler Rotation (degrees):"), wxDefaultPosition, wxDefaultSize, 0);
 	//now aligned horizontally, not yet implemented
 	wxStaticText* Euler1 = new wxStaticText(this, wxID_ANY, wxT("Alpha:"), wxDefaultPosition, wxDefaultSize, 0);
-	wxSpinCtrl* Euler1Value = nullptr;// new wxSpinCtrl(gunPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
+	wxSpinCtrlDouble* Euler1Value = nullptr;// new wxSpinCtrl(gunPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 10, "wxSpinCtrl");
 	wxStaticText* Euler2 = new wxStaticText(this, wxID_ANY, wxT("Beta:"), wxDefaultPosition, wxDefaultSize, 0);
-	wxSpinCtrl* Euler2Value = nullptr;
+	wxSpinCtrlDouble* Euler2Value = nullptr;
 	wxStaticText* Euler3 = new wxStaticText(this, wxID_ANY, wxT("Gamma:"), wxDefaultPosition, wxDefaultSize, 0);
-	wxSpinCtrl* Euler3Value = nullptr;
+	wxSpinCtrlDouble* Euler3Value = nullptr;
 
 	//continue vertical
 	wxButton* RefreshViewer = nullptr;
@@ -63,8 +63,8 @@ public:
 	
 	//when clicked on buttons
 	void ApplyChanges(wxCommandEvent& event); //when refreshviewer is clicked
-	void TranslateBodies(wxSpinEvent& event); //when the translation setting is adjusted
-	void RotateBodies(wxSpinEvent& event); //when the rotation setting is adjusted
+	void TranslateBodies(wxSpinDoubleEvent& event); //when the translation setting is adjusted
+	void RotateBodies(wxSpinDoubleEvent& event); //when the rotation setting is adjusted
 	void DeleteBodyf(wxCommandEvent& event);
 	void SelectBodyf(wxCommandEvent& event);
 

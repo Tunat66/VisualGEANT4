@@ -129,8 +129,8 @@ void Geometry::AddObject()
 		
 		//add to g4geom.txt
 		TxtModifier << "\n";
-		TxtModifier << ":VOLU " + ObjectName + " BOX " + length + ". " + width + ". " + height + ". " + material << std::endl;
-		TxtModifier << ":PLACE " + ObjectName + " 1 world R00 " + posx + ". " + posy + ". " + posz + "." << std::endl;
+		TxtModifier << ":VOLU " + ObjectName + " BOX " + length + " " + width + " " + height + " " + material << std::endl;
+		TxtModifier << ":PLACE " + ObjectName + " 1 world R00 " + posx + " " + posy + " " + posz << std::endl;
 
 		//create the obj file: first copy the template
 		//std::ifstream TemplateBoxFile;
@@ -159,8 +159,8 @@ void Geometry::AddObject()
 
 		//add to g4geom.txt
 		TxtModifier << "\n";
-		TxtModifier << ":VOLU " + ObjectName + " ORB " + radius + ". " + material << std::endl;
-		TxtModifier << ":PLACE " + ObjectName + " 1 world R00 " + posx + ". " + posy + ". " + posz + "." << std::endl;
+		TxtModifier << ":VOLU " + ObjectName + " ORB " + radius + " " + material << std::endl;
+		TxtModifier << ":PLACE " + ObjectName + " 1 world R00 " + posx + " " + posy + " " + posz << std::endl;
 
 		//create the obj file: first copy the template
 		//std::ifstream TemplateSphereFile;
@@ -221,7 +221,7 @@ void Geometry::TranslateObject()
 	std::string deltaY = Args.at(level + 3);
 	std::string deltaZ = Args.at(level + 4);
 	
-	std::string NewValue = "1 world R00 " + deltaX + ". " + deltaY + ". " + deltaZ + "."; //the decimal points may lead to bugs
+	std::string NewValue = "1 world R00 " + deltaX + " " + deltaY + " " + deltaZ; //the decimal points may lead to bugs
 	std::string Prefix = ":PLACE " + ObjectName;
 	std::string GeometryFilePath = Project_dir + "/Geometry/g4geom.txt";
 

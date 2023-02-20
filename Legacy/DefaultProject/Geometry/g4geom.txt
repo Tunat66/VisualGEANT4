@@ -19,17 +19,93 @@
 //the (virtual) geiger counter is found in every project
 //this is a actually a physical volume mirroring the position and shape
 //of the actual scoring volume, created for aiding in visualization
-:VOLU counterbox BOX 10. 15. 1. G4_Ar
-:PLACE counterbox 1 world R00 0. 0. 20.
+:ROTM R_counterbox 1. 0. 0. 0. 1. 0. 0. 0. 1.  //initialized to unit matrix
+:VOLU counterbox BOX 15. 15. 1. G4_Ar
+:PLACE counterbox 1 world R_counterbox 0. 0. 17.
 
-:VOLU mytube TUBS 0. 10. 20. 0. 360. G4_WATER
-:PLACE mytube 1 world R00 0. 0. 0.
+:VOLU untitled_sphere ORB 10. G4_POLYETHYLENE
+:PLACE untitled_sphere 1 world R00 0. 0. 0.
 
-:VOLU mybox3 BOX 15. 5. 10. G4_WATER
-:PLACE mybox3 1 world R00 0. 0. 0.
 
-:VOLU cornstarch BOX 5. 30. 5. G4_Al
-:PLACE cornstarch 1 world R00 0. 0. 0.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
