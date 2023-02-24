@@ -57,15 +57,21 @@ bool BuildApplication::CMakeGenerate()
 
 void BuildApplication::Build_MSBuild()
 {
+	//find the MSBuild Directory from MSBuildDIR.txt
+	//read the G4DIR and push back to kernel args
+	std::string MSBuildDir;
+	std::ifstream Reader("MSBuildDIR.txt");
+	std::getline(Reader, MSBuildDir);
+		
 	std::string cdCommand;
 	//NTS: change this depending on the MSVS version
-	cdCommand = "cd C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin";
+	cdCommand = "cd " + MSBuildDir;
 	std::string BuildCommand = "MSBuild.exe " + CMakeListsTxt_DIR + "/build/Project.sln " + "/property:Configuration=Release";
 	std::string command;
 	command = cdCommand + " && " + BuildCommand;
 	//std::cout << command << std::endl;
 	//system(command.c_str());
-	std::string command2 = "C:/\"Program Files (x86)\"/\"Microsoft Visual Studio\"/2019/Community/MSBuild/Current/Bin/MSBuild.exe " 
+	std::string command2 = MSBuildDir + "/MSBuild.exe " 
 		+ CMakeListsTxt_DIR + "/build/Project.sln " + "/property:Configuration=Release";
 
 	char* MSBuildDirectory = new char[command2.length() + 1];
@@ -140,7 +146,7 @@ void BuildApplication::create_wrl(std::string ProjectDir)
 	delete[] ChildDirectory;
 
 	//for debugging
-	wxMessageBox(wxT("Race Condition Debugging: wrl file creation complete, now proceed with"));
+	//wxMessageBox(wxT("Race Condition Debugging: wrl file creation complete, now proceed with"));
 }
 
 

@@ -74,7 +74,7 @@ void GLGeometryViewer::mouseMoved(wxMouseEvent& event)
         GLfloat lattmp = -shiftRate * deltay + latinit;
         render_again(longtmp, lattmp, zoom);
     }
-    UpdateSystemVariablesViewpointSnapshots();
+    
 }
 
 void GLGeometryViewer::mouseDown(wxMouseEvent& event) {
@@ -100,6 +100,7 @@ void GLGeometryViewer::mouseReleased(wxMouseEvent& event)
     PositionChange = wxPoint(0, 0);
     deltax = 0.0f;
     deltay = 0.0f;
+    UpdateSystemVariablesViewpointSnapshots();
 }
 void GLGeometryViewer::rightClick(wxMouseEvent& event) {
 
@@ -395,9 +396,9 @@ void GLGeometryViewer::draw_BeamArrow()
     if(GLSystemManager.Project_isOpen)
     {
         ParseGunFile();
-        GLdouble ArrowTip_x = (GLdouble) BeamPosition.at(0);
-        GLdouble ArrowTip_y = (GLdouble) BeamPosition.at(1);
-        GLdouble ArrowTip_z = (GLdouble) BeamPosition.at(2);
+        GLdouble ArrowTip_x = (GLdouble) (BeamPosition.at(0) * 10); //to convert cm to mm
+        GLdouble ArrowTip_y = (GLdouble) (BeamPosition.at(1) * 10);
+        GLdouble ArrowTip_z = (GLdouble) (BeamPosition.at(2) * 10);
 
         //compute the unit direction vector:
         double nx = BeamDirection.at(0);

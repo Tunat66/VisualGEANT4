@@ -1,5 +1,0 @@
-D:/VisualGEANT4/ExampleKopie/build/CMakeFiles/main.dir
-D:/VisualGEANT4/ExampleKopie/build/CMakeFiles/Project.dir
-D:/VisualGEANT4/ExampleKopie/build/CMakeFiles/INSTALL.dir
-D:/VisualGEANT4/ExampleKopie/build/CMakeFiles/ALL_BUILD.dir
-D:/VisualGEANT4/ExampleKopie/build/CMakeFiles/ZERO_CHECK.dir

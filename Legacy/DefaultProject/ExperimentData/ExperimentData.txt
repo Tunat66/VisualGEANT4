@@ -1,4 +1,0 @@
-# mesh name: Geiger
-# primitive scorer name: flux0
-# iX, iY, iZ, total(value) [percm2], total(val^2), entry
-0,0,0,113.1016629154615,13.38635485624277,992

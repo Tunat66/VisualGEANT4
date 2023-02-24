@@ -112,7 +112,9 @@ void Configure::VisHandle()
 		}
 		else if (Args.at(3) == "removeparticle")
 		{
-			FullChangeWithRegex(VisFile, "/vis/filtering/trajectories/particleFilter-0/add " + Args.at(4), "");
+			FullChangeWithRegex(VisFile, "/vis/filtering/trajectories/particleFilter-0/add " + Args.at(4), "#");
+			//the '#' is essential as a comment line beginner, as the regex adds a "+" unexpectedly when removing positrons, corrupting the vis.mac file
+			//I couldn't find the reason for the above behavior yet
 		}
 	}
 	else if (Args.at(2) == "style")
@@ -207,6 +209,7 @@ void Configure::ChangeWithRegex(std::string FileWithDir, std::string Prefix, std
 	std::string middle = Prefix;
 	std::string PrefixCStr = beginning + middle + end;
 	TempContent = std::regex_replace(TempContent, std::regex(PrefixCStr.c_str()), Prefix + " " + NewValue);
+	
 	f.close();
 	cout << "NEW:\n" + TempContent << endl;
 	//wxString tmp(PrefixCStr);
