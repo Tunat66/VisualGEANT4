@@ -1,6 +1,8 @@
 INSTALLATION INSTRUCTIONS:
 READ ALL ASSOCIATED WARNINGS BEFORE STARTING A STEP
 
+Unzip the "InstallWork.zip" file. In the unzipped file, follow these instructions to install all dependencies:
+
 1. Install "CMake" using the installer in folder "CMake_installer".
 	
 	a. WARNING: Select "Add CMake to system PATH for all users" when options appear. This selection is essential.
