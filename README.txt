@@ -1,6 +1,7 @@
 INSTALLATION INSTRUCTIONS:
 READ ALL ASSOCIATED WARNINGS BEFORE STARTING A STEP
 
+Download the InstallWork.zip file from: https://www.mediafire.com/file/k3z2h4jgo30a0y6/InstallWork.zip/file 
 Unzip the "InstallWork.zip" file. In the unzipped file, follow these instructions to install all dependencies:
 
 1. Install "CMake" using the installer in folder "CMake_installer".
