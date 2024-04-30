@@ -13,7 +13,7 @@ Unzip the "InstallWork.zip" file. In the unzipped file, follow these instruction
 	a. WARNING: DURING INSTALLATION, SET THE DIRECTORY OF INSTALLATION
 		    TO THE FOLDER "VisualGEANT4".
 
-	b. WARNING: Select "Add CMake to system PATH for all users" when options appear. This selection is essential.
+	b. WARNING: Select "Add geant4 to the system PATH for all users" when options appear. This selection is essential.
 
 3. Install Visual Studio Build Tools (Including MSBuild) using the installer in folder "MSBuild_installer."
 	(this might take time as download is 8GB)	
